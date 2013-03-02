@@ -1,0 +1,278 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+ 
+from PySide.QtGui import *
+from PySide.QtCore import *
+from pyxpad_main import *
+
+import sys
+from StringIO import StringIO
+
+class Sources:
+    sources = []  # List of sources
+    
+    def __init__(self, mainwindow):
+        self.main = mainwindow
+        self.main.sourceDescription.stateChanged.connect(self.updateDisplay)
+    
+    def addNetCDF(self):
+        try:
+            from datafile import NetCDFDataSource
+        except:
+            self.main.write("Sorry, no NetCDF support")
+            return
+        try:
+            # Get the file name
+            tr = self.main.tr
+            fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.', filter=tr("NetCDF files (*.nc *.cdl)"))
+            if fname == None:
+                return # Cancelled
+            self.main.write("Name = "+fname)
+        
+            s = NetCDFDataSource(fname)
+            self.main.write("Contents = "+str(s.varNames))
+            
+            self.addSource(s)
+            self.updateDisplay()
+        except:
+            self.main.write("Error creating NetCDFDataSource")
+            self.main.write(str(sys.exc_info()))
+        
+    def addSource(self, source):
+        self.sources.append(source)
+        it = QTreeWidgetItem(self.main.treeView, [source.label])
+        it.setIcon(0, QIcon('folder.png'))
+        self.main.treeView.addTopLevelItem(it)
+    
+    def updateDisplay(self):
+        # Find which source is selected, and update table view
+        s = self.sources[0]
+        varNames = s.varNames
+        
+        table = self.main.sourceTable
+        table.setSortingEnabled(False)
+        if self.main.sourceDescription.isChecked():
+            # Provide description for each variable (if available)
+            
+            table.setColumnCount(2)
+            table.setRowCount(len(varNames))
+            for row, name in enumerate(varNames):
+                table.setItem(row, 0, QTableWidgetItem(name))
+            
+        else:
+            # Just a list of variable names. Can use multiple columns
+            maxrows = 15
+            n = len(varNames)
+            ncols = int(n / maxrows) + 1
+            table.setColumnCount(ncols)
+            table.setRowCount(min([n, maxrows]))
+            for i, name in enumerate(varNames):
+                row = i % maxrows
+                col = int(i / maxrows)
+                item = QTableWidgetItem(name)
+                item.source = s
+                table.setItem(row, col, item)
+        table.setSortingEnabled(True)
+        
+    def read(self):
+        """
+        Read the selected data and return as a list of data items
+        
+        """
+        table = self.main.sourceTable
+        tableitems = table.selectedItems()
+        data = []
+        for item in tableitems:
+            if item.__dict__.has_key('source'):
+                name = item.text()
+                self.main.write("Reading " + name + " from " + item.source.label)
+                data.append(item.source.read(name))
+        return data
+                
+        
+class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
+    """
+    
+    Attributes
+    
+      data    Dictionary of variables containing user data
+    """
+    def __init__(self, parent=None):
+        super(MyApplication, self).__init__(parent)
+        self.setupUi(self)
+        self.actionExit.triggered.connect(self.close)
+        
+        self.sources = Sources(self)
+        self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
+        
+        self.readDataButton.clicked.connect(self.readData)
+
+        self.commandInput.returnPressed.connect(self.commandEntered)
+        self.commandButton.clicked.connect(self.commandEntered)
+        
+        self.data = {} # User data 
+        
+        it = QTreeWidgetItem(self.treeView, ["hello"])
+        it.setIcon(0, QIcon('folder.png'))
+        self.treeView.addTopLevelItem(it)
+
+        self.dataTable.cellChanged.connect(self.dataTableChanged)
+        
+        try:
+            from matplotlib_widget import MatplotlibWidget
+            self.DataPlot = MatplotlibWidget()
+            layout = QVBoxLayout(self.plotTab)
+            layout.addWidget(self.DataPlot,1)
+        except:
+            raise
+        
+    def closeEvent(self, event):
+        reply = QtGui.QMessageBox.question(self, 'Message',
+                                           "Are you sure to quit?", QtGui.QMessageBox.Yes | 
+                                           QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+        
+        if reply == QtGui.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+    
+    def write(self, text):
+        """
+        Write some log text
+        """
+        window.textOutput.append(text)
+
+    def makeUnique(self, name):
+        if self.data.has_key(name):
+            # Name is already in the list. Add a number to the end to make it unique
+            i = 1
+            while self.data.has_key(name + "_"+str(i)):
+                i += 1
+            return name + "_"+str(i)
+        return name
+        
+    def readData(self):
+        # Get the data from the source as a list
+        newdata = self.sources.read()
+        if (newdata == None) or (newdata == []):
+            return  # No data read
+        
+        # Add to the data dictionary
+        for item in newdata:
+            # Need to make the name unique
+            name = self.makeUnique(item.name)
+            self.data[name] = item
+        
+        self.updateDataTable()
+
+    def updateDataTable(self):
+        """
+        Updates the table of data based on self.data dictionary
+        """
+        n = len(self.data)
+        table = self.dataTable
+        table.setSortingEnabled(False)
+        self.dataTable.cellChanged.disconnect(self.dataTableChanged)
+        table.setRowCount(n)
+        for row, name in enumerate(self.data):
+            item = self.data[name]
+            it = QTableWidgetItem(name)
+            it.oldname = name # Save this for when it's changed
+            table.setItem(row, 0, it)
+            try:
+                # Assume it's an XPadDataItem
+                it = QTableWidgetItem(item.source)
+                it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make source read only
+                table.setItem(row, 1, it)
+                
+                it = QTableWidgetItem(item.name)
+                it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make trace read only
+                table.setItem(row, 2, it)
+                
+                try:
+                    comment = item.comment
+                except AttributeError:
+                    comment = item.desc
+                    if comment == "":
+                        comment = item.label
+                        if item.units != "":
+                            comment += " ("+item.units+") "
+                
+                    if item.dim != []:
+                        comment += " [" + item.dim[0].name
+                        for d in item.dim[1:]:
+                            comment += ", " + d.name
+                        comment += "] "
+                    else:
+                        comment += " = " + str(item.data)
+                
+                table.setItem(row, 3, QTableWidgetItem(comment))
+            except:
+                table.setItem(row, 3, QTableWidgetItem(str(item)))
+            
+        table.setSortingEnabled(True)
+        self.dataTable.cellChanged.connect(self.dataTableChanged)
+        
+    def dataTableChanged(self, row, col):
+        if col == 0:
+            # The name of the variable
+            it = self.dataTable.item(row, col)
+            name = it.text()
+            oldname = it.oldname
+            if name == oldname:
+                return # Not really changed
+            
+            # Need to make sure new name is unique and valid
+            name = self.makeUnique(name)
+            it.setText(name)
+            it.oldname = name
+            self.data[name] = self.data[oldname]
+            del self.data[oldname]
+            
+        if col == 3:
+            # Changing the comment
+            comment = self.dataTable.item(row, col).text()
+            name = self.dataTable.item(row, 0).text()
+            self.data[name].comment = comment
+            
+        print row, col
+
+    def plot(self, x, y=None):
+        if y != None:
+            self.DataPlot.plot(x.data, y.data)
+        else:
+            self.DataPlot.plot(x.time, y.data)
+    
+    def commandEntered(self):
+        # Get the command text and clear the text box
+        cmd = self.commandInput.text() 
+        self.commandInput.clear()
+        # Output the command
+        self.write(">>> " + cmd)
+        
+        glob = globals()
+        glob['plot'] = self.plot
+        # Evaluate the command, catching any exceptions
+        # Local scope is set to self.data to allow access to user data
+        # To capture print statements stdout is temporarily directed to a StringIO buffer
+        buffer = StringIO()
+        oldstdout = sys.stdout
+        sys.stdout = buffer
+        try:
+            exec(cmd, glob, self.data)
+        except:
+            e = sys.exc_info()
+            self.write("Error: " + str(e[0]))
+            self.write("Reason: " + str(e[1]))
+        sys.stdout = oldstdout
+        output = buffer.getvalue()
+        if len(output) > 0:
+            self.write(output)
+        self.updateDataTable()
+ 
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    window = MyApplication()
+    window.show()
+    sys.exit(app.exec_())
+
