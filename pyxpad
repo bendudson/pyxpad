@@ -14,8 +14,30 @@ class Sources:
     def __init__(self, mainwindow):
         self.main = mainwindow
         self.main.sourceDescription.stateChanged.connect(self.updateDisplay)
-    
+        
+        self.groupIcon = QtGui.QIcon()	
+        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_DirClosedIcon),
+                                 QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_DirOpenIcon),
+                                 QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.keyIcon = QtGui.QIcon()
+        self.keyIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_FileIcon))
+        
+        self.main.treeView.itemSelectionChanged.connect(self.updateDisplay)
+        self.main.treeView.setContextMenuPolicy(Qt.CustomContextMenu)  # Enable popup menus
+        
+        self.main.treeView.customContextMenuRequested.connect(self.handlePopupMenu)
+        
+    def handlePopupMenu(self):
+        menu = QMenu()
+        menu.addAction('Add')
+        menu.addAction('Delete')
+        menu.exec_(QCursor.pos())
+
     def addNetCDF(self):
+        """
+        Add a NetCDF file as a data source
+        """
         try:
             from datafile import NetCDFDataSource
         except:
@@ -25,7 +47,7 @@ class Sources:
             # Get the file name
             tr = self.main.tr
             fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.', filter=tr("NetCDF files (*.nc *.cdl)"))
-            if fname == None:
+            if (fname == None) or (fname == ""):
                 return # Cancelled
             self.main.write("Name = "+fname)
         
@@ -37,17 +59,66 @@ class Sources:
         except:
             self.main.write("Error creating NetCDFDataSource")
             self.main.write(str(sys.exc_info()))
+
+    def addXPADtree(self):
+        try:
+            from xpadsource import XPadSource
+        except:
+            self.main.write("Sorry, no XPAD tree support")
+            self.main.write(str(sys.exc_info()))
+            return
+        
+        try:
+            # Select the directory
+        
+            # Create data source
+            s = XPadSource("./TREE/")
+            
+            # Add data source and update
+            self.addSource(s)
+            self.updateDisplay()
+        except:
+            self.main.write("Error creating XPadSource")
+            self.main.write(str(sys.exc_info()))
+
+    def addBOUT(self):
+        """
+        Add a BOUT++ directory source
+        """
+        try:
+            from boutsource import BoutDataSource
+        except:
+            self.main.write("Sorry, no BOUT++ support")
+            return
+        
         
     def addSource(self, source):
         self.sources.append(source)
         it = QTreeWidgetItem(self.main.treeView, [source.label])
-        it.setIcon(0, QIcon('folder.png'))
+        it.setIcon(0, self.groupIcon)
+        it.source = source
         self.main.treeView.addTopLevelItem(it)
+        
+        def buildtree(parent, it):
+            # Check for children
+            try:
+                for child in parent.children:
+                    itchild = QTreeWidgetItem(it, [child.label])
+                    itchild.source = child
+                    buildtree(child, itchild) # Add child's children
+                    it.addChild(itchild)
+            except AttributeError:
+                # Probably no children
+                return
+
+        buildtree(source, it)
     
     def updateDisplay(self):
         # Find which source is selected, and update table view
-        s = self.sources[0]
-        varNames = s.varNames
+        selected = self.main.treeView.selectedItems()
+        if len(selected) == 0:
+            return
+        s = selected[0].source
         
         table = self.main.sourceTable
         table.setSortingEnabled(False)
@@ -55,12 +126,29 @@ class Sources:
             # Provide description for each variable (if available)
             
             table.setColumnCount(2)
-            table.setRowCount(len(varNames))
-            for row, name in enumerate(varNames):
-                table.setItem(row, 0, QTableWidgetItem(name))
+            table.setRowCount(len(s.varNames))
+            for row, name in enumerate(s.variables):
+                var = s.variables[name]
+                item = QTableWidgetItem(name)
+                item.source = s
+                table.setItem(row, 0, item)
+                comment = var.desc
+                if comment == "":
+                    comment = var.label
+                    if var.units != "":
+                        comment += " ("+var.units+") "
+                        
+                if (var.dim != None) and (var.dim != []):
+                    comment += " [" + var.dim[0].name
+                    for d in var.dim[1:]:
+                        comment += ", " + d.name
+                        comment += "] "
+                item = QTableWidgetItem(comment)
+                table.setItem(row, 1, item)
             
         else:
             # Just a list of variable names. Can use multiple columns
+            varNames = s.varNames
             maxrows = 15
             n = len(varNames)
             ncols = int(n / maxrows) + 1
@@ -87,6 +175,8 @@ class Sources:
                 name = item.text()
                 self.main.write("Reading " + name + " from " + item.source.label)
                 data.append(item.source.read(name))
+            else:
+                print "Ignoring "+item.text()
         return data
                 
         
@@ -100,29 +190,31 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyApplication, self).__init__(parent)
         self.setupUi(self)
+        
+        self.sources = Sources(self)  # Handles data sources
+        self.data = {} # User data 
+        
+        # File menu
+        self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
+        self.actionXPAD_tree.triggered.connect(self.sources.addXPADtree)
         self.actionExit.triggered.connect(self.close)
         
-        self.sources = Sources(self)
-        self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
+        # Graphics menu
+        self.actionPlot.triggered.connect(self.handlePlot)
+        self.actionXYPlot.triggered.connect(self.handleXYPlot)
         
+        # Sources tab 
         self.readDataButton.clicked.connect(self.readData)
 
         self.commandInput.returnPressed.connect(self.commandEntered)
         self.commandButton.clicked.connect(self.commandEntered)
         
-        self.data = {} # User data 
-        
-        it = QTreeWidgetItem(self.treeView, ["hello"])
-        it.setIcon(0, QIcon('folder.png'))
-        self.treeView.addTopLevelItem(it)
-
+        # Data tab
         self.dataTable.cellChanged.connect(self.dataTableChanged)
         
         try:
             from matplotlib_widget import MatplotlibWidget
-            self.DataPlot = MatplotlibWidget()
-            layout = QVBoxLayout(self.plotTab)
-            layout.addWidget(self.DataPlot,1)
+            self.DataPlot = MatplotlibWidget(self.plotTab)
         except:
             raise
         
@@ -164,6 +256,8 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
             self.data[name] = item
         
         self.updateDataTable()
+        # Switch to data tab
+        self.tabWidget.setCurrentWidget(self.dataTab)
 
     def updateDataTable(self):
         """
@@ -208,6 +302,8 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
                 
                 table.setItem(row, 3, QTableWidgetItem(comment))
             except:
+                table.setItem(row, 1, QTableWidgetItem(""))
+                table.setItem(row, 2, QTableWidgetItem(""))
                 table.setItem(row, 3, QTableWidgetItem(str(item)))
             
         table.setSortingEnabled(True)
@@ -236,22 +332,58 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
             self.data[name].comment = comment
             
         print row, col
-
-    def plot(self, x, y=None):
-        if y != None:
-            self.DataPlot.plot(x.data, y.data)
-        else:
-            self.DataPlot.plot(x.time, y.data)
-    
+        
     def commandEntered(self):
         # Get the command text and clear the text box
         cmd = self.commandInput.text() 
         self.commandInput.clear()
+        self.runCommand(cmd)
+        
+    def selectedDataNames(self):
+        # Find which items are selected in the data table
+        items = self.dataTable.selectedItems() # All selected items
+        if len(items) == 0:
+            return []
+        names = []  # List of selected data names
+        for it in items:
+            try:
+                names.append(it.oldname)
+            except AttributeError:
+                pass # Ignore if doesn't have a name
+        return names
+
+    def handlePlot(self):
+        # Find which items are selected
+        names = self.selectedDataNames()
+        if len(names) == 0:
+            return
+        
+        # Create a command to execute
+        cmd = "plot("+names[0]
+        for n in names[1:]:
+            cmd += ", "+n
+        cmd += ")"
+        
+        # Run the command within sandboxed environment
+        # Also shows user the command which can be entered
+        self.runCommand(cmd)
+        self.tabWidget.setCurrentWidget(self.plotTab)
+
+    def handleXYPlot(self):
+        names = self.selectedDataNames()
+        if len(names) != 2:
+            self.write("** Two data items must be selected for X-Y plotting")
+            return
+        # Run the command in sandbox
+        self.runCommand("plotxy( "+names[0]+", "+names[1]+")")
+
+    def runCommand(self, cmd):
         # Output the command
         self.write(">>> " + cmd)
         
         glob = globals()
-        glob['plot'] = self.plot
+        glob['plot'] = self.DataPlot.plot
+        glob['plotxy'] = self.DataPlot.plotxy
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
         # To capture print statements stdout is temporarily directed to a StringIO buffer

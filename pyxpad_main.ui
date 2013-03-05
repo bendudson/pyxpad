@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -24,100 +24,103 @@
        <attribute name="title">
         <string>Sources</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6">
+       <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0" colspan="2">
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Shot:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="lineEdit"/>
-            </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="readDataButton">
-              <property name="text">
-               <string>Read</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Trace:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QLineEdit" name="lineEdit_2"/>
-            </item>
-            <item row="0" column="5">
-             <widget class="QCheckBox" name="sourceDescription">
-              <property name="text">
-               <string>Description</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="1" column="1">
-           <widget class="QTableWidget" name="sourceTable">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Shot:</string>
             </property>
-            <property name="toolTip">
-             <string>List of available signals</string>
-            </property>
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
-            <property name="alternatingRowColors">
-             <bool>true</bool>
-            </property>
-            <property name="selectionMode">
-             <enum>QAbstractItemView::MultiSelection</enum>
-            </property>
-            <property name="showGrid">
-             <bool>false</bool>
-            </property>
-            <property name="columnCount">
-             <number>1</number>
-            </property>
-            <attribute name="horizontalHeaderVisible">
-             <bool>false</bool>
-            </attribute>
-            <attribute name="verticalHeaderVisible">
-             <bool>false</bool>
-            </attribute>
-            <column/>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QTreeWidget" name="treeView">
-            <property name="columnCount">
-             <number>2</number>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="readDataButton">
+            <property name="text">
+             <string>Read</string>
             </property>
-            <column>
-             <property name="text">
-              <string notr="true">1</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string notr="true">2</string>
-             </property>
-            </column>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Trace:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLineEdit" name="lineEdit_2"/>
+          </item>
+          <item row="0" column="5">
+           <widget class="QCheckBox" name="sourceDescription">
+            <property name="text">
+             <string>Description</string>
+            </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeWidget" name="treeView">
+           <property name="columnCount">
+            <number>1</number>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="headerDefaultSectionSize">
+            <number>200</number>
+           </attribute>
+           <attribute name="headerStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">Source</string>
+            </property>
+           </column>
+          </widget>
+          <widget class="QTableWidget" name="sourceTable">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>List of available signals</string>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::MultiSelection</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="columnCount">
+            <number>1</number>
+           </property>
+           <attribute name="horizontalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <column/>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -229,6 +232,7 @@
      </property>
      <addaction name="actionNetCDF_file"/>
      <addaction name="actionXPAD_tree"/>
+     <addaction name="actionBOUT_data"/>
     </widget>
     <addaction name="menuAdd_source"/>
     <addaction name="separator"/>
@@ -237,7 +241,15 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuPlot">
+    <property name="title">
+     <string>Graphics</string>
+    </property>
+    <addaction name="actionPlot"/>
+    <addaction name="actionXYPlot"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPlot"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoad_config">
@@ -265,10 +277,34 @@
    <property name="text">
     <string>XPAD tree</string>
    </property>
+   <property name="toolTip">
+    <string>Load a tree of XPAD items</string>
+   </property>
   </action>
   <action name="actionNetCDF_file">
    <property name="text">
     <string>NetCDF file</string>
+   </property>
+  </action>
+  <action name="actionPlot">
+   <property name="text">
+    <string>Plot</string>
+   </property>
+  </action>
+  <action name="actionXYPlot">
+   <property name="text">
+    <string>XYPlot</string>
+   </property>
+  </action>
+  <action name="actionBOUT_data">
+   <property name="text">
+    <string>BOUT++ data</string>
+   </property>
+   <property name="toolTip">
+    <string>Read BOUT++ data directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
