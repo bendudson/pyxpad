@@ -62,5 +62,6 @@ class MatplotlibWidget():
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
+        self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
         self.axes.plot(x.data, y.data)
         self.canvas.draw()

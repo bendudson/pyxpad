@@ -5,6 +5,10 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 from pyxpad_main import *
 
+import fnmatch  # For matching names to patterns
+
+import cPickle as pickle
+
 import sys
 from StringIO import StringIO
 
@@ -24,9 +28,19 @@ class Sources:
         self.keyIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_FileIcon))
         
         self.main.treeView.itemSelectionChanged.connect(self.updateDisplay)
+        self.main.tracePattern.returnPressed.connect(self.updateDisplay)
         self.main.treeView.setContextMenuPolicy(Qt.CustomContextMenu)  # Enable popup menus
         
         self.main.treeView.customContextMenuRequested.connect(self.handlePopupMenu)
+
+    def saveState(self, f):
+        pickle.dump(self.sources, f)
+        
+    def loadState(self, f):        
+        sources = pickle.load(f)
+        for s in sources:
+            self.addSource(s)
+        self.updateDisplay()
         
     def handlePopupMenu(self):
         menu = QMenu()
@@ -70,9 +84,12 @@ class Sources:
         
         try:
             # Select the directory
-        
+            tr = self.main.tr
+            dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'))
+            if (dname == "") or (dname == None):
+                return
             # Create data source
-            s = XPadSource("./TREE/")
+            s = XPadSource(dname)
             
             # Add data source and update
             self.addSource(s)
@@ -80,6 +97,7 @@ class Sources:
         except:
             self.main.write("Error creating XPadSource")
             self.main.write(str(sys.exc_info()))
+            raise
 
     def addBOUT(self):
         """
@@ -119,15 +137,27 @@ class Sources:
         if len(selected) == 0:
             return
         s = selected[0].source
-        
+
         table = self.main.sourceTable
+
+        # Check if any items selected
+        selecteditems = table.selectedItems()
+        
+        pattern = self.main.tracePattern.text()
+        if pattern == "":
+            varNames = s.varNames
+        else:
+            # Filter the variable names
+            varNames = [name for name in s.varNames if fnmatch.fnmatch(name.lower(), pattern.lower())]
+
+        
         table.setSortingEnabled(False)
         if self.main.sourceDescription.isChecked():
             # Provide description for each variable (if available)
             
             table.setColumnCount(2)
-            table.setRowCount(len(s.varNames))
-            for row, name in enumerate(s.variables):
+            table.setRowCount(len(varNames))
+            for row, name in enumerate(varNames):
                 var = s.variables[name]
                 item = QTableWidgetItem(name)
                 item.source = s
@@ -148,7 +178,6 @@ class Sources:
             
         else:
             # Just a list of variable names. Can use multiple columns
-            varNames = s.varNames
             maxrows = 15
             n = len(varNames)
             ncols = int(n / maxrows) + 1
@@ -187,7 +216,7 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
     
       data    Dictionary of variables containing user data
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, loadfile=None):
         super(MyApplication, self).__init__(parent)
         self.setupUi(self)
         
@@ -198,7 +227,10 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
         self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
         self.actionXPAD_tree.triggered.connect(self.sources.addXPADtree)
         self.actionExit.triggered.connect(self.close)
-        
+
+        self.actionLoadState.triggered.connect(self.loadState)
+        self.actionSaveState.triggered.connect(self.saveState)
+
         # Graphics menu
         self.actionPlot.triggered.connect(self.handlePlot)
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
@@ -217,6 +249,46 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
             self.DataPlot = MatplotlibWidget(self.plotTab)
         except:
             raise
+
+        # Load state
+        if loadfile != None:
+            self.loadState(loadfile)
+
+    def saveState(self, filename = None):
+        if filename == None:
+            tr = self.tr
+            filename, _ = QFileDialog.getSaveFileName(self, filter=tr("PyXPad save file (*.pyx)"))
+        if (filename == None) or (filename == ""):
+            return
+        try:
+            f = open(filename, 'w')
+            self.sources.saveState(f)
+            pickle.dump(self.data, f)
+            f.close()
+            self.write("** Saved state to file '"+filename+"'")
+        except:
+            e = sys.exc_info()
+            self.write("Could not save state to file '"+str(filename)+"'")
+            self.write("\t ->" + str(e[1]))
+
+    def loadState(self, filename = None):
+        if filename == None:
+            tr = self.tr
+            filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.', filter=tr("PyXPad save file (*.pyx)"))
+        if (filename == None) or (filename == ""):
+            return # Cancelled
+        try:
+            f = open(filename, 'r')
+            self.sources.loadState(f)
+            self.data = pickle.load(f)
+            f.close()
+            # Update tables, lists
+            self.updateDataTable()
+            self.write("** Loaded state from file '"+filename+"'")
+        except:
+            e = sys.exc_info()
+            self.write("Could not load state from file '"+str(filename)+"'")
+            self.write("\t ->" + str(e[1]))
         
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message',
@@ -232,7 +304,7 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
         """
         Write some log text
         """
-        window.textOutput.append(text)
+        self.textOutput.append(text)
 
     def makeUnique(self, name):
         if self.data.has_key(name):
@@ -404,7 +476,7 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
  
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    window = MyApplication()
+    window = MyApplication(loadfile="default.pyx")
     window.show()
     sys.exit(app.exec_())
 

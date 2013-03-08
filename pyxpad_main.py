@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Tue Mar  5 22:48:36 2013
+# Created: Fri Mar  8 21:20:12 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -37,9 +37,9 @@ class Ui_MainWindow(object):
         self.label_2 = QtGui.QLabel(self.sourceTab)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 0, 3, 1, 1)
-        self.lineEdit_2 = QtGui.QLineEdit(self.sourceTab)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.lineEdit_2, 0, 4, 1, 1)
+        self.tracePattern = QtGui.QLineEdit(self.sourceTab)
+        self.tracePattern.setObjectName("tracePattern")
+        self.gridLayout.addWidget(self.tracePattern, 0, 4, 1, 1)
         self.sourceDescription = QtGui.QCheckBox(self.sourceTab)
         self.sourceDescription.setObjectName("sourceDescription")
         self.gridLayout.addWidget(self.sourceDescription, 0, 5, 1, 1)
@@ -134,10 +134,10 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.actionLoad_config = QtGui.QAction(MainWindow)
-        self.actionLoad_config.setObjectName("actionLoad_config")
-        self.actionSave_config = QtGui.QAction(MainWindow)
-        self.actionSave_config.setObjectName("actionSave_config")
+        self.actionLoadState = QtGui.QAction(MainWindow)
+        self.actionLoadState.setObjectName("actionLoadState")
+        self.actionSaveState = QtGui.QAction(MainWindow)
+        self.actionSaveState.setObjectName("actionSaveState")
         self.actionExit = QtGui.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
         self.actionXPAD_tree = QtGui.QAction(MainWindow)
@@ -155,8 +155,8 @@ class Ui_MainWindow(object):
         self.menuAdd_source.addAction(self.actionBOUT_data)
         self.menuFile.addAction(self.menuAdd_source.menuAction())
         self.menuFile.addSeparator()
-        self.menuFile.addAction(self.actionLoad_config)
-        self.menuFile.addAction(self.actionSave_config)
+        self.menuFile.addAction(self.actionLoadState)
+        self.menuFile.addAction(self.actionSaveState)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
         self.menuPlot.addAction(self.actionPlot)
@@ -187,8 +187,8 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAdd_source.setTitle(QtGui.QApplication.translate("MainWindow", "Add source", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlot.setTitle(QtGui.QApplication.translate("MainWindow", "Graphics", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionLoad_config.setText(QtGui.QApplication.translate("MainWindow", "Load config", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionSave_config.setText(QtGui.QApplication.translate("MainWindow", "Save config", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionLoadState.setText(QtGui.QApplication.translate("MainWindow", "Load config", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSaveState.setText(QtGui.QApplication.translate("MainWindow", "Save config", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit pyXpad", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))
