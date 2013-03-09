@@ -57,6 +57,8 @@ class MatplotlibWidget():
                 # p not iterable, so just plot item
                 #self.axes.plot(p.time, p.data)
                 self.axes.plot(p.data)
+                self.axes.set_ylabel(p.name)
+                
         #self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
         self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05, hspace = 0.001)
         #self.figure.tight_layout()
@@ -70,6 +72,8 @@ class MatplotlibWidget():
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
-        self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
+        self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
         self.axes.plot(x.data, y.data)
+        self.axes.set_xlabel(x.name)
+        self.axes.set_ylabel(y.name)
         self.canvas.draw()

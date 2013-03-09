@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Fri Mar  8 21:20:12 2013
+# Created: Sat Mar  9 20:37:32 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -69,7 +69,10 @@ class Ui_MainWindow(object):
         self.sourceTable.setColumnCount(1)
         self.sourceTable.setRowCount(0)
         self.sourceTable.horizontalHeader().setVisible(False)
+        self.sourceTable.horizontalHeader().setDefaultSectionSize(200)
+        self.sourceTable.horizontalHeader().setStretchLastSection(False)
         self.sourceTable.verticalHeader().setVisible(False)
+        self.sourceTable.verticalHeader().setDefaultSectionSize(20)
         self.gridLayout_3.addWidget(self.splitter, 1, 0, 1, 1)
         self.tabWidget.addTab(self.sourceTab, "")
         self.dataTab = QtGui.QWidget()
@@ -97,6 +100,7 @@ class Ui_MainWindow(object):
         item = QtGui.QTableWidgetItem()
         self.dataTable.setHorizontalHeaderItem(3, item)
         self.dataTable.horizontalHeader().setStretchLastSection(True)
+        self.dataTable.verticalHeader().setDefaultSectionSize(20)
         self.textOutput = QtGui.QTextEdit(self.splitter_2)
         self.textOutput.setReadOnly(True)
         self.textOutput.setObjectName("textOutput")

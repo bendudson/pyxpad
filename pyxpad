@@ -220,7 +220,7 @@ class Sources:
                 addVar.ind += 1
         else:
             # Just a list of variable names. Can use multiple columns
-            maxrows = 15
+            maxrows = 20
             n = len(varNames) + nextra
             ncols = int(n / maxrows) + 1
             table.setColumnCount(ncols)
@@ -510,6 +510,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             return
         # Run the command in sandbox
         self.runCommand("plotxy( "+names[0]+", "+names[1]+")")
+        self.tabWidget.setCurrentWidget(self.plotTab)
 
     def runCommand(self, cmd):
         # Output the command
