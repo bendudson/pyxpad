@@ -8,6 +8,8 @@ import os
 
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
+#import idam
+
 class XPadSource:
     def __init__(self, path, parent=None):
         
@@ -18,6 +20,12 @@ class XPadSource:
         
         self.parent = parent
         
+        # Define configuration dictionary
+        if parent == None:
+            self.config = {'Host':'mast.culham', 'Port':55}
+        else:
+            self.config = parent.config
+
         if os.path.isdir(path):
             # List directory
             ls = os.listdir(path)
@@ -51,6 +59,8 @@ class XPadSource:
                 # Split at '$'
                 s = line.split('$', 1)
                 name = s[0].strip()
+                if len(name) == 0:
+                    continue
                 try:
                     desc = s[1].strip()
                 except:
@@ -76,6 +86,7 @@ class XPadSource:
             self.parent.addVariables(vardict)  # Variables go from children up to parent
     
     def read(self, name):
+        
         pass
     
     def size(self, name):

@@ -11,6 +11,7 @@ matplotlib.rcParams['backend.qt4']='PySide'
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+from matplotlib.pyplot import setp
 
 from PySide.QtGui import QVBoxLayout
 
@@ -40,19 +41,26 @@ class MatplotlibWidget():
         self.axes.grid(True)
         for plotnum, p in enumerate(args):
             # For each plot
-            self.axes = self.figure.add_subplot(nplots,1,plotnum)
+            if plotnum == 0:
+                self.axes = self.figure.add_subplot(nplots,1,plotnum)
+                ax = self.axes
+            else:
+                self.axes = self.figure.add_subplot(nplots,1,plotnum, sharex=ax)
+                setp(self.axes.get_xticklabels(), visible=False)
             try:
                 # Assume each p is a list of data items to be overplotted
                 for data in p:
                     # Plot data
                     #self.axes.plot(data.time, data.data)
-                    print "Plotting part ", plotnum
                     self.axes.plot(data.data)
             except TypeError:
                 # p not iterable, so just plot item
                 #self.axes.plot(p.time, p.data)
                 self.axes.plot(p.data)
-                print "Plotting ", plotnum
+        #self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
+        self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05, hspace = 0.001)
+        #self.figure.tight_layout()
+
         self.canvas.draw()
 
     def plotxy(self, x, y):

@@ -48,3 +48,24 @@ class XPadDataItem:
     dim    = []             # A list of dimensions
     order  = -1             # Index of time dimension
     time   = None           # A shortcut to the time data (dim[order].data). May be None
+
+    def __init__(self, other=None): # Construct 
+        if other != None:
+            self.name = other.name
+            self.data = other.data
+            self.time = other.time
+
+    def __add__(self, other):  # +
+        item = XPadDataItem()
+        item.data = self.data + other.data
+        return item
+
+    def __iadd__(self, other):  # += 
+        self.data += other.data
+        return self
+    
+    def __isub__(self):         # -=
+        self.data -= other.data
+        return self
+    
+    

@@ -3,14 +3,16 @@
  
 from PySide.QtGui import *
 from PySide.QtCore import *
-from pyxpad_main import *
 
-import fnmatch  # For matching names to patterns
+from pyxpad_main import *
+from configdialog import ConfigDialog
 
 import cPickle as pickle
-
-import sys
 from StringIO import StringIO
+import sys
+import re
+import fnmatch  # For matching names to wildcard patterns
+from keyword import iskeyword  # Test if a string is a keyword
 
 class Sources:
     sources = []  # List of sources
@@ -30,9 +32,19 @@ class Sources:
         self.main.treeView.itemSelectionChanged.connect(self.updateDisplay)
         self.main.tracePattern.returnPressed.connect(self.updateDisplay)
         self.main.treeView.setContextMenuPolicy(Qt.CustomContextMenu)  # Enable popup menus
-        
+
+        # Context menu
         self.main.treeView.customContextMenuRequested.connect(self.handlePopupMenu)
 
+        # Context menu actions
+        self.actionAdd = QAction("Add", self.main, statusTip="Add a new source")
+        
+        self.actionDelete = QAction("Delete", self.main, statusTip="Remove source from tree")
+        self.actionDelete.triggered.connect(self.deleteSource)
+        
+        self.actionConfig = QAction("Configure", self.main, statusTip="Configure source")
+        self.actionConfig.triggered.connect(self.configureSource)
+        
     def saveState(self, f):
         pickle.dump(self.sources, f)
         
@@ -43,9 +55,16 @@ class Sources:
         self.updateDisplay()
         
     def handlePopupMenu(self):
+        
         menu = QMenu()
-        menu.addAction('Add')
-        menu.addAction('Delete')
+        menu.addAction(self.actionAdd)
+        
+        selected = self.main.treeView.selectedItems()
+        if len(selected) != 0:
+            if selected[0].source.__dict__.has_key('config'):
+                menu.addAction(self.actionConfig)
+            menu.addAction(self.actionDelete)
+            
         menu.exec_(QCursor.pos())
 
     def addNetCDF(self):
@@ -63,10 +82,8 @@ class Sources:
             fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.', filter=tr("NetCDF files (*.nc *.cdl)"))
             if (fname == None) or (fname == ""):
                 return # Cancelled
-            self.main.write("Name = "+fname)
         
             s = NetCDFDataSource(fname)
-            self.main.write("Contents = "+str(s.varNames))
             
             self.addSource(s)
             self.updateDisplay()
@@ -131,6 +148,17 @@ class Sources:
 
         buildtree(source, it)
     
+    def deleteSource(self):
+        pass
+
+    def configureSource(self):
+        selected = self.main.treeView.selectedItems()
+        if len(selected) == 0:
+            return
+        source =  selected[0].source
+        c = ConfigDialog(source.config, self.main)
+        c.exec_()
+        
     def updateDisplay(self):
         # Find which source is selected, and update table view
         selected = self.main.treeView.selectedItems()
@@ -142,26 +170,39 @@ class Sources:
 
         # Check if any items selected
         selecteditems = table.selectedItems()
+        selectedvars = []
+        nextra = 0
+        for item in selecteditems:
+            if item.__dict__.has_key('source'):
+                name = item.text()
+                selectedvars.append(  (name, item.source) )
+                if item.source != s:
+                    nextra += 1
         
+        table.clearContents()  # Clear the table and selections
+
         pattern = self.main.tracePattern.text()
         if pattern == "":
             varNames = s.varNames
         else:
             # Filter the variable names
             varNames = [name for name in s.varNames if fnmatch.fnmatch(name.lower(), pattern.lower())]
-
         
-        table.setSortingEnabled(False)
+        varNames.sort(key=str.lower)
+        
         if self.main.sourceDescription.isChecked():
             # Provide description for each variable (if available)
             
             table.setColumnCount(2)
-            table.setRowCount(len(varNames))
-            for row, name in enumerate(varNames):
-                var = s.variables[name]
+            table.setRowCount(len(varNames) + nextra)
+            table.setSelectionBehavior(QAbstractItemView.SelectRows)
+            
+            def addVar(name, source, selected=False):
+                var = source.variables[name]
                 item = QTableWidgetItem(name)
-                item.source = s
-                table.setItem(row, 0, item)
+                item.source = source
+                table.setItem(addVar.ind, 0, item)
+                item.setSelected(selected)
                 comment = var.desc
                 if comment == "":
                     comment = var.label
@@ -174,22 +215,34 @@ class Sources:
                         comment += ", " + d.name
                         comment += "] "
                 item = QTableWidgetItem(comment)
-                table.setItem(row, 1, item)
-            
+                table.setItem(addVar.ind, 1, item)
+                item.setSelected(selected)
+                addVar.ind += 1
         else:
             # Just a list of variable names. Can use multiple columns
             maxrows = 15
-            n = len(varNames)
+            n = len(varNames) + nextra
             ncols = int(n / maxrows) + 1
             table.setColumnCount(ncols)
             table.setRowCount(min([n, maxrows]))
-            for i, name in enumerate(varNames):
-                row = i % maxrows
-                col = int(i / maxrows)
+            table.setSelectionBehavior(QAbstractItemView.SelectItems)
+            
+            def addVar(name, source, selected=False):
+                row = addVar.ind % maxrows
+                col = int(addVar.ind / maxrows)
                 item = QTableWidgetItem(name)
-                item.source = s
+                item.source = source
                 table.setItem(row, col, item)
-        table.setSortingEnabled(True)
+                item.setSelected(selected)
+                addVar.ind += 1
+        
+        addVar.ind = 0
+        for name, source in selectedvars:
+            addVar(name, source, True)
+        sel = [name for name, source in selectedvars if source == s]
+        for name in varNames:
+            if not name in sel:
+                addVar(name, s)
         
     def read(self):
         """
@@ -209,7 +262,7 @@ class Sources:
         return data
                 
         
-class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
+class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
     """
     
     Attributes
@@ -217,7 +270,7 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
       data    Dictionary of variables containing user data
     """
     def __init__(self, parent=None, loadfile=None):
-        super(MyApplication, self).__init__(parent)
+        super(PyXPad, self).__init__(parent)
         self.setupUi(self)
         
         self.sources = Sources(self)  # Handles data sources
@@ -307,6 +360,12 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
         self.textOutput.append(text)
 
     def makeUnique(self, name):
+        # First make sure the name is a valid variable name
+        name = re.sub('\W|^(?=\d)','_', name) # Replace invalid characters with '_'
+        
+        if iskeyword(name): # Check if name is a keyword
+            name += '2'
+
         if self.data.has_key(name):
             # Name is already in the list. Add a number to the end to make it unique
             i = 1
@@ -323,9 +382,12 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
         
         # Add to the data dictionary
         for item in newdata:
-            # Need to make the name unique
-            name = self.makeUnique(item.name)
-            self.data[name] = item
+            try:
+                # Need to make the name unique
+                name = self.makeUnique(item.name)
+                self.data[name] = item
+            except:
+                self.write("Error adding item '"+str(item)+"'")
         
         self.updateDataTable()
         # Switch to data tab
@@ -476,7 +538,7 @@ class MyApplication(QtGui.QMainWindow, Ui_MainWindow):
  
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    window = MyApplication(loadfile="default.pyx")
+    window = PyXPad(loadfile="default.pyx")
     window.show()
     sys.exit(app.exec_())
 
