@@ -29,9 +29,6 @@ class XPadSource:
         if os.path.isdir(path):
             # List directory
             ls = os.listdir(path)
-        
-            print "path = ", path
-            print "ls = ", ls
 
             # Check if a name is supplied
             if 'title' in ls:
@@ -85,9 +82,17 @@ class XPadSource:
         if self.parent != None:
             self.parent.addVariables(vardict)  # Variables go from children up to parent
     
-    def read(self, name):
+    def read(self, name, shot):
+        """ Read data from IDAM """
         
-        pass
+        # Set configuration
+        idam.setHost(self.config['Host'])
+        idam.setPort(self.config['Port'])
+        
+        # Read data
+        data = idam.Data(name, shot)
+        
+        return XPadDataItem(data)
     
     def size(self, name):
         pass

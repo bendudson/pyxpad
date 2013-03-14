@@ -47,8 +47,8 @@ class NetCDFDataSource:
     """
     
     Functions
-      read( name )   Input variable name (string)
-                     Output is an XPadDataItem object or None
+      read( name , shot)   Input variable name (string)
+                           Output is an XPadDataItem object or None
       
       size( name )   Returns variable size as a list. [] for scalar
 
@@ -90,7 +90,7 @@ class NetCDFDataSource:
     def __del__(self):
         self.close()
 
-    def read(self, name):
+    def read(self, name, shot):
         """Read a variable from the file."""
         self.open()
         if self.handle == None: return None

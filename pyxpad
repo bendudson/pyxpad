@@ -149,8 +149,18 @@ class Sources:
         buildtree(source, it)
     
     def deleteSource(self):
-        pass
-
+        tree = self.main.treeView
+        selected = tree.selectedItems()
+        if len(selected) == 0:
+            return
+        source =  selected[0].source
+        tree.takeTopLevelItem(tree.indexOfTopLevelItem(selected[0])) # Remove from tree
+        # Remove from list of sources
+        i = self.sources.index(source)
+        del self.sources[i]
+        # Update the display
+        self.updateDisplay()
+        
     def configureSource(self):
         selected = self.main.treeView.selectedItems()
         if len(selected) == 0:
@@ -160,13 +170,14 @@ class Sources:
         c.exec_()
         
     def updateDisplay(self):
+        table = self.main.sourceTable
         # Find which source is selected, and update table view
         selected = self.main.treeView.selectedItems()
         if len(selected) == 0:
+            table.clearContents()
+            table.setRowCount(0)
             return
         s = selected[0].source
-
-        table = self.main.sourceTable
 
         # Check if any items selected
         selecteditems = table.selectedItems()
@@ -249,14 +260,19 @@ class Sources:
         Read the selected data and return as a list of data items
         
         """
+        
+        # Get list of shots
+        shotlist = self.main.shotInput.text().split(',')
+        
         table = self.main.sourceTable
         tableitems = table.selectedItems()
         data = []
         for item in tableitems:
             if item.__dict__.has_key('source'):
                 name = item.text()
-                self.main.write("Reading " + name + " from " + item.source.label)
-                data.append(item.source.read(name))
+                for shot in shotlist:
+                    self.main.write("Reading " + name + " from " + item.source.label + " shot = " + shot)
+                    data.append(item.source.read(name, shot))
             else:
                 print "Ignoring "+item.text()
         return data

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Sat Mar  9 20:37:32 2013
+# Created: Sat Mar  9 22:20:52 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,9 +28,9 @@ class Ui_MainWindow(object):
         self.label = QtGui.QLabel(self.sourceTab)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-        self.lineEdit = QtGui.QLineEdit(self.sourceTab)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 0, 1, 1, 1)
+        self.shotInput = QtGui.QLineEdit(self.sourceTab)
+        self.shotInput.setObjectName("shotInput")
+        self.gridLayout.addWidget(self.shotInput, 0, 1, 1, 1)
         self.readDataButton = QtGui.QPushButton(self.sourceTab)
         self.readDataButton.setObjectName("readDataButton")
         self.gridLayout.addWidget(self.readDataButton, 0, 2, 1, 1)

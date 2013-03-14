@@ -9,7 +9,7 @@ class BoutDataSource:
     """
     
     Functions
-      read( name )   Input variable name (string)
+      read( name, shot )   Input variable name (string)
                      Output is an XPadDataItem object or None
       
       size( name )   Returns variable size as a list. [] for scalar
