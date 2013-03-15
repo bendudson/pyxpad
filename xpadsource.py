@@ -8,10 +8,13 @@ import os
 
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
-#import idam
+import idam
 
 class XPadSource:
     def __init__(self, path, parent=None):
+
+        # Convert path to string, strip NULL chars
+        path = str(path).translate(None, '\0')
         
         self.label = os.path.basename(os.path.normpath(path))
         self.dimensions = {}
@@ -22,10 +25,10 @@ class XPadSource:
         
         # Define configuration dictionary
         if parent == None:
-            self.config = {'Host':'mast.culham', 'Port':55}
+            self.config = {'Host':'mast.fusion.org.uk', 'Port':56565, 'verbose':False, 'debug':False}
         else:
             self.config = parent.config
-
+        
         if os.path.isdir(path):
             # List directory
             ls = os.listdir(path)
@@ -84,6 +87,10 @@ class XPadSource:
     
     def read(self, name, shot):
         """ Read data from IDAM """
+        if isinstance(name, unicode):
+            name = name.encode('utf-8')
+        name = str(name).translate(None, '\0')
+        shot = str(shot).translate(None, '\0')
         
         # Set configuration
         idam.setHost(self.config['Host'])

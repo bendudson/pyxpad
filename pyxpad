@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
  
 from PySide.QtGui import *
 from PySide.QtCore import *
@@ -9,10 +8,15 @@ from configdialog import ConfigDialog
 
 import cPickle as pickle
 from StringIO import StringIO
-import sys
+import sys, os
 import re
 import fnmatch  # For matching names to wildcard patterns
 from keyword import iskeyword  # Test if a string is a keyword
+
+# On some installations (Python 2.6 only?) need to convert text using QTextCodec
+codec = QTextCodec.codecForName("UTF-8")
+def toStr(uni):
+    return str(codec.fromUnicode(uni))
 
 class Sources:
     sources = []  # List of sources
@@ -80,6 +84,7 @@ class Sources:
             # Get the file name
             tr = self.main.tr
             fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.', filter=tr("NetCDF files (*.nc *.cdl)"))
+            fname = toStr(fname)
             if (fname == None) or (fname == ""):
                 return # Cancelled
         
@@ -102,7 +107,8 @@ class Sources:
         try:
             # Select the directory
             tr = self.main.tr
-            dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'))
+            dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'), QDir.currentPath())
+            dname = toStr(dname)
             if (dname == "") or (dname == None):
                 return
             # Create data source
@@ -185,14 +191,14 @@ class Sources:
         nextra = 0
         for item in selecteditems:
             if item.__dict__.has_key('source'):
-                name = item.text()
+                name = toStr(item.text())
                 selectedvars.append(  (name, item.source) )
                 if item.source != s:
                     nextra += 1
         
         table.clearContents()  # Clear the table and selections
 
-        pattern = self.main.tracePattern.text()
+        pattern = toStr(self.main.tracePattern.text())
         if pattern == "":
             varNames = s.varNames
         else:
@@ -262,14 +268,15 @@ class Sources:
         """
         
         # Get list of shots
-        shotlist = self.main.shotInput.text().split(',')
+        shotlist = toStr(self.main.shotInput.text()).split(',')
         
         table = self.main.sourceTable
         tableitems = table.selectedItems()
         data = []
         for item in tableitems:
             if item.__dict__.has_key('source'):
-                name = item.text()
+                name = toStr(item.text())
+                
                 for shot in shotlist:
                     self.main.write("Reading " + name + " from " + item.source.label + " shot = " + shot)
                     data.append(item.source.read(name, shot))
@@ -306,6 +313,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         
         # Sources tab 
         self.readDataButton.clicked.connect(self.readData)
+        self.shotInput.returnPressed.connect(self.readData)
 
         self.commandInput.returnPressed.connect(self.commandEntered)
         self.commandButton.clicked.connect(self.commandEntered)
@@ -327,6 +335,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if filename == None:
             tr = self.tr
             filename, _ = QFileDialog.getSaveFileName(self, filter=tr("PyXPad save file (*.pyx)"))
+            filename = toStr(filename)
         if (filename == None) or (filename == ""):
             return
         try:
@@ -337,13 +346,14 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("** Saved state to file '"+filename+"'")
         except:
             e = sys.exc_info()
-            self.write("Could not save state to file '"+str(filename)+"'")
+            self.write("Could not save state to file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
 
     def loadState(self, filename = None):
         if filename == None:
             tr = self.tr
             filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.', filter=tr("PyXPad save file (*.pyx)"))
+            filename = toStr(filename)
         if (filename == None) or (filename == ""):
             return # Cancelled
         try:
@@ -356,7 +366,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("** Loaded state from file '"+filename+"'")
         except:
             e = sys.exc_info()
-            self.write("Could not load state from file '"+str(filename)+"'")
+            self.write("Could not load state from file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
         
     def closeEvent(self, event):
@@ -423,16 +433,23 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             it = QTableWidgetItem(name)
             it.oldname = name # Save this for when it's changed
             table.setItem(row, 0, it)
+            
+            # Assume it's an XPadDataItem
             try:
-                # Assume it's an XPadDataItem
                 it = QTableWidgetItem(item.source)
                 it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make source read only
                 table.setItem(row, 1, it)
-                
+            except:
+                table.setItem(row, 1, QTableWidgetItem(""))    
+            
+            try:
                 it = QTableWidgetItem(item.name)
                 it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make trace read only
                 table.setItem(row, 2, it)
+            except:
+                table.setItem(row, 2, QTableWidgetItem(""))
                 
+            try:
                 try:
                     comment = item.comment
                 except AttributeError:
@@ -452,8 +469,6 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                 
                 table.setItem(row, 3, QTableWidgetItem(comment))
             except:
-                table.setItem(row, 1, QTableWidgetItem(""))
-                table.setItem(row, 2, QTableWidgetItem(""))
                 table.setItem(row, 3, QTableWidgetItem(str(item)))
             
         table.setSortingEnabled(True)
@@ -463,7 +478,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if col == 0:
             # The name of the variable
             it = self.dataTable.item(row, col)
-            name = it.text()
+            name = toStr(it.text())
             oldname = it.oldname
             if name == oldname:
                 return # Not really changed
@@ -485,7 +500,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         
     def commandEntered(self):
         # Get the command text and clear the text box
-        cmd = self.commandInput.text() 
+        cmd = toStr(self.commandInput.text())
         self.commandInput.clear()
         self.runCommand(cmd)
         
@@ -508,10 +523,29 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if len(names) == 0:
             return
         
+        # Sort by trace name
+        def trace(name):
+            try:
+                return self.data[name].name
+            except:
+                return ""
+        namelist = [ (name, trace(name)) for name in names ]
+        values = set(map(lambda x:x[1], namelist))
+        groups = [[y[0] for y in namelist if y[1]==x] for x in values]
+        
+        def plotStr(item):
+            if len(item) < 2:
+                return item[0]
+            s = "[" + item[0]
+            for n in item[1:]:
+                s += ", " + n
+            s += "]"
+            return s
+        
         # Create a command to execute
-        cmd = "plot("+names[0]
-        for n in names[1:]:
-            cmd += ", "+n
+        cmd = "plot("+plotStr(groups[0])
+        for g in groups[1:]:
+            cmd += ", "+plotStr(g)
         cmd += ")"
         
         # Run the command within sandboxed environment
@@ -555,7 +589,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
  
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    window = PyXPad(loadfile="default.pyx")
+    path=os.path.dirname(sys.argv[0])
+    window = PyXPad(loadfile=path+"/default.pyx")
     window.show()
     sys.exit(app.exec_())
 

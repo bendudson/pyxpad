@@ -35,7 +35,6 @@ class MatplotlibWidget():
         Make multiple plots
         """
         nplots = len(args)
-        print "Number of plots = ", nplots
         self.axes.clear()
         self.figure.clear()
         self.axes.grid(True)
@@ -49,18 +48,35 @@ class MatplotlibWidget():
                 setp(self.axes.get_xticklabels(), visible=False)
             try:
                 # Assume each p is a list of data items to be overplotted
+                
                 for data in p:
                     # Plot data
                     #self.axes.plot(data.time, data.data)
-                    self.axes.plot(data.data)
+                    label = data.desc
+                    if label == "":
+                        label = data.label
+                    label += " " + data.source
+                    
+                    self.axes.plot(data.time, data.data, label=label)
+                if plotnum == 0:
+                    self.axes.set_xlabel(p[0].dim[p[0].order].label)
+                self.axes.legend()
             except TypeError:
                 # p not iterable, so just plot item
                 #self.axes.plot(p.time, p.data)
-                self.axes.plot(p.data)
-                self.axes.set_ylabel(p.name)
+                self.axes.plot(p.time, p.data)
+                
+                ylabel = p.desc
+                if ylabel == "":
+                    ylabel = p.label
+                    if p.units != "":
+                        ylabel += " ("+p.units+")"
+                self.axes.set_ylabel(ylabel)
+                if plotnum == 0:
+                    self.axes.set_xlabel(p.dim[p.order].label)
                 
         #self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
-        self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05, hspace = 0.001)
+        self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace = 0.001)
         #self.figure.tight_layout()
 
         self.canvas.draw()

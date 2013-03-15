@@ -12,6 +12,23 @@ class XPadDataDim:
     errl     Low-side error (may be None)
     errh     High-side error (may be None)
     """
+    
+    def __init__(self, other=None): # Constructor 
+        if other != None:
+            try:
+                # List of variables to copy
+                varlist = ["name", "label", "units", 
+                           "data", "errl", "errh"]
+                attr = dir(other)
+                for name in varlist:
+                    # Check if other has this property
+                    if name in attr:
+                        setattr(self, name, getattr(other, name))
+                if self.name == "":
+                    self.name = self.label
+            except:
+                pass
+    
     name = ""
     label = ""
     units = ""
@@ -54,20 +71,27 @@ class XPadDataItem:
     order  = -1             # Index of time dimension
     time   = None           # A shortcut to the time data (dim[order].data). May be None
 
-    def __init__(self, other=None): # Construct 
+    def __init__(self, other=None): # Constructor
         if other != None:
             try:
                 # List of variables to copy
                 varlist = ["name", "source", "label", "units", "desc",
-                           "data", "errl", "errh", "dim", "order", "time"]
+                           "data", "errl", "errh", "order", "time"]
+                attr = dir(other)
                 for name in varlist:
                     # Check if other has this property
-                    if other.__dict__.has_key("name"):
+                    if name in attr:
                         setattr(self, name, getattr(other, name))
+                if "dim" in attr:
+                    # Copy the dim attributes
+                    self.dim = []
+                    for d in other.dim:
+                        self.dim.append(XPadDataDim(d))
             except AttributeError:
                 # Assume it's a numerical type
                 self.data = other
                 self.name = str(other)
+                raise
 
     #def __coerce__(self, other):
     #    # Convert other to an XPadDataItem and return
