@@ -259,6 +259,8 @@
     </property>
     <addaction name="actionPlot"/>
     <addaction name="actionXYPlot"/>
+    <addaction name="actionContour"/>
+    <addaction name="actionContour_filled"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -317,6 +319,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionContour">
+   <property name="text">
+    <string>Contour</string>
+   </property>
+  </action>
+  <action name="actionContour_filled">
+   <property name="text">
+    <string>Contour filled</string>
    </property>
   </action>
  </widget>

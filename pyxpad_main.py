@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Sat Mar  9 22:20:52 2013
+# Created: Sat Mar 16 21:00:21 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -154,6 +154,10 @@ class Ui_MainWindow(object):
         self.actionXYPlot.setObjectName("actionXYPlot")
         self.actionBOUT_data = QtGui.QAction(MainWindow)
         self.actionBOUT_data.setObjectName("actionBOUT_data")
+        self.actionContour = QtGui.QAction(MainWindow)
+        self.actionContour.setObjectName("actionContour")
+        self.actionContour_filled = QtGui.QAction(MainWindow)
+        self.actionContour_filled.setObjectName("actionContour_filled")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -165,6 +169,8 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionExit)
         self.menuPlot.addAction(self.actionPlot)
         self.menuPlot.addAction(self.actionXYPlot)
+        self.menuPlot.addAction(self.actionContour)
+        self.menuPlot.addAction(self.actionContour_filled)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
 
@@ -204,4 +210,6 @@ class Ui_MainWindow(object):
         self.actionBOUT_data.setText(QtGui.QApplication.translate("MainWindow", "BOUT++ data", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBOUT_data.setToolTip(QtGui.QApplication.translate("MainWindow", "Read BOUT++ data directory", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBOUT_data.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionContour.setText(QtGui.QApplication.translate("MainWindow", "Contour", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionContour_filled.setText(QtGui.QApplication.translate("MainWindow", "Contour filled", None, QtGui.QApplication.UnicodeUTF8))
 

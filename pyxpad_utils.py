@@ -73,11 +73,11 @@ class XPadDataItem:
 
     def __init__(self, other=None): # Constructor
         if other != None:
-            try:
+            attr = dir(other)
+            if "data" in attr:
                 # List of variables to copy
                 varlist = ["name", "source", "label", "units", "desc",
                            "data", "errl", "errh", "order", "time"]
-                attr = dir(other)
                 for name in varlist:
                     # Check if other has this property
                     if name in attr:
@@ -87,11 +87,10 @@ class XPadDataItem:
                     self.dim = []
                     for d in other.dim:
                         self.dim.append(XPadDataDim(d))
-            except AttributeError:
+            else:
                 # Assume it's a numerical type
                 self.data = other
                 self.name = str(other)
-                raise
 
     #def __coerce__(self, other):
     #    # Convert other to an XPadDataItem and return
@@ -234,35 +233,44 @@ class XPadDataItem:
         return item
     
     def __idiv__(self, other): # /=
-        # Metadata
-        self.name += " / " + other.name
-        if (self.label != "") and (other.label != ""):
-            self.label += " / " + other.label
-        else:
-            self.label = self.name
+        try:
+            # Metadata
+            self.name += " / " + other.name
+            if (self.label != "") and (other.label != ""):
+                self.label += " / " + other.label
+            else:
+                self.label = self.name
+                
+            # Dimensions
         
-        # Dimensions
         
-        
-        # Low-side error. Note h and l swap for other
-        if self.errl != None and other.errh != None:
-            self.errl = sqrt((self.errl / other.data)**2 + (self.data * other.errh / other.data**2)**2)
-        elif other.errh != None:
-            self.errl = self.data * other.errh / other.data**2
-        elif self.errl != None:
-            self.errl = self.errl / other.data
+            # Low-side error. Note h and l swap for other
+            if self.errl != None and other.errh != None:
+                self.errl = sqrt((self.errl / other.data)**2 + (self.data * other.errh / other.data**2)**2)
+            elif other.errh != None:
+                self.errl = self.data * other.errh / other.data**2
+            elif self.errl != None:
+                self.errl = self.errl / other.data
 
-        # High-side error
-        if self.errh != None and other.errl != None:
-            self.errh = sqrt((self.errh / other.data)**2 + (self.data * other.errl / other.data**2)**2)
-        elif other.errl != None:
-            self.errh = self.data * other.errl / other.data**2
-        elif self.errh != None:
-            self.errh = self.errh / other.data
-        
-        # Data
-        self.data = self.data / other.data
-
+            # High-side error
+            if self.errh != None and other.errl != None:
+                self.errh = sqrt((self.errh / other.data)**2 + (self.data * other.errl / other.data**2)**2)
+            elif other.errl != None:
+                self.errh = self.data * other.errl / other.data**2
+            elif self.errh != None:
+                self.errh = self.errh / other.data
+                
+            # Data
+            self.data = self.data / other.data
+        except AttributeError:
+            self.name = "( " +self.name + " / " + str(other)+" )"
+            if self.label != "":
+                self.label = "( " + self.label + " / " + str(other)+" )"
+            self.data = self.data / other
+            if self.errl != None:
+                self.errl = self.errl / other
+            if self.errh != None:
+                self.errh = self.errh / other
         return self
 
     def __rdiv__(self, other): #

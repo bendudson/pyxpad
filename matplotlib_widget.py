@@ -93,3 +93,28 @@ class MatplotlibWidget():
         self.axes.set_xlabel(x.name)
         self.axes.set_ylabel(y.name)
         self.canvas.draw()
+    
+    def contour(self, item):
+        if len(item.data.shape) != 2: # Must be 2D
+            print "Data must be 2 dimensional"
+            return
+        
+        self.axes.clear()
+        self.figure.clear()
+        self.axes = self.figure.add_subplot(111)
+        self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
+        self.axes.contour(item.data)
+        self.canvas.draw()
+
+    def contourf(self, item):
+        if len(item.data.shape) != 2: # Must be 2D
+            print "Data must be 2 dimensional"
+            return
+        
+        self.axes.clear()
+        self.figure.clear()
+        self.axes = self.figure.add_subplot(111)
+        self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
+        self.axes.contourf(item.data)
+        self.canvas.draw()
+        

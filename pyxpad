@@ -278,7 +278,10 @@ class Sources:
                 name = toStr(item.text())
                 
                 for shot in shotlist:
-                    self.main.write("Reading " + name + " from " + item.source.label + " shot = " + shot)
+                    s = "Reading " + name + " from " + item.source.label
+                    if shot != "":
+                        s += " shot = " + shot
+                    self.main.write(s)
                     data.append(item.source.read(name, shot))
             else:
                 print "Ignoring "+item.text()
@@ -310,6 +313,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         # Graphics menu
         self.actionPlot.triggered.connect(self.handlePlot)
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
+        self.actionContour.triggered.connect(lambda : self.handleCommandAction("contour"))
+        self.actionContour_filled.triggered.connect(lambda : self.handleCommandAction("contourf"))
         
         # Sources tab 
         self.readDataButton.clicked.connect(self.readData)
@@ -517,6 +522,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                 pass # Ignore if doesn't have a name
         return names
 
+    ##################### Plot menu actions #####################
+
     def handlePlot(self):
         # Find which items are selected
         names = self.selectedDataNames()
@@ -562,13 +569,23 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         self.runCommand("plotxy( "+names[0]+", "+names[1]+")")
         self.tabWidget.setCurrentWidget(self.plotTab)
 
+    def handleCommandAction(self, command):
+        names = self.selectedDataNames()
+        if len(names) != 1:
+            self.write("** One data item must be selected for "+command)
+            return
+        # Run the command in sandbox
+        self.runCommand(command+"( "+names[0]+" )")
+        
     def runCommand(self, cmd):
         # Output the command
         self.write(">>> " + cmd)
         
         glob = globals()
-        glob['plot'] = self.DataPlot.plot
-        glob['plotxy'] = self.DataPlot.plotxy
+        glob['plot']     = self.DataPlot.plot
+        glob['plotxy']   = self.DataPlot.plotxy
+        glob['contour']  = self.DataPlot.contour
+        glob['contourf'] = self.DataPlot.contourf
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
         # To capture print statements stdout is temporarily directed to a StringIO buffer
