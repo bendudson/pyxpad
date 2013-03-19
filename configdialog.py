@@ -3,6 +3,7 @@ Creates small configuration dialogs from a dictionary of values
 """
 
 from PySide.QtGui import QDialog, QGridLayout, QLineEdit, QLabel, QCheckBox, QDialogButtonBox
+from PySide.QtCore import Qt
 
 class ConfigDialog(QDialog):
     def __init__(self, settings, parent=None, description=None):
@@ -31,6 +32,12 @@ class ConfigDialog(QDialog):
                 # A list of alternative values, first is selected
                 print "List: ", name
                 continue
+            elif isinstance(val, bool):
+                widget = QCheckBox(self)
+                if val:
+                    widget.setCheckState(Qt.CheckState.Checked)
+                else:
+                    widget.setCheckState(Qt.CheckState.Unchecked)
             elif isinstance(val, (int,long)):
                 widget = QLineEdit(self)
                 widget.setInputMask("9000000")
@@ -38,9 +45,6 @@ class ConfigDialog(QDialog):
             elif isinstance(val, float):
                 print "Floating point", name
                 continue
-            elif isinstance(val, bool):
-                widget = QCheckBox(self)
-                widget.setCheckState(val)
             else:
                 print "Ignoring: ", name
                 continue
@@ -61,8 +65,8 @@ class ConfigDialog(QDialog):
             val = self.settings[name]  # The old value
             if isinstance(val, basestring):
                 self.settings[name] = widget.text()
-            elif isinstance(val, (int,long)):
-                self.settings[name] = int(widget.text())
             elif isinstance(val, bool):
                 self.settings[name] = widget.isChecked()
+            elif isinstance(val, (int,long)):
+                self.settings[name] = int(widget.text())
         self.accept()
