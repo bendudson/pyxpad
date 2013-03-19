@@ -8,7 +8,12 @@ import os
 
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
-import idam
+try:
+    import idam
+    gotidam = True
+except:
+    print("Warning: IDAM library not found. Cannot read data")
+    gotidam = False
 
 class XPadSource:
     def __init__(self, path, parent=None):
@@ -87,6 +92,8 @@ class XPadSource:
     
     def read(self, name, shot):
         """ Read data from IDAM """
+        if not gotidam:
+            raise ImportError("No IDAM library available")
         if isinstance(name, unicode):
             name = name.encode('utf-8')
         name = str(name).translate(None, '\0')

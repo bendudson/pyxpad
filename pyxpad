@@ -282,7 +282,9 @@ class Sources:
                     if shot != "":
                         s += " shot = " + shot
                     self.main.write(s)
-                    data.append(item.source.read(name, shot))
+                    # Run in a sandbox to catch exceptions and display output
+                    self.main.runSandboxed(lambda : data.append(item.source.read(name, shot)))
+                    
             else:
                 print "Ignoring "+item.text()
         return data
@@ -406,6 +408,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         return name
         
     def readData(self):
+        # Switch to data tab
+        self.tabWidget.setCurrentWidget(self.dataTab)
         # Get the data from the source as a list
         newdata = self.sources.read()
         if (newdata == None) or (newdata == []):
@@ -421,8 +425,6 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                 self.write("Error adding item '"+str(item)+"'")
         
         self.updateDataTable()
-        # Switch to data tab
-        self.tabWidget.setCurrentWidget(self.dataTab)
 
     def updateDataTable(self):
         """
@@ -577,6 +579,32 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         # Run the command in sandbox
         self.runCommand(command+"( "+names[0]+" )")
         
+    def runSandboxed(self, func, args=()):
+        # To capture print statements stdout is temporarily directed to a StringIO buffer
+        buffer = StringIO()
+        oldstdout = sys.stdout
+        sys.stdout = buffer
+        val = None
+        try:
+            val = func(*args)
+        except:
+            e = sys.exc_info()
+            self.write("Error: " + str(e[0]))
+            self.write("Reason: " + str(e[1]))
+        sys.stdout = oldstdout
+        output = buffer.getvalue()
+        if len(output) > 0:
+            self.write(output)
+        return val
+
+    def _runExec(self, cmd, glob, loc):
+        """
+        This is a wrapper around exec
+        Needed because exec isn't allowed in a lambda or nested function
+        and can't be passed as a function pointer.
+        """
+        exec(cmd, glob, loc)
+    
     def runCommand(self, cmd):
         # Output the command
         self.write(">>> " + cmd)
@@ -588,20 +616,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         glob['contourf'] = self.DataPlot.contourf
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
-        # To capture print statements stdout is temporarily directed to a StringIO buffer
-        buffer = StringIO()
-        oldstdout = sys.stdout
-        sys.stdout = buffer
-        try:
-            exec(cmd, glob, self.data)
-        except:
-            e = sys.exc_info()
-            self.write("Error: " + str(e[0]))
-            self.write("Reason: " + str(e[1]))
-        sys.stdout = oldstdout
-        output = buffer.getvalue()
-        if len(output) > 0:
-            self.write(output)
+        self.runSandboxed(self._runExec, args=(cmd, glob, self.data))
         self.updateDataTable()
  
 if __name__ == "__main__":
