@@ -59,7 +59,9 @@ class Sources:
         self.updateDisplay()
         
     def handlePopupMenu(self):
-        
+        """
+        Called when user right-clicks on the sources tree
+        """
         menu = QMenu()
         menu.addAction(self.actionAdd)
         
@@ -168,6 +170,10 @@ class Sources:
         self.updateDisplay()
         
     def configureSource(self):
+        """
+        Configure a data source, changing the source's
+        'config' dictionary.
+        """
         selected = self.main.treeView.selectedItems()
         if len(selected) == 0:
             return
@@ -265,6 +271,17 @@ class Sources:
         """
         Read the selected data and return as a list of data items
         
+        Input
+        -----
+            None
+            
+        Returns
+        ------
+            [ XPadDataItem ]  or equivalent
+
+        Modifies
+        --------
+            None
         """
         
         # Get list of shots
@@ -339,6 +356,10 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.loadState(loadfile)
 
     def saveState(self, filename = None):
+        """
+        Saves program state to given file. If no file is specified,
+        then a dialog is created to ask the user for one.
+        """
         if filename == None:
             tr = self.tr
             filename, _ = QFileDialog.getSaveFileName(self, filter=tr("PyXPad save file (*.pyx)"))
@@ -357,6 +378,11 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("\t ->" + str(e[1]))
 
     def loadState(self, filename = None):
+        """
+        Loads program state from the given filename.
+        If no filename is specified, then a dialog is created
+        to ask the user for a file name.
+        """
         if filename == None:
             tr = self.tr
             filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.', filter=tr("PyXPad save file (*.pyx)"))
@@ -377,6 +403,9 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("\t ->" + str(e[1]))
         
     def closeEvent(self, event):
+        """
+        Called when the main window is closed
+        """
         reply = QtGui.QMessageBox.question(self, 'Message',
                                            "Are you sure to quit?", QtGui.QMessageBox.Yes | 
                                            QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
@@ -388,11 +417,29 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
     
     def write(self, text):
         """
-        Write some log text
+        Write some log text to output text widget
         """
         self.textOutput.append(text)
 
     def makeUnique(self, name):
+        """
+        Modifies a given string into a valid Python variable name
+        which is not already in self.data
+        
+        Input
+        -----
+            name  ::  string
+
+            self.data   (class member)
+            
+        Returns
+        ------
+            string containing modified name
+
+        Modifies
+        --------
+            None
+        """
         # First make sure the name is a valid variable name
         name = re.sub('\W|^(?=\d)','_', name) # Replace invalid characters with '_'
         
@@ -408,6 +455,30 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         return name
         
     def readData(self):
+        """
+        User pressed the "Read" button to read selected
+        data items from given shots.
+        
+        Input
+        -----
+            None
+
+        Returns
+        ------
+            None
+
+        Modifies
+        --------
+            self.data
+
+        
+        Calls Sources to read the new data
+        
+        Inserts data into self.data, ensuring that the name
+        of each data item is unique and a valid Python name
+        
+        Updates the data table based on self.data
+        """
         # Switch to data tab
         self.tabWidget.setCurrentWidget(self.dataTab)
         # Get the data from the source as a list
@@ -432,8 +503,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         """
         n = len(self.data)
         table = self.dataTable
-        table.setSortingEnabled(False)
-        self.dataTable.cellChanged.disconnect(self.dataTableChanged)
+        table.setSortingEnabled(False) # Stops the table rearranging itself
+        self.dataTable.cellChanged.disconnect(self.dataTableChanged) # Don't call the dataTableChanged function
         table.setRowCount(n)
         for row, name in enumerate(self.data):
             item = self.data[name]
@@ -478,10 +549,15 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             except:
                 table.setItem(row, 3, QTableWidgetItem(str(item)))
             
-        table.setSortingEnabled(True)
+        table.setSortingEnabled(True)  # Re-enable sorting
         self.dataTable.cellChanged.connect(self.dataTableChanged)
         
     def dataTableChanged(self, row, col):
+        """
+        Called when the user changes the value of a cell
+        in the data table. This can either be to change 
+        the name of a variable, or the comment.
+        """
         if col == 0:
             # The name of the variable
             it = self.dataTable.item(row, col)
@@ -506,12 +582,21 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         print row, col
         
     def commandEntered(self):
+        """
+        Called when a command is entered on the Data tab.
+        Gets the command string from the text box, and calls
+        the runCommand to run the command.
+        """
         # Get the command text and clear the text box
         cmd = toStr(self.commandInput.text())
         self.commandInput.clear()
         self.runCommand(cmd)
         
     def selectedDataNames(self):
+        """
+        Retuns a list of the names of variables selected
+        in the Data table.
+        """
         # Find which items are selected in the data table
         items = self.dataTable.selectedItems() # All selected items
         if len(items) == 0:

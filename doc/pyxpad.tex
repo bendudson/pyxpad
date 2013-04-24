@@ -1,0 +1,198 @@
+%% Manual for grid generator
+
+\documentclass[12pt, a4paper]{article}
+\usepackage[nofoot]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+
+%% Modify margins
+\addtolength{\oddsidemargin}{-.25in}
+\addtolength{\evensidemargin}{-.25in}
+\addtolength{\textwidth}{0.5in}
+\addtolength{\textheight}{0.25in}
+%% SET HEADERS AND FOOTERS
+
+\pagestyle{fancy}
+\fancyfoot{}
+\renewcommand{\sectionmark}[1]{         % Lower case Section marker style
+  \markright{\thesection.\ #1}}
+\fancyhead[LE,RO]{\bfseries\thepage}    % Page number (boldface) in left on even
+                                        % pages and right on odd pages 
+\renewcommand{\headrulewidth}{0.3pt}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bf #1}}
+
+%% commands for boxes with important notes
+\newlength{\notewidth}
+\addtolength{\notewidth}{\textwidth}
+\addtolength{\notewidth}{-3.\parindent}
+\newcommand{\note}[1]{
+\fbox{
+\begin{minipage}{\notewidth}
+{\bf NOTE}: #1
+\end{minipage}
+}}
+
+\newcommand{\pow}{\ensuremath{\wedge} }
+\newcommand{\poweq}{\ensuremath{\wedge =} }
+
+\begin{document}
+\title{PyXPaD - a data analysis tool in Python}
+\author{B.D.Dudson\dag\\
+\dag Department of Physics, University of York, York YO10 5DD, UK}
+
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+
+PyXPaD is intended to be a replacement for the venerable XPAD code, used to display and perform simple analysis of MAST data. Whereas XPAD is written in IDL, PyXPaD is in Python. 
+
+To run PyXPaD, you will need the following libraries:
+\begin{itemize}
+\item NumPy - Numerical Python
+\item PySide - Qt bindings for Python
+\item IDAM, available from David Muir, is needed to read data from MAST
+\item PyIDAM, the Python bindings for IDAM. This is available here: \url{http://github.com/bendudson/PyIDAM}
+\end{itemize}
+
+The PyXPaD interface should be familiar to anyone who's used XPAD, and is divided into three tabs: Sources (for reading data), Data (for manipulating data), and Plot (for plotting data). These are described in turn in the following sections.
+
+\section{Sources: Reading data}
+
+The Sources tab consists of two panels: a tree of sources on the left, and list of
+data traces on the right. 
+\begin{figure}[hp!]
+  \centering
+  \includegraphics[width=0.5\paperwidth, keepaspectratio]{sources_tab.png}
+  \caption{}
+  \label{fig:sources_tab}
+\end{figure}
+
+The following functions are available:
+\begin{itemize}
+\item Menu ``File'' $\rightarrow$ ``Add source'' provides ways to add data sources to the panel on the left. These can currently be NetCDF files or XPAD directory trees (called ``TREE'' in XPAD source).
+\item Select (Left click) on a source (e.g. MAST) to display a list of available data traces for that source.
+\item Left click on the '+' to the left of the source name to expand the tree and see sub-categories. Selecting one of these sub-categories (e.g. Temperature/Density) displays only the data traces in that category.
+\item Right clicking on a source displays a pop-up menu with ``Add'', ``Configure'' and ``Delete'' options. Selecting ``Configure'' displays a window to configure the options for the data source. For IDAM sources this includes the host and port to connect to, an example of which
+is shown in figure~\ref{fig:sources_config}.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.2\paperwidth, keepaspectratio]{sources_config.png}
+  \caption{}
+  \label{fig:sources_config}
+\end{figure}
+\item The box labelled ``Trace:'' at the top right is a filter, which can be used to select only particular data traces. For example, entering ``ane*'' and pressing Enter, displays only those traces in the currently selected source which start with ``ane''. This is not case sensitive, so ``ANE\_DENSITY'' will also match.
+\item The checkbox at top right labelled ``Description'' switches the display of the data traces in the right panel. If Description is selected, then the traces are shown as two columns, with the trace name on the left, and a description (if available) on the right.
+\end{itemize}
+
+To read data:
+\begin{enumerate}
+\item Select a source and one or more data traces. You may select more than one data source, and already selected data traces will still be displayed
+\item Enter one or more shot numbers into the ``Shot:'' box at the top left. Multiple shots should be separated by commas
+\item Click on the ``Read'' button
+\end{enumerate}
+
+Once data is read, it should appear on the Data tab.
+
+\section{Data: Manipulation and analysis} 
+
+This tab consists of a table of data traces, a status window for text output, and Python
+command input box. For each data trace the table lists the following:
+\begin{itemize}
+\item {\bf Name} is the variable name which can be used in Python commands. Double-click to edit.
+\item {\bf Source} is the shot number.
+\item {\bf Trace} is the name of the data trace. This will often be similar to the variable name, but doesn't need to be.
+\item {\bf Comments} is generated from the data trace description, units, and dimensions. Double click to edit.
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\paperwidth, keepaspectratio]{data_tab.png}
+  \caption{}
+  \label{fig:data_tab}
+\end{figure}
+The following functions are available:
+\begin{itemize}
+\item Variables can be renamed by double clicking on their Name in the table.
+\item Variable comments can be edited by double clicking on the comment.
+\item Data traces can be manipulated by entering Python code into the box labelled 
+  ``Command:''. Run the command by pressing Enter or clicking the ``Run'' button. 
+\begin{itemize}
+\item Standard arithmetic operations (+,-,*,/,**) can be used on traces.
+\item Any new variables created will be listed in the table.
+\item Some functions (sin, cos, tan, exp, log, sqrt currently) are defined in the \file{user\_functions} module and can be applied to data traces. To use, run the Python command \code{from user\_functions import *}
+\end{itemize} 
+\item To plot one or more data traces: Select the traces you want to plot, and use the menu ``Graphics'' $\rightarrow$ ``Plot''. By default, the plots will be grouped by Trace. The Python command to run will be displayed in the status window. If you would like a different grouping, then enter a Python plot command manually.
+\item To plot one data trace against another, select two traces and choose menu item ``Graphics'' $\rightarrow$ ``XYPlot''. As with plot, this can also be done by entering a Python command.
+\item Contour plots can be made of 2D variables, using ``Graphics'' $\rightarrow$ ``Contour'' or ``Contour filled'' for a filled contour plot.
+\end{itemize}
+
+\section{Plot: Plotting data}
+
+This tab is a Matplotlib window, and has the standard buttons on the bottom left.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\paperwidth, keepaspectratio]{plot_tab.png}
+  \caption{}
+  \label{fig:plot_tab}
+\end{figure}
+\begin{itemize}
+\item Graphs can be panned by selecting the arrow button, holding down the left mouse button whilst dragging the mouse.
+\item Graphs can be zoomed by selecting the arrow button, holding down right mouse button whilst dragging.
+\item To save a graph, click the Save button (floppy disk icon). You will be given a choice of file formats.
+\end{itemize}
+
+
+\section{Code structure}
+
+This section gives details of how the code works internally, so is really only of interest if you want to modify PyXPaD yourself.
+
+The code is divided into the following files:
+\begin{itemize}
+\item \file{configdialog.py} - Defines a class \code{ConfigDialog}, which is used to create dialogs to configure sources.
+\item \file{datafile.py} - Defines a class \code{NetCDFDataSource}, an interface to a NetCDF file, which behaves like a data source
+\item \file{matplotlib\_widget.py} - Defines a class \code{MatplotlibWidget}, which produces matplotlib output in a widget. Routines for plotting and contours.
+\item \file{pyxpad} - Main file. Defines classes \code{PyXPad}, which inherits from \code{QMainWindow}, and \code{Sources}, which handles the display of sources and data items.
+\item \file{pyxpad\_main.py} - Created automatically from \file{pyxpad\_main.ui}. Do not edit manually!
+\item \file{pyxpad\_main.ui} - Edit using Qt Designer.
+\item \file{pyxpad\_utils.py} - Defines classes \code{XPadDataItem} and \code{XPadDataDim}. These define a standard interface for data items, along with operators.
+\item \file{user\_functions.py} - Defines functions on \code{XPadDataItem}. Function \code{XPadFunction} returns a function which wraps a NumPy function and handles the additional labels and metadata.
+\item \file{xpadsource.py} - Defines \code{XPadSource}, which provides an interface to IDAM data.
+\end{itemize}
+
+The code is designed around two interfaces: Sources and DataItem. 
+Due to Python's duck typing, any class which implements these interfaces can be used.
+
+\subsection{Data Items}
+
+Data items represent arrays of data, along with metadata such as dimensions and labels. The classes \code{XPadDataItem} and \code{XPadDataDim} in \file{pyxpad\_utils.py} list the members needed.
+
+\subsection{Sources}
+
+The source interface must consist of 
+a class with the following members:
+\begin{itemize}
+\item \code{config}    - A dictionary of \code{\{string : value\}}  pairs. This is passed to \code{ConfigDialog}. Used by the IDAM interface to set the server and port to contact.
+\item \code{varNames} - A list \code{ [string] } of variable names
+\item \code{variables}  - A dictionary of \code{\{ string : DataItem\}} pairs. The DataItems need not contain data, and are only assumed to contain a \code{name} attribute. 
+\item \code{read(name, shot)} - This function should take two string inputs: a data trace name (which should be in varNames) and a shot. The function should return a DataItem or can raise an exception.
+\end{itemize}
+
+\subsection{Code sandboxing}
+
+There are many potential sources of exceptions and crashes: The user can
+enter arbitrary commands, external data sources or plotting libraries
+may fail. To make PyXPad more robust, many commands are run sandboxed.
+This is done using two functions in \code{class PyXPad}:
+
+The function \code{PyXPad.runSandboxed(func, args)} redirects \code{stdout}
+to a buffer (written to text widget on Data tab), and calls the function
+with supplied arguments inside a \code{try...except} block. Nothing is currently done with \code{stderr}.
+
+The function \code{PyXPad.runCommand(cmd)} is used to run commands entered by the user. It runs the given command using \code{runSandboxed} inside an environment with custom global and local variables. Plotting commands 'plot', 'plotxy' etc. are added to the global environment, whilst \code{PyXPad.data} is used for the local environment. This allows changes to the local environment to be displayed in the Data tab.
+
+\end{document}
