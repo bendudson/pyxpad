@@ -148,8 +148,22 @@ class Sources:
         """
         try:
             from boutsource import BoutDataSource
+
+            # Select the directory
+            tr = self.main.tr
+            dname = QFileDialog.getExistingDirectory(self.main, tr('Open BOUT++ directory'), QDir.currentPath())
+            dname = toStr(dname)
+            if (dname == "") or (dname == None):
+                return
+            # Create data source
+            s = BoutDataSource(dname)
+            
+            # Add data source and update
+            self.addSource(s)
+            self.updateDisplay()
         except:
             self.main.write("Sorry, no BOUT++ support")
+            raise
             return
         
         
@@ -342,6 +356,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         # File menu
         self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
         self.actionXPAD_tree.triggered.connect(self.sources.addXPADtree)
+        self.actionBOUT_data.triggered.connect(self.sources.addBOUT)
+        
         self.actionExit.triggered.connect(self.close)
 
         self.actionLoadState.triggered.connect(self.loadState)

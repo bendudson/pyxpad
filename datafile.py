@@ -78,6 +78,12 @@ class NetCDFDataSource:
         self.open(filename)
         self.dimensions = self.getDimensions()        # A dictionary of XPadDataDim objects
         self.varNames  = self.handle.variables.keys() # A list of variable names
+        for i,v in enumerate(self.varNames):
+            if isinstance(v, unicode):
+                v = v.encode('utf-8')
+            v = str(v).translate(None, '\0')
+            self.varNames[i] = v
+                
         self.variables = {}   # A dictionary of XPadDataItem objects with empty data
         for name, var in self.handle.variables.items():
             item = XPadDataItem()
