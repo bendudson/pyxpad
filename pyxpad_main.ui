@@ -251,6 +251,8 @@
     <addaction name="actionLoadState"/>
     <addaction name="actionSaveState"/>
     <addaction name="separator"/>
+    <addaction name="actionWrite_ASCII"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
@@ -262,8 +264,25 @@
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
    </widget>
+   <widget class="QMenu" name="menuCommand">
+    <property name="title">
+     <string>Command</string>
+    </property>
+    <addaction name="actionChop"/>
+    <addaction name="separator"/>
+    <addaction name="actionIntegrate"/>
+    <addaction name="actionDf_dt"/>
+    <addaction name="actionSmooth"/>
+    <addaction name="actionBand_pass_filter"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd"/>
+    <addaction name="actionSubtract"/>
+    <addaction name="actionMultiply"/>
+    <addaction name="actionDivide"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
+   <addaction name="menuCommand"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoadState">
@@ -329,6 +348,66 @@
   <action name="actionContour_filled">
    <property name="text">
     <string>Contour filled</string>
+   </property>
+  </action>
+  <action name="actionWrite_ASCII">
+   <property name="text">
+    <string>Write ASCII</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="text">
+    <string>X+Y (Sum Channels)</string>
+   </property>
+  </action>
+  <action name="actionSubtract">
+   <property name="text">
+    <string>X-Y</string>
+   </property>
+  </action>
+  <action name="actionMultiply">
+   <property name="text">
+    <string>X*Y</string>
+   </property>
+  </action>
+  <action name="actionDivide">
+   <property name="text">
+    <string>X/Y</string>
+   </property>
+  </action>
+  <action name="actionChop">
+   <property name="text">
+    <string>Chop</string>
+   </property>
+  </action>
+  <action name="actionIntegrate">
+   <property name="text">
+    <string>Integrate</string>
+   </property>
+  </action>
+  <action name="actionDf_dt">
+   <property name="text">
+    <string>df/dt</string>
+   </property>
+  </action>
+  <action name="actionSmooth">
+   <property name="text">
+    <string>Smooth</string>
+   </property>
+  </action>
+  <action name="actionLow_pass_filter">
+   <property name="text">
+    <string>Low pass filter</string>
+   </property>
+  </action>
+  <action name="actionHigh_pass_filter">
+   <property name="text">
+    <string>High pass filter</string>
+   </property>
+  </action>
+  <action name="actionBand_pass_filter">
+   <property name="text">
+    <string>Band pass filter</string>
    </property>
   </action>
  </widget>
