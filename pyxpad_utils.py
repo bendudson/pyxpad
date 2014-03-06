@@ -47,6 +47,13 @@ class XPadDataDim:
             except:
                 pass
     
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return ("XPadDataDim( {'name':'"+self.name + 
+                         "', 'label':'"+self.label + 
+                         "', 'units':'"+self.units+"'} )")
     name = ""
     label = ""
     units = ""
@@ -114,6 +121,24 @@ class XPadDataItem:
     #    # Convert other to an XPadDataItem and return
     #    item = XPadDataItem
 
+    def __str__(self):
+        """
+        Returns a summary of the data as a string
+        """
+        s = self.name + "("+self.units+")"
+        
+        if len(self.dim) > 0:
+            s += " [" + reduce(lambda x,y:x+","+y, [str(d) for d in self.dim]) + "]"
+            
+        return s
+                
+    def __repr__(self):
+        return ("XPadDataItem( {'name':'"+self.name + 
+                           "', 'source':'"+self.source + 
+                           "', 'label':'"+self.label + 
+                           "', 'units':'"+self.units + 
+                           "', 'desc':'"+self.desc+"'} )")
+                           
     def __add__(self, other):  # +
         item = XPadDataItem(self)
         item += other
@@ -330,7 +355,13 @@ class XPadDataItem:
         
         return item
 
-
+def chop(item):
+    """
+    Selects a range of indices
+    
+    """
+    pass
+    
 if __name__ == "__main__":
     # Run test cases
     

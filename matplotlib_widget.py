@@ -57,14 +57,28 @@ class MatplotlibWidget():
                         label = data.label
                     label += " " + data.source
                     
-                    self.axes.plot(data.time, data.data, label=label)
+                    time = data.time
+                    if time == None:
+                        if len(data.dim) != 1:
+                            raise ValueError("Cannot plot '"+data.label+"' as it has too many dimensions")
+                        time = data.dim[0].data
+                    
+                    self.axes.plot(time, data.data, label=label)
                 if plotnum == 0:
                     self.axes.set_xlabel(p[0].dim[p[0].order].label)
                 self.axes.legend()
             except TypeError:
                 # p not iterable, so just plot item
                 #self.axes.plot(p.time, p.data)
-                self.axes.plot(p.time, p.data)
+                time = p.time
+                xlabel = p.dim[p.order].label
+                if time == None:
+                    if len(p.dim) != 1:
+                        raise ValueError("Cannot plot '"+p.label+"' as it has too many dimensions")
+                    time = p.dim[0].data
+                    xlabel = p.dim[0].label
+                        
+                self.axes.plot(time, p.data)
                 
                 ylabel = p.desc
                 if ylabel == "":
@@ -73,7 +87,7 @@ class MatplotlibWidget():
                         ylabel += " ("+p.units+")"
                 self.axes.set_ylabel(ylabel)
                 if plotnum == 0:
-                    self.axes.set_xlabel(p.dim[p.order].label)
+                    self.axes.set_xlabel(xlabel)
                 
         #self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
         self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace = 0.001)

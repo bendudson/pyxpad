@@ -201,7 +201,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="commandInput"/>
+             <widget class="ConsoleWidget" name="commandInput"/>
             </item>
             <item row="0" column="2">
              <widget class="QPushButton" name="commandButton">
@@ -279,6 +279,8 @@
     <addaction name="actionSubtract"/>
     <addaction name="actionMultiply"/>
     <addaction name="actionDivide"/>
+    <addaction name="separator"/>
+    <addaction name="actionFFTP"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -410,7 +412,19 @@
     <string>Band pass filter</string>
    </property>
   </action>
+  <action name="actionFFTP">
+   <property name="text">
+    <string>FFTP</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ConsoleWidget</class>
+   <extends>QLineEdit</extends>
+   <header>console_widget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

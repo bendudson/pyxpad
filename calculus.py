@@ -33,7 +33,9 @@ def integrate(item):
     result.source = item.source
     if item.label != "":
         result.label = "INTG( "+item.label+" )"
-    
+    if item.units != "":
+        result.units = item.units+"*"+item.dim[0].units
+
     result.data = zeros(item.data.shape)
     
     time = item.dim[0].data

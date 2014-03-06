@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Tue Mar  4 09:26:00 2014
+# Created: Thu Mar  6 09:56:21 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -112,7 +112,7 @@ class Ui_MainWindow(object):
         self.label_3 = QtGui.QLabel(self.layoutWidget)
         self.label_3.setObjectName("label_3")
         self.gridLayout_4.addWidget(self.label_3, 0, 0, 1, 1)
-        self.commandInput = QtGui.QLineEdit(self.layoutWidget)
+        self.commandInput = ConsoleWidget(self.layoutWidget)
         self.commandInput.setObjectName("commandInput")
         self.gridLayout_4.addWidget(self.commandInput, 0, 1, 1, 1)
         self.commandButton = QtGui.QPushButton(self.layoutWidget)
@@ -184,6 +184,8 @@ class Ui_MainWindow(object):
         self.actionHigh_pass_filter.setObjectName("actionHigh_pass_filter")
         self.actionBand_pass_filter = QtGui.QAction(MainWindow)
         self.actionBand_pass_filter.setObjectName("actionBand_pass_filter")
+        self.actionFFTP = QtGui.QAction(MainWindow)
+        self.actionFFTP.setObjectName("actionFFTP")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -210,6 +212,8 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionSubtract)
         self.menuCommand.addAction(self.actionMultiply)
         self.menuCommand.addAction(self.actionDivide)
+        self.menuCommand.addSeparator()
+        self.menuCommand.addAction(self.actionFFTP)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -265,4 +269,6 @@ class Ui_MainWindow(object):
         self.actionLow_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "Low pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHigh_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "High pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBand_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "Band pass filter", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFFTP.setText(QtGui.QApplication.translate("MainWindow", "FFTP", None, QtGui.QApplication.UnicodeUTF8))
 
+from console_widget import ConsoleWidget

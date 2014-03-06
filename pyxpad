@@ -32,7 +32,8 @@ import string
 import fnmatch  # For matching names to wildcard patterns
 from keyword import iskeyword  # Test if a string is a keyword
 
-import calculus
+import calculus   # Integration and differentiation methods
+import fourier    # FFT-based methods
 
 # On some installations (Python 2.6 only?) need to convert text using QTextCodec
 codec = QTextCodec.codecForName("UTF-8")
@@ -378,12 +379,13 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         self.actionMultiply.triggered.connect(self.handleMultiply)
         self.actionSubtract.triggered.connect(self.handleSubtract)
         self.actionDivide.triggered.connect(self.handleDivide)
+        self.actionFFTP.triggered.connect(self.handleFFTP)
         
         # Sources tab 
         self.readDataButton.clicked.connect(self.readData)
         self.shotInput.returnPressed.connect(self.readData)
 
-        self.commandInput.returnPressed.connect(self.commandEntered)
+        self.commandInput.commandEntered.connect(self.commandEntered)
         self.commandButton.clicked.connect(self.commandEntered)
         
         # Data tab
@@ -653,14 +655,14 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             
         print row, col
         
-    def commandEntered(self):
+    def commandEntered(self, text):
         """
         Called when a command is entered on the Data tab.
         Gets the command string from the text box, and calls
         the runCommand to run the command.
         """
         # Get the command text and clear the text box
-        cmd = toStr(self.commandInput.text())
+        cmd = toStr(text)
         self.commandInput.clear()
         self.runCommand(cmd)
         
@@ -789,6 +791,20 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("** Two data items must be selected to subtract one from another")
             return
         self.runCommand(self.uniqueName()+" = " + names[0] + " / " + names[1])
+        
+    def handleFFTP(self):
+        """
+        Perform FFT, returning amplitude and phase
+        
+        """
+        
+        for n in self.selectedDataNames():
+            # Create a unique name for amplitude and phase
+            ampname = self.makeUnique(n+"_amp")
+            phasename = self.makeUnique(n+"_phase")
+            self.runCommand(ampname+","+phasename + " = " + "fftp( "+n+" )")
+            
+        
     ########
     
     def runSandboxed(self, func, args=()):
@@ -828,6 +844,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         glob['contourf'] = self.DataPlot.contourf
         
         glob['intg'] = calculus.integrate
+        glob['fftp'] = fourier.fftp
+        
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
         self.runSandboxed(self._runExec, args=(cmd, glob, self.data))
