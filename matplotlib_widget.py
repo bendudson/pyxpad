@@ -77,8 +77,17 @@ class MatplotlibWidget():
                         raise ValueError("Cannot plot '"+p.label+"' as it has too many dimensions")
                     time = p.dim[0].data
                     xlabel = p.dim[0].label
-                        
-                self.axes.plot(time, p.data)
+                
+                data = p.data
+                # Check the size of the array
+                size = len(time)
+                if size > 10000:
+                    fac = int(len(time) / 10000)
+                    time = time[::fac]
+                    data = data[::fac]
+                    print("Warning: too many samples (%d). Down-sampling to %d points" % (size, len(time)))
+
+                self.axes.plot(time, data)
                 
                 ylabel = p.desc
                 if ylabel == "":
