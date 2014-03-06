@@ -339,7 +339,7 @@ class Sources:
                     self.main.runSandboxed(lambda : data.append(item.source.read(name, shot)))
                     
             else:
-                print "Ignoring "+item.text()
+                print("Ignoring "+item.text())
         return data
                 
         
@@ -653,7 +653,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             name = self.dataTable.item(row, 0).text()
             self.data[name].comment = comment
             
-        print row, col
+        print(row, col)
         
     def commandEntered(self, text):
         """

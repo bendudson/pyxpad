@@ -15,7 +15,7 @@
 try:
     import numpy as np
 except ImportError:
-    print "ERROR: NumPy module not available"
+    print("ERROR: NumPy module not available")
     raise
 
 library = None # Record which library to use
@@ -24,20 +24,20 @@ try:
     from netCDF4 import Dataset
     library = "netCDF4"
 except ImportError:
-    #print "netcdf4-python module not found"
+    #print("netcdf4-python module not found")
     
     try:
         from Scientific.IO.NetCDF import NetCDFFile as Dataset
         from Scientific.N import Int, Float
         library = "Scientific"
-        #print "  => Using Scientific.IO.NetCDF instead"
+        #print("  => Using Scientific.IO.NetCDF instead")
     except ImportError:
         try:
             from scipy.io.netcdf import netcdf_file as Dataset
             library = "scipy"
-            # print "Using scipy.io.netcdf library"
+            #print("Using scipy.io.netcdf library")
         except:
-            print "No supported NetCDF modules available"
+            print("No supported NetCDF modules available")
             raise
 import time
 
@@ -108,7 +108,7 @@ class NetCDFDataSource:
             var = None
             for n in self.handle.variables.keys():
                 if n.lower() == name.lower():
-                    print "WARNING: Reading '"+n+"' instead of '"+name+"'"
+                    print("WARNING: Reading '"+n+"' instead of '"+name+"'")
                     var = self.handle.variables[n]
             if var == None:
                 return None

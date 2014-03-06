@@ -119,7 +119,7 @@ class MatplotlibWidget():
     
     def contour(self, item):
         if len(item.data.shape) != 2: # Must be 2D
-            print "Data must be 2 dimensional"
+            print("Data must be 2 dimensional")
             return
         
         self.axes.clear()
@@ -131,7 +131,7 @@ class MatplotlibWidget():
 
     def contourf(self, item):
         if len(item.data.shape) != 2: # Must be 2D
-            print "Data must be 2 dimensional"
+            print("Data must be 2 dimensional")
             return
         
         self.axes.clear()

@@ -48,7 +48,7 @@ class ConfigDialog(QDialog):
                 widget.setText(val)
             elif isinstance(val, list):
                 # A list of alternative values, first is selected
-                print "List: ", name
+                print("List: ", name)
                 continue
             elif isinstance(val, bool):
                 widget = QCheckBox(self)
@@ -61,10 +61,10 @@ class ConfigDialog(QDialog):
                 widget.setInputMask("9000000")
                 widget.setText(str(val).strip())
             elif isinstance(val, float):
-                print "Floating point", name
+                print("Floating point", name)
                 continue
             else:
-                print "Ignoring: ", name
+                print("Ignoring: ", name)
                 continue
             widget.config = name
             self.widgets[name] = widget

@@ -376,7 +376,8 @@ if __name__ == "__main__":
     c = 2 * a
     
     d = 4 / a
-    print d.data, d.name
+    print(d.data, d.name)
 
-    print b.data, b.errl, b.errh
-    print b.name
+    print(b.data, b.errl, b.errh)
+    print(b.name)
+
