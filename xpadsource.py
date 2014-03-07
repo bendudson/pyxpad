@@ -112,10 +112,13 @@ class XPadSource:
         """ Read data from IDAM """
         if not gotidam:
             raise ImportError("No IDAM library available")
-        if isinstance(name, unicode):
-            name = name.encode('utf-8')
-        name = str(name).translate(None, '\0')
-        shot = str(shot).translate(None, '\0')
+        try:
+            if isinstance(name, unicode):
+                name = name.encode('utf-8')
+            name = str(name).translate(None, '\0')
+            shot = str(shot).translate(None, '\0')
+        except NameError:
+            pass
         
         # Set configuration
         idam.setHost(self.config['Host'])

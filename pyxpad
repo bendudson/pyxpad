@@ -24,8 +24,16 @@ from PySide.QtCore import *
 from pyxpad_main import *
 from configdialog import ConfigDialog
 
-import cPickle as pickle
-from StringIO import StringIO
+try:
+  import cPickle as pickle
+except:
+  import pickle
+
+try:
+  from StringIO import StringIO  # Python 2
+except:
+  from io import StringIO
+
 import sys, os
 import re
 import string
@@ -89,7 +97,7 @@ class Sources:
         
         selected = self.main.treeView.selectedItems()
         if len(selected) != 0:
-            if selected[0].source.__dict__.has_key('config'):
+            if 'config' in selected[0].source.__dict__:
                 menu.addAction(self.actionConfig)
             menu.addAction(self.actionDelete)
             
@@ -232,7 +240,7 @@ class Sources:
         selectedvars = []
         nextra = 0
         for item in selecteditems:
-            if item.__dict__.has_key('source'):
+            if 'source' in item.__dict__:
                 name = toStr(item.text())
                 selectedvars.append(  (name, item.source) )
                 if item.source != s:
@@ -327,7 +335,7 @@ class Sources:
         tableitems = table.selectedItems()
         data = []
         for item in tableitems:
-            if item.__dict__.has_key('source'):
+            if 'source' in item.__dict__:
                 name = toStr(item.text())
                 
                 for shot in shotlist:
@@ -436,7 +444,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if (filename == None) or (filename == ""):
             return # Cancelled
         try:
-            f = open(filename, 'r')
+            f = open(filename, 'rb')
             self.sources.loadState(f)
             self.data = pickle.load(f)
             f.close()
@@ -447,6 +455,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             e = sys.exc_info()
             self.write("Could not load state from file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
+            raise
         
     def closeEvent(self, event):
         """
@@ -487,15 +496,15 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             None
         """
         # First make sure the name is a valid variable name
-        name = re.sub('\W|^(?=\d)','_', name) # Replace invalid characters with '_'
+        name = re.sub(b'\W|^(?=\d)','_', name) # Replace invalid characters with '_'
         
         if iskeyword(name): # Check if name is a keyword
             name += '2'
 
-        if self.data.has_key(name):
+        if name in self.data:
             # Name is already in the list. Add a number to the end to make it unique
             i = 1
-            while self.data.has_key(name + "_"+str(i)):
+            while name + "_"+str(i) in self.data:
                 i += 1
             return name + "_"+str(i)
         return name
