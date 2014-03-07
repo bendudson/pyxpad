@@ -52,9 +52,15 @@ class BoutDataSource:
             
             self.varNames   = self.data.varNames
             for i,v in enumerate(self.varNames):
-                if isinstance(v, unicode):
-                    v = v.encode('utf-8')
-                v = str(v).translate(None, '\0')
+                try:
+                    # This is for Python 2.x. Python 3.x will raise a NameError
+                    # since unicode -> str and str -> bytes
+                    if isinstance(v, unicode):
+                        v = v.encode('utf-8')
+                    v = str(v).translate(None, '\0')
+                except NameError:
+                    pass
+                 
                 self.varNames[i] = v
         except:
             # No data in path. Check if any children
@@ -62,9 +68,9 @@ class BoutDataSource:
                 raise
             
     def read(self, name, shot):
-        
-        if isinstance(name, unicode):
-            name = name.encode('utf-8')
+        try:
+            if isinstance(name, unicode):
+                name = name.encode('utf-8')
         name = str(name).translate(None, '\0')
         
         item = self.data.read(name)
