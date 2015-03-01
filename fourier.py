@@ -4,8 +4,8 @@ Fourier transform based methods on XPadDataItem objects
 
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
-from numpy.fft import rfft
-from numpy import abs, arange, arctan, pi
+from numpy.fft import rfft, rfftfreq
+from numpy import abs, arctan2, pi
 
 def fftp(item):
     """
@@ -27,18 +27,18 @@ def fftp(item):
         raise ValueError("fftp can only operate on 1D traces currently")
     
     # Calculate FFT
-    data = rfft(item.data)
+    data = rfft(item.data)*(1./len(item.data))
     
     # Create a dimension
     dim = XPadDataDim()
     
     dim.name = "Frequency"
     
-    step = 1. / (item.dim[0].data[1] - item.dim[0].data[0])*len(item.dim[0].data)
-    dim.data = arange(len(data))*step
+    step = (item.dim[0].data[1] - item.dim[0].data[0])
+    dim.data = rfftfreq(len(item.data), step)
 
     dim.units = "1/"+item.dim[0].units
-    if item.dim[0].units == "s":
+    if item.dim[0].units in ["s", "S", "sec", "Sec", "SEC"]:
         dim.data /= 1000.
         dim.units = "kHz"
     
@@ -64,7 +64,7 @@ def fftp(item):
         phase.label = "PHASE( "+item.label+" )"
     phase.units = "Radians"
     
-    phase.data = arctan(data.real, data.imag)
+    phase.data = arctan2(data.real, data.imag)
 
     a = phase.data - 2*pi
     for i in range(1,len(phase.data)):

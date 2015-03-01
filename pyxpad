@@ -863,7 +863,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     path=os.path.dirname(sys.argv[0])
-    window = PyXPad(loadfile=path+"/default.pyx")
+    window = PyXPad()#loadfile=path+"/default.pyx")
     window.show()
     sys.exit(app.exec_())
 
