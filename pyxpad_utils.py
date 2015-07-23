@@ -32,6 +32,14 @@ class XPadDataDim:
     """
     
     def __init__(self, other=None): # Constructor 
+        # Instance Variables
+        self.name = ""
+        self.label = ""
+        self.units = ""
+        self.data = None
+        self.errl = None
+        self.errh = None
+
         if other != None:
             try:
                 # List of variables to copy
@@ -54,12 +62,6 @@ class XPadDataDim:
         return ("XPadDataDim( {'name':'"+self.name + 
                          "', 'label':'"+self.label + 
                          "', 'units':'"+self.units+"'} )")
-    name = ""
-    label = ""
-    units = ""
-    data = None
-    errl = None
-    errh = None
 
 class XPadDataItem:
     """
@@ -84,19 +86,21 @@ class XPadDataItem:
     time    A shortcut to the time data (dim[order].data). May be None
     
     """
-    name   = ""
-    source = ""
-    label  = ""
-    units  = ""
-    desc   = ""
-    data   = None
-    errl   = None
-    errh   = None
-    dim    = []             # A list of dimensions
-    order  = -1             # Index of time dimension
-    time   = None           # A shortcut to the time data (dim[order].data). May be None
 
     def __init__(self, other=None): # Constructor
+        # Instance Variables
+        self.name   = ""
+        self.source = ""
+        self.label  = ""
+        self.units  = ""
+        self.desc   = ""
+        self.data   = None
+        self.errl   = None
+        self.errh   = None
+        self.dim    = []             # A list of dimensions
+        self.order  = -1             # Index of time dimension
+        self.time   = None           # A shortcut to the time data (dim[order].data). May be None
+
         if other != None:
             attr = dir(other)
             if "data" in attr:
@@ -380,4 +384,3 @@ if __name__ == "__main__":
 
     print(b.data, b.errl, b.errh)
     print(b.name)
-
