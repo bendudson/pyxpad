@@ -61,10 +61,11 @@ class ConfigDialog(QDialog):
                 widget.setInputMask("9000000")
                 widget.setText(str(val).strip())
             elif isinstance(val, float):
-                print("Floating point", name)
-                continue
+                widget = QLineEdit(self)
+                widget.setInputMask("0.00")
+                widget.setText(str(val).strip())
             else:
-                print("Ignoring: ", name)
+                print("Ignoring: " + name)
                 continue
             widget.config = name
             self.widgets[name] = widget
@@ -87,4 +88,6 @@ class ConfigDialog(QDialog):
                 self.settings[name] = widget.isChecked()
             elif isinstance(val, (int,long)):
                 self.settings[name] = int(widget.text())
+            elif isinstance(val, float):
+                self.settings[name] = float(widget.text())
         self.accept()

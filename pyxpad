@@ -42,6 +42,7 @@ from keyword import iskeyword  # Test if a string is a keyword
 
 import calculus   # Integration and differentiation methods
 import fourier    # FFT-based methods
+import user_functions # Miscellaneous useful functions
 
 # On some installations (Python 2.6 only?) need to convert text using QTextCodec
 codec = QTextCodec.codecForName("UTF-8")
@@ -382,6 +383,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         self.actionContour_filled.triggered.connect(lambda : self.handleCommandAction("contourf"))
 
         # Command menu
+        self.actionChop.triggered.connect(self.handleChop)
         self.actionIntegrate.triggered.connect(self.handleIntegrate)
         self.actionAdd.triggered.connect(self.handleAdd)
         self.actionMultiply.triggered.connect(self.handleMultiply)
@@ -749,6 +751,37 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
 
     ######## Command menu handlers
 
+    def handleChop(self):
+      """
+      Chops a signal, keeping only specified time range
+      """
+      # Get list of selected variables
+      names = self.selectedDataNames()
+      
+      if len(names) == 0:
+        return
+        
+      try:
+        # Get current time range from first variable
+        var = self.data[names[0]]
+        if var.time != None:
+          tmin = var.time[0]
+          tmax = var.time[-1]
+        else:
+          tmin = var.dim[0].data[0]
+          tmax = var.dim[0].data[-1]
+      except:
+        return
+      
+      # Use a dialog box to get time range
+      config = {"min":float(tmin), "max":float(tmax)}
+      
+      c = ConfigDialog(config, self)
+      c.exec_()
+
+      for n in names:
+        self.runCommand(self.makeUnique(n+"_chop") + " = " + "chop( "+n+", %e, %e )" % (config["min"], config["max"]))
+
     def handleIntegrate(self):
         """
         Integrates one or more traces
@@ -854,6 +887,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         
         glob['intg'] = calculus.integrate
         glob['fftp'] = fourier.fftp
+        glob['chop'] = user_functions.chop
         
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

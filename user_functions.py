@@ -39,12 +39,12 @@ sqrt = XPadFunction(np.sqrt, "sqrt")
 
 
 
-def chopNew(item, t_min, t_max):
+def chop(item, t_min, t_max):
     """
         >>> from user_functions import *
-        >>> a = chopNew(XMC_OMV_110, 0.274, 0.276)
+        >>> a = chop(XMC_OMV_110, 0.274, 0.276)
         >>> a_amp,a_phase = fftp(a)
-        >>> b = chopNew(a_phase, 0.0, 100.0)
+        >>> b = chop(a_phase, 0.0, 100.0)
         >>> plot(b)
     """
     if len(item.dim) != 1:
