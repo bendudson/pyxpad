@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # 
 # Author: Ben Dudson, Department of Physics, University of York 
 #         benjamin.dudson@york.ac.uk
@@ -26,12 +26,12 @@ from configdialog import ConfigDialog
 
 try:
   import cPickle as pickle
-except:
+except ImportError:
   import pickle
 
 try:
   from StringIO import StringIO  # Python 2
-except:
+except ImportError:
   from io import StringIO
 
 import sys, os
@@ -110,7 +110,7 @@ class Sources:
         """
         try:
             from datafile import NetCDFDataSource
-        except:
+        except ImportError:
             self.main.write("Sorry, no NetCDF support")
             return
         try:
@@ -132,7 +132,7 @@ class Sources:
     def addXPADtree(self):
         try:
             from xpadsource import XPadSource
-        except:
+        except ImportError:
             self.main.write("Sorry, no XPAD tree support")
             self.main.write(str(sys.exc_info()))
             return
@@ -498,7 +498,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             None
         """
         # First make sure the name is a valid variable name
-        name = re.sub(b'\W|^(?=\d)','_', name) # Replace invalid characters with '_'
+        name = re.sub('\W|^(?=\d)','_', name) # Replace invalid characters with '_'
         
         if iskeyword(name): # Check if name is a keyword
             name += '2'
@@ -711,21 +711,12 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         namelist = [ (name, trace(name)) for name in names ]
         values = set(map(lambda x:x[1], namelist))
         groups = [[y[0] for y in namelist if y[1]==x] for x in values]
-        
-        def plotStr(item):
-            if len(item) < 2:
-                return item[0]
-            s = "[" + item[0]
-            for n in item[1:]:
-                s += ", " + n
-            s += "]"
-            return s
-        
+
+        def plotStr(items):
+            return "[" + ", ".join(items) + "]"
+
         # Create a command to execute
-        cmd = "plot("+plotStr(groups[0])
-        for g in groups[1:]:
-            cmd += ", "+plotStr(g)
-        cmd += ")"
+        cmd = "plot(" + ", ".join([plotStr(group) for group in groups]) + ")"
         
         # Run the command within sandboxed environment
         # Also shows user the command which can be entered

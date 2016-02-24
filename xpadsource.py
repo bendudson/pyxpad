@@ -27,31 +27,35 @@ import os
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
 try:
-    import idam
+    import pyidam as idam
     gotidam = True
-except:
-    print("Warning: IDAM library not found. Cannot read data")
-    gotidam = False
+except ImportError:
+    try:
+        import idam
+        gotidam = True
+    except ImportError:
+        print("Warning: IDAM library not found. Cannot read data")
+        gotidam = False
 
 class XPadSource:
     def __init__(self, path, parent=None):
 
         # Convert path to string, strip NULL chars
-        path = str(path).translate(None, '\0')
-        
+        path = str(path)
+
         self.label = os.path.basename(os.path.normpath(path))
         self.dimensions = {}
         self.varNames = []
         self.variables = {}
-        
+
         self.parent = parent
-        
+
         # Define configuration dictionary
         if parent == None:
-            self.config = {'Host':'mast.fusion.org.uk', 'Port':56565, 'verbose':False, 'debug':False}
+            self.config = {'Host':'mast.fusion.org.uk', 'Port':56565, 'verbose':True, 'debug':False}
         else:
             self.config = parent.config
-        
+
         if os.path.isdir(path):
             # List directory
             ls = os.listdir(path)
@@ -115,21 +119,22 @@ class XPadSource:
         try:
             if isinstance(name, unicode):
                 name = name.encode('utf-8')
-            name = str(name).translate(None, '\0')
-            shot = str(shot).translate(None, '\0')
+            name = str(name)
+            shot = str(shot)
         except NameError:
             pass
-        
-        # Set configuration
-        idam.setHost(self.config['Host'])
-        idam.setPort(self.config['Port'])
-        
+
+        # Start client
+        if not hasattr(self, "client"):
+            # Set configuration
+            idam.Client.server = self.config['Host']
+            idam.Client.port = self.config['Port']
+            self.client = idam.Client()
+
         # Read data
-        data = idam.Data(name, shot)
-        
+        data = self.client.get(name, shot)
+
         return XPadDataItem(data)
-    
+
     def size(self, name):
         pass
-    
-    

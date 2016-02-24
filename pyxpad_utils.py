@@ -101,27 +101,32 @@ class XPadDataItem:
         self.order  = -1             # Index of time dimension
         self.time   = None           # A shortcut to the time data (dim[order].data). May be None
 
-        if other != None:
-            attr = dir(other)
-            if "data" in attr:
+        if other is not None:
+            if hasattr(other, "data"):
                 # List of variables to copy
                 varlist = ["name", "source", "label", "units", "desc",
                            "data", "errl", "errh", "order", "time"]
                 for name in varlist:
                     # Check if other has this property
-                    if name in attr:
+                    try:
                         setattr(self, name, getattr(other, name))
-                if "dim" in attr:
+                    except AttributeError:
+                        pass
+                if self.name == "":
+                    self.name = other.label
+                try:
                     # Copy the dim attributes
                     self.dim = []
-                    for d in other.dim:
-                        self.dim.append(XPadDataDim(d))
+                    for d in range(other.rank):
+                        self.dim.append(XPadDataDim(other.dim(d)))
+                except AttributeError:
+                    pass
             else:
                 # Assume it's a numerical type
                 self.data = other
                 self.name = str(other)
 
-    #def __coerce__(self, other):
+    # def __coerce__(self, other):
     #    # Convert other to an XPadDataItem and return
     #    item = XPadDataItem
 

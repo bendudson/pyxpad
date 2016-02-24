@@ -10,7 +10,10 @@ matplotlib.rcParams['backend.qt4']='PySide'
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+try:
+    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+except ImportError:
+    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.pyplot import setp
 
 from PySide.QtGui import QVBoxLayout
@@ -38,17 +41,16 @@ class MatplotlibWidget():
         self.axes.clear()
         self.figure.clear()
         self.axes.grid(True)
-        for plotnum, p in enumerate(args):
+        for plotnum, p in enumerate(args, 1):
             # For each plot
-            if plotnum == 0:
-                self.axes = self.figure.add_subplot(nplots,1,plotnum)
+            if plotnum == 1:
+                self.axes = self.figure.add_subplot(nplots, 1, plotnum)
                 ax = self.axes
             else:
-                self.axes = self.figure.add_subplot(nplots,1,plotnum, sharex=ax)
+                self.axes = self.figure.add_subplot(nplots, 1, plotnum, sharex=ax)
                 setp(self.axes.get_xticklabels(), visible=False)
             try:
                 # Assume each p is a list of data items to be overplotted
-                
                 for data in p:
                     # Plot data
                     #self.axes.plot(data.time, data.data)
