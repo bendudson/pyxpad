@@ -4,7 +4,7 @@
 
 """
 
-# Author: Ben Dudson, Department of Physics, University of York 
+# Author: Ben Dudson, Department of Physics, University of York
 #         benjamin.dudson@york.ac.uk
 #
 # This file is part of PyXPad.
@@ -37,6 +37,7 @@ except ImportError:
         print("Warning: IDAM library not found. Cannot read data")
         gotidam = False
 
+
 class XPadSource:
     def __init__(self, path, parent=None):
 
@@ -51,8 +52,11 @@ class XPadSource:
         self.parent = parent
 
         # Define configuration dictionary
-        if parent == None:
-            self.config = {'Host':'mast.fusion.org.uk', 'Port':56565, 'verbose':True, 'debug':False}
+        if parent is None:
+            self.config = {'Host': 'mast.fusion.org.uk',
+                           'Port': 56565,
+                           'verbose': True,
+                           'debug': False}
         else:
             self.config = parent.config
 
@@ -66,16 +70,17 @@ class XPadSource:
                 f = open(os.path.join(path, 'title'), 'r')
                 self.label = f.readline().strip()
                 f.close()
-                
+
             # Create a child for each subdirectory
-            self.children = [ XPadSource( os.path.join(path, name), parent=self )  # Create child
-                              for name in ls
-                              if os.path.isdir(os.path.join(path, name)) and name[0] != '.' ]  # For each directory which isn't hidden
-            
-            # Find items 
+            self.children = [XPadSource(os.path.join(path, name), parent=self)  # Create child
+                             for name in ls
+                             # For each directory which isn't hidden
+                             if os.path.isdir(os.path.join(path, name)) and name[0] != '.']
+
+            # Find items
             for name in ls:
-                if os.path.isfile(os.path.join(path, name)) and ( os.path.splitext(name)[1] == ".item" ):
-                    self.children.append( XPadSource( os.path.join(path, name), parent=self) )
+                if os.path.isfile(os.path.join(path, name)) and (os.path.splitext(name)[1] == ".item"):
+                    self.children.append(XPadSource(os.path.join(path, name), parent=self))
         else:
             # Given an item file to read
             f = open(path, 'r')
@@ -98,20 +103,20 @@ class XPadSource:
                 item.source = path
                 self.variables[name] = item
                 self.varNames.append(name)
-                
-            if parent != None:
+
+            if parent is not None:
                 parent.addVariables(self.variables)
             f.close()
-            
+
     def addVariables(self, vardict):
         # Add to dictionary of variables and list of names
         for name, var in vardict.items():
             self.variables[name] = var
             self.varNames.append(name)
-        
-        if self.parent != None:
+
+        if self.parent is not None:
             self.parent.addVariables(vardict)  # Variables go from children up to parent
-    
+
     def read(self, name, shot):
         """ Read data from IDAM """
         if not gotidam:

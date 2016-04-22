@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# 
-# Author: Ben Dudson, Department of Physics, University of York 
+#
+# Author: Ben Dudson, Department of Physics, University of York
 #         benjamin.dudson@york.ac.uk
 #
 # This file is part of PyXPad.
@@ -18,23 +18,26 @@
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide.QtGui import (QAbstractItemView, QAction, QApplication, QCursor,
+                          QFileDialog, QIcon, QMainWindow, QMenu, QMessageBox,
+                          QStyle, QTableWidgetItem, QTreeWidgetItem)
+from PySide.QtCore import Qt, QTextCodec, QDir
 
-from pyxpad_main import *
+from pyxpad_main import Ui_MainWindow
 from configdialog import ConfigDialog
 
 try:
-  import cPickle as pickle
+    import cPickle as pickle
 except ImportError:
-  import pickle
+    import pickle
 
 try:
-  from StringIO import StringIO  # Python 2
+    from StringIO import StringIO  # Python 2
 except ImportError:
-  from io import StringIO
+    from io import StringIO
 
-import sys, os
+import sys
+import os
 import re
 import string
 import fnmatch  # For matching names to wildcard patterns
@@ -42,28 +45,30 @@ from keyword import iskeyword  # Test if a string is a keyword
 
 import calculus   # Integration and differentiation methods
 import fourier    # FFT-based methods
-import user_functions # Miscellaneous useful functions
+import user_functions  # Miscellaneous useful functions
 
-# On some installations (Python 2.6 only?) need to convert text using QTextCodec
+# On some installations (Python 2.6 only?) need to convert text using
+# QTextCodec
 codec = QTextCodec.codecForName("UTF-8")
 def toStr(uni):
     return str(codec.fromUnicode(uni))
 
+
 class Sources:
     sources = []  # List of sources
-    
+
     def __init__(self, mainwindow):
         self.main = mainwindow
         self.main.sourceDescription.stateChanged.connect(self.updateDisplay)
-        
-        self.groupIcon = QtGui.QIcon()	
-        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_DirClosedIcon),
-                                 QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_DirOpenIcon),
-                                 QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.keyIcon = QtGui.QIcon()
-        self.keyIcon.addPixmap(mainwindow.style().standardPixmap(QtGui.QStyle.SP_FileIcon))
-        
+
+        self.groupIcon = QIcon()
+        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QStyle.SP_DirClosedIcon),
+                                 QIcon.Normal, QIcon.Off)
+        self.groupIcon.addPixmap(mainwindow.style().standardPixmap(QStyle.SP_DirOpenIcon),
+                                 QIcon.Normal, QIcon.On)
+        self.keyIcon = QIcon()
+        self.keyIcon.addPixmap(mainwindow.style().standardPixmap(QStyle.SP_FileIcon))
+
         self.main.treeView.itemSelectionChanged.connect(self.updateDisplay)
         self.main.tracePattern.returnPressed.connect(self.updateDisplay)
         self.main.treeView.setContextMenuPolicy(Qt.CustomContextMenu)  # Enable popup menus
@@ -73,35 +78,35 @@ class Sources:
 
         # Context menu actions
         self.actionAdd = QAction("Add", self.main, statusTip="Add a new source")
-        
+
         self.actionDelete = QAction("Delete", self.main, statusTip="Remove source from tree")
         self.actionDelete.triggered.connect(self.deleteSource)
-        
+
         self.actionConfig = QAction("Configure", self.main, statusTip="Configure source")
         self.actionConfig.triggered.connect(self.configureSource)
-        
+
     def saveState(self, f):
         pickle.dump(self.sources, f)
-        
-    def loadState(self, f):        
+
+    def loadState(self, f):
         sources = pickle.load(f)
         for s in sources:
             self.addSource(s)
         self.updateDisplay()
-        
+
     def handlePopupMenu(self):
         """
         Called when user right-clicks on the sources tree
         """
         menu = QMenu()
         menu.addAction(self.actionAdd)
-        
+
         selected = self.main.treeView.selectedItems()
         if len(selected) != 0:
             if 'config' in selected[0].source.__dict__:
                 menu.addAction(self.actionConfig)
             menu.addAction(self.actionDelete)
-            
+
         menu.exec_(QCursor.pos())
 
     def addNetCDF(self):
@@ -116,13 +121,14 @@ class Sources:
         try:
             # Get the file name
             tr = self.main.tr
-            fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.', filter=tr("NetCDF files (*.nc *.cdl)"))
+            fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.',
+                                                   filter=tr("NetCDF files (*.nc *.cdl)"))
             fname = toStr(fname)
-            if (fname == None) or (fname == ""):
-                return # Cancelled
-        
+            if (fname is None) or (fname == ""):
+                return  # Cancelled
+
             s = NetCDFDataSource(fname)
-            
+
             self.addSource(s)
             self.updateDisplay()
         except:
@@ -136,17 +142,18 @@ class Sources:
             self.main.write("Sorry, no XPAD tree support")
             self.main.write(str(sys.exc_info()))
             return
-        
+
         try:
             # Select the directory
             tr = self.main.tr
-            dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'), QDir.currentPath())
+            dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'),
+                                                     QDir.currentPath())
             dname = toStr(dname)
-            if (dname == "") or (dname == None):
+            if (dname == "") or (dname is None):
                 return
             # Create data source
             s = XPadSource(dname)
-            
+
             # Add data source and update
             self.addSource(s)
             self.updateDisplay()
@@ -164,13 +171,14 @@ class Sources:
 
             # Select the directory
             tr = self.main.tr
-            dname = QFileDialog.getExistingDirectory(self.main, tr('Open BOUT++ directory'), QDir.currentPath())
+            dname = QFileDialog.getExistingDirectory(self.main, tr('Open BOUT++ directory'),
+                                                     QDir.currentPath())
             dname = toStr(dname)
-            if (dname == "") or (dname == None):
+            if (dname == "") or (dname is None):
                 return
             # Create data source
             s = BoutDataSource(dname)
-            
+
             # Add data source and update
             self.addSource(s)
             self.updateDisplay()
@@ -178,42 +186,41 @@ class Sources:
             self.main.write("Sorry, no BOUT++ support")
             raise
             return
-        
-        
+
     def addSource(self, source):
         self.sources.append(source)
         it = QTreeWidgetItem(self.main.treeView, [source.label])
         it.setIcon(0, self.groupIcon)
         it.source = source
         self.main.treeView.addTopLevelItem(it)
-        
+
         def buildtree(parent, it):
             # Check for children
             try:
                 for child in parent.children:
                     itchild = QTreeWidgetItem(it, [child.label])
                     itchild.source = child
-                    buildtree(child, itchild) # Add child's children
+                    buildtree(child, itchild)  # Add child's children
                     it.addChild(itchild)
             except AttributeError:
                 # Probably no children
                 return
 
         buildtree(source, it)
-    
+
     def deleteSource(self):
         tree = self.main.treeView
         selected = tree.selectedItems()
         if len(selected) == 0:
             return
-        source =  selected[0].source
-        tree.takeTopLevelItem(tree.indexOfTopLevelItem(selected[0])) # Remove from tree
+        source = selected[0].source
+        tree.takeTopLevelItem(tree.indexOfTopLevelItem(selected[0]))  # Remove from tree
         # Remove from list of sources
         i = self.sources.index(source)
         del self.sources[i]
         # Update the display
         self.updateDisplay()
-        
+
     def configureSource(self):
         """
         Configure a data source, changing the source's
@@ -222,10 +229,10 @@ class Sources:
         selected = self.main.treeView.selectedItems()
         if len(selected) == 0:
             return
-        source =  selected[0].source
+        source = selected[0].source
         c = ConfigDialog(source.config, self.main)
         c.exec_()
-        
+
     def updateDisplay(self):
         table = self.main.sourceTable
         # Find which source is selected, and update table view
@@ -243,10 +250,10 @@ class Sources:
         for item in selecteditems:
             if 'source' in item.__dict__:
                 name = toStr(item.text())
-                selectedvars.append(  (name, item.source) )
+                selectedvars.append((name, item.source))
                 if item.source != s:
                     nextra += 1
-        
+
         table.clearContents()  # Clear the table and selections
 
         pattern = toStr(self.main.tracePattern.text())
@@ -254,17 +261,18 @@ class Sources:
             varNames = s.varNames
         else:
             # Filter the variable names
-            varNames = [name for name in s.varNames if fnmatch.fnmatch(name.lower(), pattern.lower())]
-        
+            varNames = [name for name in s.varNames
+                        if fnmatch.fnmatch(name.lower(), pattern.lower())]
+
         varNames.sort(key=str.lower)
-        
+
         if self.main.sourceDescription.isChecked():
             # Provide description for each variable (if available)
-            
+
             table.setColumnCount(2)
             table.setRowCount(len(varNames) + nextra)
             table.setSelectionBehavior(QAbstractItemView.SelectRows)
-            
+
             def addVar(name, source, selected=False):
                 var = source.variables[name]
                 item = QTableWidgetItem(name)
@@ -276,8 +284,8 @@ class Sources:
                     comment = var.label
                     if var.units != "":
                         comment += " ("+var.units+") "
-                        
-                if (var.dim != None) and (var.dim != []):
+
+                if (var.dim is not None) and (var.dim != []):
                     comment += " [" + var.dim[0].name
                     for d in var.dim[1:]:
                         comment += ", " + d.name
@@ -294,7 +302,7 @@ class Sources:
             table.setColumnCount(ncols)
             table.setRowCount(min([n, maxrows]))
             table.setSelectionBehavior(QAbstractItemView.SelectItems)
-            
+
             def addVar(name, source, selected=False):
                 row = addVar.ind % maxrows
                 col = int(addVar.ind / maxrows)
@@ -303,23 +311,23 @@ class Sources:
                 table.setItem(row, col, item)
                 item.setSelected(selected)
                 addVar.ind += 1
-        
+
         addVar.ind = 0
         for name, source in selectedvars:
             addVar(name, source, True)
         sel = [name for name, source in selectedvars if source == s]
         for name in varNames:
-            if not name in sel:
+            if name not in sel:
                 addVar(name, s)
-        
+
     def read(self):
         """
         Read the selected data and return as a list of data items
-        
+
         Input
         -----
             None
-            
+
         Returns
         ------
             [ XPadDataItem ]  or equivalent
@@ -328,49 +336,49 @@ class Sources:
         --------
             None
         """
-        
+
         # Get list of shots
         shotlist = toStr(self.main.shotInput.text()).split(',')
-        
+
         table = self.main.sourceTable
         tableitems = table.selectedItems()
         data = []
         for item in tableitems:
             if 'source' in item.__dict__:
                 name = toStr(item.text())
-                
+
                 for shot in shotlist:
                     s = "Reading " + name + " from " + item.source.label
                     if shot != "":
                         s += " shot = " + shot
                     self.main.write(s)
                     # Run in a sandbox to catch exceptions and display output
-                    self.main.runSandboxed(lambda : data.append(item.source.read(name, shot)))
-                    
+                    self.main.runSandboxed(lambda: data.append(item.source.read(name, shot)))
+
             else:
                 print("Ignoring "+item.text())
         return data
-                
-        
-class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
+
+
+class PyXPad(QMainWindow, Ui_MainWindow):
     """
-    
+
     Attributes
-    
+
       data    Dictionary of variables containing user data
     """
     def __init__(self, parent=None, loadfile=None):
         super(PyXPad, self).__init__(parent)
         self.setupUi(self)
-        
+
         self.sources = Sources(self)  # Handles data sources
-        self.data = {} # User data 
-        
+        self.data = {}  # User data
+
         # File menu
         self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
         self.actionXPAD_tree.triggered.connect(self.sources.addXPADtree)
         self.actionBOUT_data.triggered.connect(self.sources.addBOUT)
-        
+
         self.actionExit.triggered.connect(self.close)
 
         self.actionLoadState.triggered.connect(self.loadState)
@@ -379,8 +387,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         # Graphics menu
         self.actionPlot.triggered.connect(self.handlePlot)
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
-        self.actionContour.triggered.connect(lambda : self.handleCommandAction("contour"))
-        self.actionContour_filled.triggered.connect(lambda : self.handleCommandAction("contourf"))
+        self.actionContour.triggered.connect(lambda: self.handleCommandAction("contour"))
+        self.actionContour_filled.triggered.connect(lambda: self.handleCommandAction("contourf"))
 
         # Command menu
         self.actionChop.triggered.connect(self.handleChop)
@@ -390,17 +398,17 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         self.actionSubtract.triggered.connect(self.handleSubtract)
         self.actionDivide.triggered.connect(self.handleDivide)
         self.actionFFTP.triggered.connect(self.handleFFTP)
-        
-        # Sources tab 
+
+        # Sources tab
         self.readDataButton.clicked.connect(self.readData)
         self.shotInput.returnPressed.connect(self.readData)
 
         self.commandInput.commandEntered.connect(self.commandEntered)
         self.commandButton.clicked.connect(self.commandEntered)
-        
+
         # Data tab
         self.dataTable.cellChanged.connect(self.dataTableChanged)
-        
+
         try:
             from matplotlib_widget import MatplotlibWidget
             self.DataPlot = MatplotlibWidget(self.plotTab)
@@ -408,19 +416,19 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             raise
 
         # Load state
-        if loadfile != None:
+        if loadfile is not None:
             self.loadState(loadfile)
 
-    def saveState(self, filename = None):
+    def saveState(self, filename=None):
         """
         Saves program state to given file. If no file is specified,
         then a dialog is created to ask the user for one.
         """
-        if filename == None:
+        if filename is None:
             tr = self.tr
             filename, _ = QFileDialog.getSaveFileName(self, filter=tr("PyXPad save file (*.pyx)"))
             filename = toStr(filename)
-        if (filename == None) or (filename == ""):
+        if (filename is None) or (filename == ""):
             return
         try:
             f = open(filename, 'w')
@@ -433,18 +441,19 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("Could not save state to file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
 
-    def loadState(self, filename = None):
+    def loadState(self, filename=None):
         """
         Loads program state from the given filename.
         If no filename is specified, then a dialog is created
         to ask the user for a file name.
         """
-        if filename == None:
+        if filename is None:
             tr = self.tr
-            filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.', filter=tr("PyXPad save file (*.pyx)"))
+            filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.',
+                                                      filter=tr("PyXPad save file (*.pyx)"))
             filename = toStr(filename)
-        if (filename == None) or (filename == ""):
-            return # Cancelled
+        if (filename is None) or (filename == ""):
+            return  # Cancelled
         try:
             f = open(filename, 'rb')
             self.sources.loadState(f)
@@ -458,20 +467,20 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("Could not load state from file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
             raise
-        
+
     def closeEvent(self, event):
         """
         Called when the main window is closed
         """
-        reply = QtGui.QMessageBox.question(self, 'Message',
-                                           "Are you sure to quit?", QtGui.QMessageBox.Yes | 
-                                           QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
-        
-        if reply == QtGui.QMessageBox.Yes:
+        reply = QMessageBox.question(self, 'Message',
+                                           "Are you sure to quit?", QMessageBox.Yes |
+                                           QMessageBox.No, QMessageBox.Yes)
+
+        if reply == QMessageBox.Yes:
             event.accept()
         else:
             event.ignore()
-    
+
     def write(self, text):
         """
         Write some log text to output text widget
@@ -482,13 +491,13 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         """
         Modifies a given string into a valid Python variable name
         which is not already in self.data
-        
+
         Input
         -----
             name  ::  string
 
             self.data   (class member)
-            
+
         Returns
         ------
             string containing modified name
@@ -498,9 +507,9 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             None
         """
         # First make sure the name is a valid variable name
-        name = re.sub('\W|^(?=\d)','_', name) # Replace invalid characters with '_'
-        
-        if iskeyword(name): # Check if name is a keyword
+        name = re.sub('\W|^(?=\d)', '_', name)  # Replace invalid characters with '_'
+
+        if iskeyword(name):  # Check if name is a keyword
             name += '2'
 
         if name in self.data:
@@ -516,34 +525,33 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         Generates a unique variable name, which
         is not already in self.data
         """
-        
-        def findName(name,length):
+
+        def findName(name, length):
             """
             Finds a name
             """
             for c in string.ascii_lowercase:
                 if length <= 1:
-                    if not name+c in self.data:
+                    if name+c not in self.data:
                         return name+c
                 else:
-                    r = findName(name+c,length-1)
-                    if r != None:
+                    r = findName(name+c, length-1)
+                    if r is not None:
                         return r
             return None
-        
+
         length = 1
         while True:
-            n = findName("",length)
-            if n != None:
+            n = findName("", length)
+            if n is not None:
                 return n
             length += 1
-            
-        
+
     def readData(self):
         """
         User pressed the "Read" button to read selected
         data items from given shots.
-        
+
         Input
         -----
             None
@@ -556,21 +564,21 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         --------
             self.data
 
-        
+
         Calls Sources to read the new data
-        
+
         Inserts data into self.data, ensuring that the name
         of each data item is unique and a valid Python name
-        
+
         Updates the data table based on self.data
         """
         # Switch to data tab
         self.tabWidget.setCurrentWidget(self.dataTab)
         # Get the data from the source as a list
         newdata = self.sources.read()
-        if (newdata == None) or (newdata == []):
+        if (newdata is None) or (newdata == []):
             return  # No data read
-        
+
         # Add to the data dictionary
         for item in newdata:
             try:
@@ -579,7 +587,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                 self.data[name] = item
             except:
                 self.write("Error adding item '"+str(item)+"'")
-        
+
         self.updateDataTable()
 
     def updateDataTable(self):
@@ -588,30 +596,30 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         """
         n = len(self.data)
         table = self.dataTable
-        table.setSortingEnabled(False) # Stops the table rearranging itself
-        self.dataTable.cellChanged.disconnect(self.dataTableChanged) # Don't call the dataTableChanged function
+        table.setSortingEnabled(False)  # Stops the table rearranging itself
+        self.dataTable.cellChanged.disconnect(self.dataTableChanged)  # Don't call the dataTableChanged function
         table.setRowCount(n)
         for row, name in enumerate(self.data):
             item = self.data[name]
             it = QTableWidgetItem(name)
-            it.oldname = name # Save this for when it's changed
+            it.oldname = name  # Save this for when it's changed
             table.setItem(row, 0, it)
-            
+
             # Assume it's an XPadDataItem
             try:
                 it = QTableWidgetItem(item.source)
-                it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make source read only
+                it.setFlags(it.flags() ^ Qt.ItemIsEditable)  # Make source read only
                 table.setItem(row, 1, it)
             except:
-                table.setItem(row, 1, QTableWidgetItem(""))    
-            
+                table.setItem(row, 1, QTableWidgetItem(""))
+
             try:
                 it = QTableWidgetItem(item.name)
-                it.setFlags(it.flags() ^ Qt.ItemIsEditable); # Make trace read only
+                it.setFlags(it.flags() ^ Qt.ItemIsEditable)  # Make trace read only
                 table.setItem(row, 2, it)
             except:
                 table.setItem(row, 2, QTableWidgetItem(""))
-                
+
             try:
                 try:
                     comment = item.comment
@@ -621,7 +629,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                         comment = item.label
                         if item.units != "":
                             comment += " ("+item.units+") "
-                
+
                     if item.dim != []:
                         comment += " [" + item.dim[0].name
                         for d in item.dim[1:]:
@@ -629,18 +637,18 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
                         comment += "] "
                     else:
                         comment += " = " + str(item.data)
-                
+
                 table.setItem(row, 3, QTableWidgetItem(comment))
             except:
                 table.setItem(row, 3, QTableWidgetItem(str(item)))
-            
+
         table.setSortingEnabled(True)  # Re-enable sorting
         self.dataTable.cellChanged.connect(self.dataTableChanged)
-        
+
     def dataTableChanged(self, row, col):
         """
         Called when the user changes the value of a cell
-        in the data table. This can either be to change 
+        in the data table. This can either be to change
         the name of a variable, or the comment.
         """
         if col == 0:
@@ -649,23 +657,23 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             name = toStr(it.text())
             oldname = it.oldname
             if name == oldname:
-                return # Not really changed
-            
+                return  # Not really changed
+
             # Need to make sure new name is unique and valid
             name = self.makeUnique(name)
             it.setText(name)
             it.oldname = name
             self.data[name] = self.data[oldname]
             del self.data[oldname]
-            
+
         if col == 3:
             # Changing the comment
             comment = self.dataTable.item(row, col).text()
             name = self.dataTable.item(row, 0).text()
             self.data[name].comment = comment
-            
+
         print(row, col)
-        
+
     def commandEntered(self, text):
         """
         Called when a command is entered on the Data tab.
@@ -676,14 +684,14 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         cmd = toStr(text)
         self.commandInput.clear()
         self.runCommand(cmd)
-        
+
     def selectedDataNames(self):
         """
         Retuns a list of the names of variables selected
         in the Data table.
         """
         # Find which items are selected in the data table
-        items = self.dataTable.selectedItems() # All selected items
+        items = self.dataTable.selectedItems()  # All selected items
         if len(items) == 0:
             return []
         names = []  # List of selected data names
@@ -691,7 +699,7 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             try:
                 names.append(it.oldname)
             except AttributeError:
-                pass # Ignore if doesn't have a name
+                pass  # Ignore if doesn't have a name
         return names
 
     ##################### Plot menu actions #####################
@@ -701,23 +709,23 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         names = self.selectedDataNames()
         if len(names) == 0:
             return
-        
+
         # Sort by trace name
         def trace(name):
             try:
                 return self.data[name].name
             except:
                 return ""
-        namelist = [ (name, trace(name)) for name in names ]
-        values = set(map(lambda x:x[1], namelist))
-        groups = [[y[0] for y in namelist if y[1]==x] for x in values]
+        namelist = [(name, trace(name)) for name in names]
+        values = set(map(lambda x: x[1], namelist))
+        groups = [[y[0] for y in namelist if y[1] == x] for x in values]
 
         def plotStr(items):
             return "[" + ", ".join(items) + "]"
 
         # Create a command to execute
         cmd = "plot(" + ", ".join([plotStr(group) for group in groups]) + ")"
-        
+
         # Run the command within sandboxed environment
         # Also shows user the command which can be entered
         self.runCommand(cmd)
@@ -743,42 +751,43 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
     ######## Command menu handlers
 
     def handleChop(self):
-      """
-      Chops a signal, keeping only specified time range
-      """
-      # Get list of selected variables
-      names = self.selectedDataNames()
-      
-      if len(names) == 0:
-        return
-        
-      try:
-        # Get current time range from first variable
-        var = self.data[names[0]]
-        if var.time != None:
-          tmin = var.time[0]
-          tmax = var.time[-1]
-        else:
-          tmin = var.dim[0].data[0]
-          tmax = var.dim[0].data[-1]
-      except:
-        return
-      
-      # Use a dialog box to get time range
-      config = {"min":float(tmin), "max":float(tmax)}
-      
-      c = ConfigDialog(config, self)
-      c.exec_()
+        """
+        Chops a signal, keeping only specified time range
+        """
+        # Get list of selected variables
+        names = self.selectedDataNames()
 
-      for n in names:
-        self.runCommand(self.makeUnique(n+"_chop") + " = " + "chop( "+n+", %e, %e )" % (config["min"], config["max"]))
+        if len(names) == 0:
+            return
+
+        try:
+            # Get current time range from first variable
+            var = self.data[names[0]]
+            if var.time is not None:
+                tmin = var.time[0]
+                tmax = var.time[-1]
+            else:
+                tmin = var.dim[0].data[0]
+                tmax = var.dim[0].data[-1]
+        except:
+            return
+
+        # Use a dialog box to get time range
+        config = {"min":float(tmin), "max":float(tmax)}
+
+        c = ConfigDialog(config, self)
+        c.exec_()
+
+        for n in names:
+            self.runCommand(self.makeUnique(n+"_chop") + " = " +
+                            "chop( "+n+", %e, %e )" % (config["min"], config["max"]))
 
     def handleIntegrate(self):
         """
         Integrates one or more traces
         """
         names = self.selectedDataNames()
-        
+
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "intg( "+n+" )")
 
@@ -807,14 +816,14 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
     def handleSubtract(self):
         """
         Subtracts one trace from another
-        
+
         """
         names = self.selectedDataNames()
         if len(names) != 2:
             self.write("** Two data items must be selected to subtract one from another")
             return
         self.runCommand(self.uniqueName()+" = " + names[0] + " - " + names[1])
-    
+
     def handleDivide(self):
         """
         Divide one trace by another
@@ -824,22 +833,21 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
             self.write("** Two data items must be selected to subtract one from another")
             return
         self.runCommand(self.uniqueName()+" = " + names[0] + " / " + names[1])
-        
+
     def handleFFTP(self):
         """
         Perform FFT, returning amplitude and phase
-        
+
         """
-        
+
         for n in self.selectedDataNames():
             # Create a unique name for amplitude and phase
             ampname = self.makeUnique(n+"_amp")
             phasename = self.makeUnique(n+"_phase")
             self.runCommand(ampname+","+phasename + " = " + "fftp( "+n+" )")
-            
-        
+
     ########
-    
+
     def runSandboxed(self, func, args=()):
         # To capture print statements stdout is temporarily directed to a StringIO buffer
         buffer = StringIO()
@@ -865,30 +873,29 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         and can't be passed as a function pointer.
         """
         exec(cmd, glob, loc)
-    
+
     def runCommand(self, cmd):
         # Output the command
         self.write(">>> " + cmd)
-        
+
         glob = globals()
         glob['plot']     = self.DataPlot.plot
         glob['plotxy']   = self.DataPlot.plotxy
         glob['contour']  = self.DataPlot.contour
         glob['contourf'] = self.DataPlot.contourf
-        
+
         glob['intg'] = calculus.integrate
         glob['fftp'] = fourier.fftp
         glob['chop'] = user_functions.chop
-        
+
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
         self.runSandboxed(self._runExec, args=(cmd, glob, self.data))
         self.updateDataTable()
- 
+
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
-    path=os.path.dirname(sys.argv[0])
-    window = PyXPad()#loadfile=path+"/default.pyx")
+    app = QApplication(sys.argv)
+    path = os.path.dirname(sys.argv[0])
+    window = PyXPad(loadfile=os.path.join(path, "test.conf"))
     window.show()
     sys.exit(app.exec_())
-

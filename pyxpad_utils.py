@@ -1,5 +1,5 @@
 #
-# Author: Ben Dudson, Department of Physics, University of York 
+# Author: Ben Dudson, Department of Physics, University of York
 #         benjamin.dudson@york.ac.uk
 #
 # This file is part of PyXPad.
@@ -19,10 +19,11 @@
 
 from numpy import sqrt, abs, max
 
+
 class XPadDataDim:
     """
     Dimension of a data item
-    
+
     name     Short name (e.g. "t")
     label    Short axis label (e.g. "Time (sec)")
     units    (e.g. "s")
@@ -30,8 +31,8 @@ class XPadDataDim:
     errl     Low-side error (may be None)
     errh     High-side error (may be None)
     """
-    
-    def __init__(self, other=None): # Constructor 
+
+    def __init__(self, other=None):  # Constructor
         # Instance Variables
         self.name = ""
         self.label = ""
@@ -40,28 +41,30 @@ class XPadDataDim:
         self.errl = None
         self.errh = None
 
-        if other != None:
+        if other is not None:
             try:
                 # List of variables to copy
-                varlist = ["name", "label", "units", 
+                varlist = ["name", "label", "units",
                            "data", "errl", "errh"]
-                attr = dir(other)
                 for name in varlist:
                     # Check if other has this property
-                    if name in attr:
+                    try:
                         setattr(self, name, getattr(other, name))
+                    except AttributeError:
+                        pass
                 if self.name == "":
                     self.name = self.label
             except:
                 pass
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
-        return ("XPadDataDim( {'name':'"+self.name + 
-                         "', 'label':'"+self.label + 
-                         "', 'units':'"+self.units+"'} )")
+        return ("XPadDataDim( {'name':'"+self.name +
+                "', 'label':'"+self.label +
+                "', 'units':'"+self.units+"'} )")
+
     def __eq__(self, other):
         return ((self.name == other.name) and
                 (self.units == other.units) and
@@ -89,10 +92,10 @@ class XPadDataItem:
       - errh   High-side error (may be None)
     order   Index of time dimension
     time    A shortcut to the time data (dim[order].data). May be None
-    
+
     """
 
-    def __init__(self, other=None): # Constructor
+    def __init__(self, other=None):  # Constructor
         # Instance Variables
         self.name   = ""
         self.source = ""
@@ -146,19 +149,19 @@ class XPadDataItem:
         Returns a summary of the data as a string
         """
         s = self.name + "("+self.units+")"
-        
+
         if len(self.dim) > 0:
             s += " [" + ",".join([str(d) for d in self.dim]) + "]"
 
         return s
-                
+
     def __repr__(self):
-        return ("XPadDataItem( {'name':'"+self.name + 
-                           "', 'source':'"+self.source + 
-                           "', 'label':'"+self.label + 
-                           "', 'units':'"+self.units + 
-                           "', 'desc':'"+self.desc+"'} )")
-                           
+        return ("XPadDataItem( {'name':'"+self.name +
+                "', 'source':'"+self.source +
+                "', 'label':'"+self.label +
+                "', 'units':'"+self.units +
+                "', 'desc':'"+self.desc+"'} )")
+
     def __add__(self, other):  # +
         item = XPadDataItem(self)
         item += other
@@ -167,7 +170,7 @@ class XPadDataItem:
     def __radd__(self, other):
         return self.__add__(other)
 
-    def __iadd__(self, other):  # += 
+    def __iadd__(self, other):  # +=
         try:
             # Metadata
             self.name += " + " + other.name
@@ -175,7 +178,7 @@ class XPadDataItem:
                 self.label += " + " + other.label
             else:
                 self.label = self.name
-        
+
             # Dimensions
             if (self.dim == other.dim):
                 self.dim = other.dim
@@ -184,17 +187,17 @@ class XPadDataItem:
                     self.dim, other.dim))
 
             # Low-side error
-            if self.errl != None and other.errl != None:
+            if self.errl is not None and other.errl is not None:
                 self.errl = sqrt(self.errl**2 + other.errl**2)
-            elif other.errl != None:
+            elif other.errl is not None:
                 self.errl = other.errl
-            
+
             # High-side error
-            if self.errh != None and other.errh != None:
+            if self.errh is not None and other.errh is not None:
                 self.errh = sqrt(self.errh**2 + other.errh**2)
-            elif other.errh != None:
+            elif other.errh is not None:
                 self.errh = other.errh
-                
+
             # Data
             self.data = self.data + other.data
         except AttributeError:
@@ -203,9 +206,9 @@ class XPadDataItem:
             if self.label != "":
                 self.label += " + " + str(other)
             self.data = self.data + other
-            
+
         return self
-    
+
     def __sub__(self, other):  # -
         item = XPadDataItem(self)
         item -= other
@@ -232,15 +235,15 @@ class XPadDataItem:
                     self.dim, other.dim))
 
             # Low-side error. Note h and l swap for other
-            if self.errl != None and other.errh != None:
+            if self.errl is not None and other.errh is not None:
                 self.errl = sqrt(self.errl**2 + other.errh**2)
-            elif other.errh != None:
+            elif other.errh is not None:
                 self.errl = other.errh
 
             # High-side error
-            if self.errh != None and other.errl != None:
+            if self.errh is not None and other.errl is not None:
                 self.errh = sqrt(self.errh**2 + other.errl**2)
-            elif other.errl != None:
+            elif other.errl is not None:
                 self.errh = other.errl
 
             # Data
@@ -251,7 +254,7 @@ class XPadDataItem:
                 self.label += " - " + str(other)
             self.data = self.data - other
         return self
-    
+
     def __mul__(self, other):  # *
         item = XPadDataItem(self)
         item *= other
@@ -259,7 +262,7 @@ class XPadDataItem:
 
     def __rmul__(self, other):
         return self.__mul__(other)
-    
+
     def __imul__(self, other):         # *=
         try:
             # Metadata
@@ -277,40 +280,40 @@ class XPadDataItem:
                     self.dim, other.dim))
 
             # Low-side error
-            if self.errl != None and other.errl != None:
+            if self.errl is not None and other.errl is not None:
                 self.errl = sqrt( (other.data*self.errl)**2 + (self.data * other.errl)**2 )
-            elif other.errl != None:
+            elif other.errl is not None:
                 self.errl = self.data * other.errl
-            elif self.errl != None:
+            elif self.errl is not None:
                 self.errl = other.data * self.errl
 
             # High-side error
-            if self.errh != None and other.errh != None:
+            if self.errh is not None and other.errh is not None:
                 self.errh = sqrt( (other.data*self.errh)**2 + (self.data * other.errh)**2 )
-            elif other.errh != None:
+            elif other.errh is not None:
                 self.errh = self.data * other.errh
-            elif self.errh != None:
+            elif self.errh is not None:
                 self.errh = other.data * self.errh
 
             # Data
             self.data = self.data * other.data
         except:
-            self.name = "( " +self.name + " * " + str(other)+" )"
+            self.name = "( " + self.name + " * " + str(other) + " )"
             if self.label != "":
-                self.label = "( " + self.label + " * " + str(other)+" )"
+                self.label = "( " + self.label + " * " + str(other) + " )"
             self.data = self.data * other
-            if self.errl != None:
+            if self.errl is not None:
                 self.errl = self.errl * other
-            if self.errh != None:
+            if self.errh is not None:
                 self.errh = self.errh * other
         return self
-    
+
     def __div__(self, other):  # /
         item = XPadDataItem(self)
         item /= other
         return item
-    
-    def __idiv__(self, other): # /=
+
+    def __idiv__(self, other):  # /=
         try:
             # Metadata
             self.name += " / " + other.name
@@ -318,7 +321,7 @@ class XPadDataItem:
                 self.label += " / " + other.label
             else:
                 self.label = self.name
-                
+
             # Dimensions
             if (self.dim == other.dim):
                 self.dim = other.dim
@@ -327,50 +330,50 @@ class XPadDataItem:
                     self.dim, other.dim))
 
             # Low-side error. Note h and l swap for other
-            if self.errl != None and other.errh != None:
+            if self.errl is not None and other.errh is not None:
                 self.errl = sqrt((self.errl / other.data)**2 + (self.data * other.errh / other.data**2)**2)
-            elif other.errh != None:
+            elif other.errh is not None:
                 self.errl = self.data * other.errh / other.data**2
-            elif self.errl != None:
+            elif self.errl is not None:
                 self.errl = self.errl / other.data
 
             # High-side error
-            if self.errh != None and other.errl != None:
+            if self.errh is not None and other.errl is not None:
                 self.errh = sqrt((self.errh / other.data)**2 + (self.data * other.errl / other.data**2)**2)
-            elif other.errl != None:
+            elif other.errl is not None:
                 self.errh = self.data * other.errl / other.data**2
-            elif self.errh != None:
+            elif self.errh is not None:
                 self.errh = self.errh / other.data
-                
+
             # Data
             self.data = self.data / other.data
         except AttributeError:
-            self.name = "( " +self.name + " / " + str(other)+" )"
+            self.name = "( " + self.name + " / " + str(other)+" )"
             if self.label != "":
                 self.label = "( " + self.label + " / " + str(other)+" )"
             self.data = self.data / other
-            if self.errl != None:
+            if self.errl is not None:
                 self.errl = self.errl / other
-            if self.errh != None:
+            if self.errh is not None:
                 self.errh = self.errh / other
         return self
 
-    def __rdiv__(self, other): #
+    def __rdiv__(self, other):  #
         item = XPadDataItem(other)
         item /= self
         return item
-    
-    def __neg__(self): # Unary minus
+
+    def __neg__(self):  # Unary minus
         item = XPadDataItem(self)
         item.name = "-"+self.name
         if self.label != "":
             item.label = "-"+self.label
-        
+
         item.data = -self.data
         # Swap high and low errors
         item.errl = self.errh
         item.errh = self.errl
-        
+
         return item
 
     def __pos__(self):
@@ -384,36 +387,37 @@ class XPadDataItem:
 
         item.data = abs(self.data)
         # High side error is maximum of low and high
-        if self.errl != None and self.errh != None:
+        if self.errl is not None and self.errh is not None:
             pass
-        if self.errl != None:
+        if self.errl is not None:
             item.errh = self.errl
-        
+
         # Low side error is zero
         item.errl = 0.0
-        
+
         return item
+
 
 def chop(item):
     """
     Selects a range of indices
-    
+
     """
     pass
-    
+
 if __name__ == "__main__":
     # Run test cases
-    
+
     a = XPadDataItem()
     a.name = "a"
     a.data = 1
     a.errl = 0.1
     a.errh = 0.2
-    
+
     b = abs(a*3 + 2)
-    
+
     c = 2 * a
-    
+
     d = 4 / a
     print(d.data, d.name)
 

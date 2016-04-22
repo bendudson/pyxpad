@@ -6,7 +6,7 @@
 import matplotlib
 
 matplotlib.use('Qt4Agg')
-matplotlib.rcParams['backend.qt4']='PySide'
+matplotlib.rcParams['backend.qt4'] = 'PySide'
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -18,21 +18,22 @@ from matplotlib.pyplot import setp
 
 from PySide.QtGui import QVBoxLayout
 
+
 class MatplotlibWidget():
 
     def __init__(self, parent):
-        
+
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
         self.canvas.setParent(parent)
         self.mpl_toolbar = NavigationToolbar(self.canvas, parent)
         self.axes = self.figure.add_subplot(111)
-        
+
         self.grid_layout = QVBoxLayout()
         self.grid_layout.addWidget(self.canvas)
         self.grid_layout.addWidget(self.mpl_toolbar)
         parent.setLayout(self.grid_layout)
-        
+
     def plot(self, *args):
         """
         Make multiple plots
@@ -58,13 +59,14 @@ class MatplotlibWidget():
                     if label == "":
                         label = data.label
                     label += " " + data.source
-                    
+
                     time = data.time
-                    if time == None:
+                    if time is None:
                         if len(data.dim) != 1:
+                            print(data.dim)
                             raise ValueError("Cannot plot '"+data.label+"' as it has too many dimensions")
                         time = data.dim[0].data
-                    
+
                     self.axes.plot(time, data.data, label=label)
                 if plotnum == 0:
                     self.axes.set_xlabel(p[0].dim[p[0].order].label)
@@ -72,14 +74,14 @@ class MatplotlibWidget():
             except TypeError:
                 # p not iterable, so just plot item
                 #self.axes.plot(p.time, p.data)
-                time = p.time
+                time = p.time.data
                 xlabel = p.dim[p.order].label
-                if time == None:
+                if time is None:
                     if len(p.dim) != 1:
                         raise ValueError("Cannot plot '"+p.label+"' as it has too many dimensions")
                     time = p.dim[0].data
                     xlabel = p.dim[0].label
-                
+
                 data = p.data
                 # Check the size of the array
                 size = len(time)
@@ -90,7 +92,7 @@ class MatplotlibWidget():
                     print("Warning: too many samples (%d). Down-sampling to %d points" % (size, len(time)))
 
                 self.axes.plot(time, data)
-                
+
                 ylabel = p.desc
                 if ylabel == "":
                     ylabel = p.label
@@ -99,10 +101,8 @@ class MatplotlibWidget():
                 self.axes.set_ylabel(ylabel)
                 if plotnum == 0:
                     self.axes.set_xlabel(xlabel)
-                
-        #self.figure.subplots_adjust(left=0.05, right=0.98, top=0.95, bottom=0.05)
-        self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace = 0.001)
-        #self.figure.tight_layout()
+
+        self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace=0.001)
 
         self.canvas.draw()
 
@@ -118,12 +118,12 @@ class MatplotlibWidget():
         self.axes.set_xlabel(x.name)
         self.axes.set_ylabel(y.name)
         self.canvas.draw()
-    
+
     def contour(self, item):
-        if len(item.data.shape) != 2: # Must be 2D
+        if len(item.data.shape) != 2:  # Must be 2D
             print("Data must be 2 dimensional")
             return
-        
+
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
@@ -132,14 +132,13 @@ class MatplotlibWidget():
         self.canvas.draw()
 
     def contourf(self, item):
-        if len(item.data.shape) != 2: # Must be 2D
+        if len(item.data.shape) != 2:  # Must be 2D
             print("Data must be 2 dimensional")
             return
-        
+
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
         self.axes.contourf(item.data)
         self.canvas.draw()
-        

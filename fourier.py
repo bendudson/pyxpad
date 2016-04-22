@@ -10,30 +10,30 @@ from numpy import abs, arctan2, pi
 def fftp(item):
     """
     Calculate amplitude and phase as a function of frequency
-    
+
     Inputs
     ------
 
     item  - an XPadDataItem object
-    
+
     Returns
     -------
-    
+
     amplitude, phase pair of XPadDataItem objects
-    
+
     """
 
     if len(item.dim) != 1:
         raise ValueError("fftp can only operate on 1D traces currently")
-    
+
     # Calculate FFT
     data = rfft(item.data)*(1./len(item.data))
-    
+
     # Create a dimension
     dim = XPadDataDim()
-    
+
     dim.name = "Frequency"
-    
+
     step = (item.dim[0].data[1] - item.dim[0].data[0])
     dim.data = rfftfreq(len(item.data), step)
 
@@ -41,7 +41,7 @@ def fftp(item):
     if item.dim[0].units in ["s", "S", "sec", "Sec", "SEC"]:
         dim.data /= 1000.
         dim.units = "kHz"
-    
+
     # Calculate the amplitude
     amp = XPadDataItem()
     if item.name != "":
@@ -52,9 +52,9 @@ def fftp(item):
     amp.units = item.units
 
     amp.data = abs(data)
-    
+
     amp.dim = [dim]
-    
+
     # Calculate the phase
     phase = XPadDataItem()
     if item.name != "":
@@ -63,19 +63,19 @@ def fftp(item):
     if item.label != "":
         phase.label = "PHASE( "+item.label+" )"
     phase.units = "Radians"
-    
+
     phase.data = arctan2(data.real, data.imag)
 
     a = phase.data - 2*pi
     for i in range(1,len(phase.data)):
         if abs(phase.data[i-1] - a[i]) < 1.:
             phase.data[i] = a[i]
-            
+
     a = phase.data + 2*pi
     for i in range(1,len(phase.data)):
         if abs(phase.data[i-1] - a[i]) < 1.:
             phase.data[i] = a[i]
-    
+
     phase.dim = [dim]
-    
+
     return amp, phase
