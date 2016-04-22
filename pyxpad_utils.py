@@ -62,6 +62,11 @@ class XPadDataDim:
         return ("XPadDataDim( {'name':'"+self.name + 
                          "', 'label':'"+self.label + 
                          "', 'units':'"+self.units+"'} )")
+    def __eq__(self, other):
+        return ((self.name == other.name) and
+                (self.units == other.units) and
+                all(self.data == other.data))
+
 
 class XPadDataItem:
     """
@@ -97,6 +102,7 @@ class XPadDataItem:
         self.data   = None
         self.errl   = None
         self.errh   = None
+        self.rank   = None
         self.dim    = []             # A list of dimensions
         self.order  = -1             # Index of time dimension
         self.time   = None           # A shortcut to the time data (dim[order].data). May be None
@@ -105,7 +111,7 @@ class XPadDataItem:
             if hasattr(other, "data"):
                 # List of variables to copy
                 varlist = ["name", "source", "label", "units", "desc",
-                           "data", "errl", "errh", "order", "time"]
+                           "data", "rank", "errl", "errh", "order", "time"]
                 for name in varlist:
                     # Check if other has this property
                     try:
@@ -115,10 +121,15 @@ class XPadDataItem:
                 if self.name == "":
                     self.name = other.label
                 try:
-                    # Copy the dim attributes
-                    self.dim = []
-                    for d in range(other.rank):
-                        self.dim.append(XPadDataDim(other.dim(d)))
+                    if isinstance(other.dim, list):
+                        self.dim = other.dim
+                    else:
+                        # Copy the dim attributes
+                        self.dim = []
+                        for d in range(other.rank):
+                            self.dim.append(XPadDataDim(other.dim(d)))
+                    if self.rank is None:
+                        self.rank = len(self.dim)
                 except AttributeError:
                     pass
             else:
@@ -137,8 +148,8 @@ class XPadDataItem:
         s = self.name + "("+self.units+")"
         
         if len(self.dim) > 0:
-            s += " [" + reduce(lambda x,y:x+","+y, [str(d) for d in self.dim]) + "]"
-            
+            s += " [" + ",".join([str(d) for d in self.dim]) + "]"
+
         return s
                 
     def __repr__(self):
@@ -166,7 +177,12 @@ class XPadDataItem:
                 self.label = self.name
         
             # Dimensions
-        
+            if (self.dim == other.dim):
+                self.dim = other.dim
+            else:
+                raise ValueError("Incompatible dims: {} and {}".format(
+                    self.dim, other.dim))
+
             # Low-side error
             if self.errl != None and other.errl != None:
                 self.errl = sqrt(self.errl**2 + other.errl**2)
@@ -209,6 +225,11 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
+            if (self.dim == other.dim):
+                self.dim = other.dim
+            else:
+                raise ValueError("Incompatible dims: {} and {}".format(
+                    self.dim, other.dim))
 
             # Low-side error. Note h and l swap for other
             if self.errl != None and other.errh != None:
@@ -249,6 +270,11 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
+            if (self.dim == other.dim):
+                self.dim = other.dim
+            else:
+                raise ValueError("Incompatible dims: {} and {}".format(
+                    self.dim, other.dim))
 
             # Low-side error
             if self.errl != None and other.errl != None:
@@ -294,8 +320,12 @@ class XPadDataItem:
                 self.label = self.name
                 
             # Dimensions
-        
-        
+            if (self.dim == other.dim):
+                self.dim = other.dim
+            else:
+                raise ValueError("Incompatible dims: {} and {}".format(
+                    self.dim, other.dim))
+
             # Low-side error. Note h and l swap for other
             if self.errl != None and other.errh != None:
                 self.errl = sqrt((self.errl / other.data)**2 + (self.data * other.errh / other.data**2)**2)

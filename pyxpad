@@ -790,8 +790,8 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if len(names) < 2:
             self.write("** At least two data items must be selected to add together")
             return
-        
-        self.runCommand(self.uniqueName() + " = " + reduce(lambda x,y: x+"+"+y, names))
+
+        self.runCommand(self.uniqueName() + " = " + "+".join(names))
 
     def handleMultiply(self):
         """
@@ -801,9 +801,9 @@ class PyXPad(QtGui.QMainWindow, Ui_MainWindow):
         if len(names) < 2:
             self.write("** At least two data items must be selected to multiply together")
             return
-        
-        self.runCommand(self.uniqueName() + " = " + reduce(lambda x,y: x+"*"+y, names))
-        
+
+        self.runCommand(self.uniqueName() + " = " + "*".join(names))
+
     def handleSubtract(self):
         """
         Subtracts one trace from another
