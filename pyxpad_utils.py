@@ -124,13 +124,13 @@ class XPadDataItem:
                 if self.name == "":
                     self.name = other.label
                 try:
-                    if isinstance(other.dim, list):
-                        self.dim = other.dim
+                    if isinstance(other.dims, list):
+                        self.dim = other.dims
                     else:
                         # Copy the dim attributes
                         self.dim = []
-                        for d in range(other.rank):
-                            self.dim.append(XPadDataDim(other.dim(d)))
+                        for dim in range(other.rank):
+                            self.dim.append(XPadDataDim(other.dims[dim]))
                     if self.rank is None:
                         self.rank = len(self.dim)
                 except AttributeError:
