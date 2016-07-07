@@ -139,6 +139,9 @@ class XPadSource:
         # Read data
         data = self.client.get(name, shot)
 
+        if hasattr(data, "dims") and not hasattr(data, "dim"):
+            data.dim = data.dims
+
         return XPadDataItem(data)
 
     def size(self, name):

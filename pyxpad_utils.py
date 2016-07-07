@@ -124,13 +124,13 @@ class XPadDataItem:
                 if self.name == "":
                     self.name = other.label
                 try:
-                    if isinstance(other.dims, list):
-                        self.dim = other.dims
+                    if isinstance(other.dim, list):
+                        self.dim = other.dim
                     else:
                         # Copy the dim attributes
                         self.dim = []
                         for dim in range(other.rank):
-                            self.dim.append(XPadDataDim(other.dims[dim]))
+                            self.dim.append(XPadDataDim(other.dim[dim]))
                     if self.rank is None:
                         self.rank = len(self.dim)
                 except AttributeError:
@@ -182,6 +182,8 @@ class XPadDataItem:
             # Dimensions
             if (self.dim == other.dim):
                 self.dim = other.dim
+            elif compdims(self.dim, other.dim):
+                self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
                     self.dim, other.dim))
@@ -229,6 +231,8 @@ class XPadDataItem:
 
             # Dimensions
             if (self.dim == other.dim):
+                self.dim = other.dim
+            elif compdims(self.dim, other.dim):
                 self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
@@ -397,6 +401,15 @@ class XPadDataItem:
 
         return item
 
+def compdims(dim1, dim2):
+    """
+    Compares dims to see if they are equal
+    """
+    result = True
+    for dims in zip(dim1, dim2):
+        if dims[0].units != dims[1].units or any(dims[0].data != dims[1].data):
+            result = False
+    return result
 
 def chop(item):
     """
