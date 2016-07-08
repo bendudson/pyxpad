@@ -277,11 +277,17 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
-            if (self.dim == other.dim):
+            if compdims(self.dim, other.dim):
                 self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
                     self.dim, other.dim))
+
+            # Units
+            if self.units == other.units:
+                self.units += chr(0x00B2)
+            else:
+                self.units += other.units
 
             # Low-side error
             if self.errl is not None and other.errl is not None:
@@ -312,12 +318,12 @@ class XPadDataItem:
                 self.errh = self.errh * other
         return self
 
-    def __div__(self, other):  # /
+    def __truediv__(self, other):  # /
         item = XPadDataItem(self)
         item /= other
         return item
 
-    def __idiv__(self, other):  # /=
+    def __itruediv__(self, other):  # /=
         try:
             # Metadata
             self.name += " / " + other.name
@@ -327,11 +333,19 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
-            if (self.dim == other.dim):
+            if compdims(self.dim, other.dim):
                 self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
                     self.dim, other.dim))
+
+            #Units
+            if self.units == other.units:
+                self.units = ""
+            elif self.units == "":
+                self.units = other.units + chr(0x207B) + chr(0x00B9)
+            else:
+                self.units += "/", other.units
 
             # Low-side error. Note h and l swap for other
             if self.errl is not None and other.errh is not None:
@@ -362,7 +376,7 @@ class XPadDataItem:
                 self.errh = self.errh / other
         return self
 
-    def __rdiv__(self, other):  #
+    def __rtruediv__(self, other):  #
         item = XPadDataItem(other)
         item /= self
         return item
