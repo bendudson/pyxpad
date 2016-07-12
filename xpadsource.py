@@ -143,7 +143,8 @@ class XPadSource:
             data.dim = data.dims
 
         #Give data a name
-        data.name = name + '-' + shot
+        data.name = name
+        data.source = "Shot " + shot
 
         return XPadDataItem(data)
 
