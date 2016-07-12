@@ -124,10 +124,10 @@ class XPadSource:
         try:
             if isinstance(name, unicode):
                 name = name.encode('utf-8')
-            name = str(name)
-            shot = str(shot)
         except NameError:
             pass
+        name = str(name)
+        shot = str(shot)
 
         # Start client
         if not hasattr(self, "client"):
@@ -141,6 +141,9 @@ class XPadSource:
 
         if hasattr(data, "dims") and not hasattr(data, "dim"):
             data.dim = data.dims
+
+        #Give data a name
+        data.name = name + '-' + shot
 
         return XPadDataItem(data)
 

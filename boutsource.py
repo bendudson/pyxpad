@@ -60,7 +60,8 @@ class BoutDataSource:
                         v = v.encode('utf-8')
                     v = str(v).translate(None, '\0')
                 except NameError:
-                    pass
+                    if isinstance(v, str):
+                        v = v.encode('utf-8')
 
                 self.varNames[i] = v
         except:

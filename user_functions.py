@@ -146,9 +146,7 @@ def parse_padsav(xpad_idl_dict):
         return None
 
     items = []
-
     for trace in xpad_idl_dict['ptr']:
-
         item = XPadDataItem()
 
         item.name = trace['NAME'][0]
