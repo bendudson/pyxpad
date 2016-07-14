@@ -106,7 +106,7 @@ class XPadDataItem:
         self.errl   = None
         self.errh   = None
         self.rank   = None
-        self.dim    = []             # A list of dimensions
+        self.dim    = XPadDataDim()             # A list of dimensions
         self.order  = -1             # Index of time dimension
         self.time   = None           # A shortcut to the time data (dim[order].data). May be None
 
@@ -175,8 +175,6 @@ class XPadDataItem:
             # Dimensions
             if (self.dim == other.dim):
                 self.dim = other.dim
-            elif compdims(self.dim, other.dim):
-                self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
                     self.dim, other.dim))
@@ -225,8 +223,6 @@ class XPadDataItem:
             # Dimensions
             if (self.dim == other.dim):
                 self.dim = other.dim
-            elif compdims(self.dim, other.dim):
-                self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
                     self.dim, other.dim))
@@ -270,7 +266,7 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
-            if compdims(self.dim, other.dim):
+            if (self.dim == other.dim):
                 self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
@@ -326,7 +322,7 @@ class XPadDataItem:
                 self.label = self.name
 
             # Dimensions
-            if compdims(self.dim, other.dim):
+            if (self.dim == other.dim):
                 self.dim = other.dim
             else:
                 raise ValueError("Incompatible dims: {} and {}".format(
@@ -408,15 +404,6 @@ class XPadDataItem:
 
         return item
 
-def compdims(dim1, dim2):
-    """
-    Compares dims to see if they are equal
-    """
-    result = True
-    for dims in zip(dim1, dim2):
-        if dims[0].units != dims[1].units or any(dims[0].data != dims[1].data):
-            result = False
-    return result
 
 def chop(item):
     """
