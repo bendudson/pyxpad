@@ -281,6 +281,8 @@
     <addaction name="actionDivide"/>
     <addaction name="separator"/>
     <addaction name="actionFFTP"/>
+    <addaction name="actionReciprocal"/>
+    <addaction name="actionExponential"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -415,6 +417,16 @@
   <action name="actionFFTP">
    <property name="text">
     <string>FFTP</string>
+   </property>
+  </action>
+  <action name="actionReciprocal">
+   <property name="text">
+    <string>1/X</string>
+   </property>
+  </action>
+  <action name="actionExponential">
+   <property name="text">
+    <string>exp</string>
    </property>
   </action>
  </widget>

@@ -186,6 +186,10 @@ class Ui_MainWindow(object):
         self.actionBand_pass_filter.setObjectName("actionBand_pass_filter")
         self.actionFFTP = QtGui.QAction(MainWindow)
         self.actionFFTP.setObjectName("actionFFTP")
+        self.actionReciprocal = QtGui.QAction(MainWindow)
+        self.actionReciprocal.setObjectName("actionReciprocal")
+        self.actionExponential = QtGui.QAction(MainWindow)
+        self.actionExponential.setObjectName("actionExponential")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -214,6 +218,9 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionDivide)
         self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionFFTP)
+        self.menuCommand.addSeparator()
+        self.menuCommand.addAction(self.actionReciprocal)
+        self.menuCommand.addAction(self.actionExponential)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -270,5 +277,7 @@ class Ui_MainWindow(object):
         self.actionHigh_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "High pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBand_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "Band pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFFTP.setText(QtGui.QApplication.translate("MainWindow", "FFTP", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionReciprocal.setText(QtGui.QApplication.translate("MainWindow", "1/X", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExponential.setText(QtGui.QApplication.translate("MainWindow", "exp", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

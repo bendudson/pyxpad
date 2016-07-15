@@ -38,6 +38,13 @@ log = XPadFunction(np.log, "log")
 
 sqrt = XPadFunction(np.sqrt, "sqrt")
 
+def reciprocal(data):
+    recip = XPadFunction(np.reciprocal, "recip")
+    return recip(data)
+
+def exponential(data):
+    exp = XPadFunction(np.exp, "exp")
+    return exp(data)
 
 def chop(item, t_min, t_max):
     """
