@@ -194,6 +194,8 @@ class Ui_MainWindow(object):
         self.actionAbsolute.setObjectName("actionAbsolute")
         self.actionArctan = QtGui.QAction(MainWindow)
         self.actionArctan.setObjectName("actionArctan")
+        self.actionNlog = QtGui.QAction(MainWindow)
+        self.actionNlog.setObjectName("actionNlog")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -227,6 +229,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionExponential)
         self.menuCommand.addAction(self.actionAbsolute)
         self.menuCommand.addAction(self.actionArctan)
+        self.menuCommand.addAction(self.actionNlog)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -287,5 +290,6 @@ class Ui_MainWindow(object):
         self.actionExponential.setText(QtGui.QApplication.translate("MainWindow", "exp", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbsolute.setText(QtGui.QApplication.translate("MainWindow", "abs", None, QtGui.QApplication.UnicodeUTF8))
         self.actionArctan.setText(QtGui.QApplication.translate("MainWindow", "arctan", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionNlog.setText(QtGui.QApplication.translate("MainWindow", "ln", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

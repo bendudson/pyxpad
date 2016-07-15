@@ -285,6 +285,7 @@
     <addaction name="actionExponential"/>
     <addaction name="actionAbsolute"/>
     <addaction name="actionArctan"/>
+    <addaction name="actionNlog"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -439,6 +440,11 @@
   <action name="actionArctan">
    <property name="text">
     <string>arctan</string>
+   </property>
+  </action>
+  <action name="actionNlog">
+   <property name="text">
+    <string>ln</string>
    </property>
   </action>
  </widget>

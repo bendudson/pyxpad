@@ -54,6 +54,10 @@ def arctan(data):
     atan = XPadFunction(np.arctan, "arctan")
     return atan(data)
 
+def nlog(data):
+    natlog = XPadFunction(np.log, "nlog")
+    return natlog(data)
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *
