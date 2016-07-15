@@ -190,6 +190,8 @@ class Ui_MainWindow(object):
         self.actionReciprocal.setObjectName("actionReciprocal")
         self.actionExponential = QtGui.QAction(MainWindow)
         self.actionExponential.setObjectName("actionExponential")
+        self.actionAbsolute = QtGui.QAction(MainWindow)
+        self.actionAbsolute.setObjectName("actionAbsolute")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -221,6 +223,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionReciprocal)
         self.menuCommand.addAction(self.actionExponential)
+        self.menuCommand.addAction(self.actionAbsolute)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -279,5 +282,6 @@ class Ui_MainWindow(object):
         self.actionFFTP.setText(QtGui.QApplication.translate("MainWindow", "FFTP", None, QtGui.QApplication.UnicodeUTF8))
         self.actionReciprocal.setText(QtGui.QApplication.translate("MainWindow", "1/X", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExponential.setText(QtGui.QApplication.translate("MainWindow", "exp", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbsolute.setText(QtGui.QApplication.translate("MainWindow", "abs", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

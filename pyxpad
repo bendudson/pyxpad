@@ -400,6 +400,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionFFTP.triggered.connect(self.handleFFTP)
         self.actionReciprocal.triggered.connect(self.handleReciprocal)
         self.actionExponential.triggered.connect(self.handleExponential)
+        self.actionAbsolute.triggered.connect(self.handleAbsolute)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -867,6 +868,16 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "exp( "+n+" )")
 
+    def handleAbsolute(self):
+        """
+        Returns the absolute value of one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "abs( "+n+" )")
+
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -910,6 +921,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['chop'] = user_functions.chop
         glob['recip'] = user_functions.reciprocal
         glob['exp'] = user_functions.exponential
+        glob['abs'] = user_functions.absolute
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

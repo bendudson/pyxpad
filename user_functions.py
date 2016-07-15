@@ -46,6 +46,10 @@ def exponential(data):
     exp = XPadFunction(np.exp, "exp")
     return exp(data)
 
+def absolute(data):
+    abso = XPadFunction(np.absolute, "abs")
+    return abso(data)
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *

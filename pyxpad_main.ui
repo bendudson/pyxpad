@@ -283,6 +283,7 @@
     <addaction name="actionFFTP"/>
     <addaction name="actionReciprocal"/>
     <addaction name="actionExponential"/>
+    <addaction name="actionAbsolute"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -427,6 +428,11 @@
   <action name="actionExponential">
    <property name="text">
     <string>exp</string>
+   </property>
+  </action>
+  <action name="actionAbsolute">
+   <property name="text">
+    <string>abso</string>
    </property>
   </action>
  </widget>
