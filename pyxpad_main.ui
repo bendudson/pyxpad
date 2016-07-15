@@ -286,6 +286,7 @@
     <addaction name="actionAbsolute"/>
     <addaction name="actionArctan"/>
     <addaction name="actionNlog"/>
+    <addaction name="actionNorm"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -445,6 +446,11 @@
   <action name="actionNlog">
    <property name="text">
     <string>ln</string>
+   </property>
+  </action>
+  <action name="actionNorm">
+   <property name="text">
+    <string>Normalise</string>
    </property>
   </action>
  </widget>

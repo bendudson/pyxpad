@@ -6,6 +6,7 @@ Available to the user in the command terminal
 """
 
 import numpy as np
+import calculus
 
 from pyxpad_utils import XPadDataItem, XPadDataDim
 
@@ -57,6 +58,20 @@ def arctan(data):
 def nlog(data):
     natlog = XPadFunction(np.log, "nlog")
     return natlog(data)
+
+def normalise(data):
+    point = len(data.data)-1
+    integral = calculus.integrate(data)
+    normfac = integral.data[point]
+    normdat = np.true_divide(data.data, normfac)
+    result = XPadDataItem(integral)
+    result.data[:] = normdat[:]
+    if data.name != "":
+        result.name = "Norm(" + data.name + ")"
+    if data.label != "":
+        result.label = "Norm(" + data.label + ")"
+    result.units = data.units
+    return result
 
 def chop(item, t_min, t_max):
     """

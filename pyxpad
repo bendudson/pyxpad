@@ -403,6 +403,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionAbsolute.triggered.connect(self.handleAbsolute)
         self.actionArctan.triggered.connect(self.handleArctan)
         self.actionNlog.triggered.connect(self.handleNlog)
+        self.actionNorm.triggered.connect(self.handleNorm)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -897,6 +898,15 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "ln( "+n+" )")
 
+    def handleNorm(self):
+        """
+        Normalises and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "norm( "+n+" )")
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -943,6 +953,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['abs'] = user_functions.absolute
         glob['atan'] = user_functions.arctan
         glob['ln'] = user_functions.nlog
+        glob['norm'] = user_functions.normalise
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
