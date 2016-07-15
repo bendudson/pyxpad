@@ -284,6 +284,7 @@
     <addaction name="actionReciprocal"/>
     <addaction name="actionExponential"/>
     <addaction name="actionAbsolute"/>
+    <addaction name="actionArctan"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -433,6 +434,11 @@
   <action name="actionAbsolute">
    <property name="text">
     <string>abso</string>
+   </property>
+  </action>
+  <action name="actionArctan">
+   <property name="text">
+    <string>arctan</string>
    </property>
   </action>
  </widget>

@@ -192,6 +192,8 @@ class Ui_MainWindow(object):
         self.actionExponential.setObjectName("actionExponential")
         self.actionAbsolute = QtGui.QAction(MainWindow)
         self.actionAbsolute.setObjectName("actionAbsolute")
+        self.actionArctan = QtGui.QAction(MainWindow)
+        self.actionArctan.setObjectName("actionArctan")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -224,6 +226,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionReciprocal)
         self.menuCommand.addAction(self.actionExponential)
         self.menuCommand.addAction(self.actionAbsolute)
+        self.menuCommand.addAction(self.actionArctan)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -283,5 +286,6 @@ class Ui_MainWindow(object):
         self.actionReciprocal.setText(QtGui.QApplication.translate("MainWindow", "1/X", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExponential.setText(QtGui.QApplication.translate("MainWindow", "exp", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbsolute.setText(QtGui.QApplication.translate("MainWindow", "abs", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionArctan.setText(QtGui.QApplication.translate("MainWindow", "arctan", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

@@ -50,6 +50,10 @@ def absolute(data):
     abso = XPadFunction(np.absolute, "abs")
     return abso(data)
 
+def arctan(data):
+    atan = XPadFunction(np.arctan, "arctan")
+    return atan(data)
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *

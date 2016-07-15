@@ -401,6 +401,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionReciprocal.triggered.connect(self.handleReciprocal)
         self.actionExponential.triggered.connect(self.handleExponential)
         self.actionAbsolute.triggered.connect(self.handleAbsolute)
+        self.actionArctan.triggered.connect(self.handleArctan)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -877,6 +878,14 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "abs( "+n+" )")
 
+    def handleArctan(self):
+        """
+        Returns the arctan of one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "atan( "+n+" )")
 
     ########
 
@@ -922,6 +931,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['recip'] = user_functions.reciprocal
         glob['exp'] = user_functions.exponential
         glob['abs'] = user_functions.absolute
+        glob['atan'] = user_functions.arctan
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
