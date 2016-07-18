@@ -73,6 +73,13 @@ def normalise(data):
     result.units = data.units
     return result
 
+def invert(data):
+    result = XPadDataItem(data)
+    result.data = -1.*data.data
+    result.name = "-(" + data.name + ")"
+    result.label = "-(" + data.label + ")"
+    return result
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *

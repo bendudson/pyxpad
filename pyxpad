@@ -404,6 +404,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionArctan.triggered.connect(self.handleArctan)
         self.actionNlog.triggered.connect(self.handleNlog)
         self.actionNorm.triggered.connect(self.handleNorm)
+        self.actionInvert.triggered.connect(self.handleInvert)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -907,6 +908,15 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "norm( "+n+" )")
 
+    def handleInvert(self):
+        """
+        Returns the inversion of one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "inv( "+n+" )")
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -954,6 +964,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['atan'] = user_functions.arctan
         glob['ln'] = user_functions.nlog
         glob['norm'] = user_functions.normalise
+        glob['inv'] = user_functions.invert
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

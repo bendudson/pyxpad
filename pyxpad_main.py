@@ -198,6 +198,8 @@ class Ui_MainWindow(object):
         self.actionNlog.setObjectName("actionNlog")
         self.actionNorm = QtGui.QAction(MainWindow)
         self.actionNorm.setObjectName("actionNorm")
+        self.actionInvert = QtGui.QAction(MainWindow)
+        self.actionInvert.setObjectName("actionInvert")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -233,6 +235,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionArctan)
         self.menuCommand.addAction(self.actionNlog)
         self.menuCommand.addAction(self.actionNorm)
+        self.menuCommand.addAction(self.actionInvert)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -295,5 +298,6 @@ class Ui_MainWindow(object):
         self.actionArctan.setText(QtGui.QApplication.translate("MainWindow", "arctan", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNlog.setText(QtGui.QApplication.translate("MainWindow", "ln", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNorm.setText(QtGui.QApplication.translate("MainWindow", "Normalise", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionInvert.setText(QtGui.QApplication.translate("MainWindow", "Invert", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

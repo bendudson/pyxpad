@@ -287,6 +287,7 @@
     <addaction name="actionArctan"/>
     <addaction name="actionNlog"/>
     <addaction name="actionNorm"/>
+    <addaction name="actionInvert"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -451,6 +452,11 @@
   <action name="actionNorm">
    <property name="text">
     <string>Normalise</string>
+   </property>
+  </action>
+  <action name="actionInvert">
+   <property name="text">
+    <string>Invert</string>
    </property>
   </action>
  </widget>
