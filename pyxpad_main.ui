@@ -288,6 +288,11 @@
     <addaction name="actionNlog"/>
     <addaction name="actionNorm"/>
     <addaction name="actionInvert"/>
+    <addaction name="actionAddCon"/>
+    <addaction name="actionSubCon"/>
+    <addaction name="actionMulCon"/>
+    <addaction name="actionDivCon"/>
+    <addaction name="actionPowCon"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -457,6 +462,31 @@
   <action name="actionInvert">
    <property name="text">
     <string>Invert</string>
+   </property>
+  </action>
+  <action name="actionAddCon">
+   <property name="text">
+    <string>X+C</string>
+   </property>
+  </action>
+  <action name="actionSubCon">
+   <property name="text">
+    <string>X-C</string>
+   </property>
+  </action>
+  <action name="actionMulCon">
+   <property name="text">
+    <string>X*C</string>
+   </property>
+  </action>
+  <action name="actionDivCon">
+   <property name="text">
+    <string>X/C</string>
+   </property>
+  </action>
+  <action name="actionPowCon">
+   <property name="text">
+    <string>X^C</string>
    </property>
   </action>
  </widget>

@@ -80,6 +80,66 @@ def invert(data):
     result.label = "-(" + data.label + ")"
     return result
 
+from PySide.QtGui import QDialog, QGridLayout, QDialogButtonBox, QPushButton
+from PySide.QtCore import Qt
+from PySide.QtGui import QInputDialog
+
+def addcon(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    dialog = QInputDialog.getDouble(parent, "X+C", "Input constant:")
+    if dialog[1]:
+        constant = dialog[0]
+    result.data = np.add(data.data, constant)
+    result.name = "(" + data.name + ")+" + str(constant)
+    result.label = "(" + data.label + ")+" + str(constant)
+    return result
+
+def subcon(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    dialog = QInputDialog.getDouble(parent, "X-C", "Input constant:")
+    if dialog[1]:
+        constant = dialog[0]
+    constant = 1.
+    result.data = np.subtract(data.data, constant)
+    result.name = "(" + data.name + ")-" + str(constant)
+    result.label = "(" + data.label + ")-" + str(constant)
+    return result
+
+def mulcon(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    dialog = QInputDialog.getDouble(parent, "X*C", "Input constant:")
+    if dialog[1]:
+        constant = dialog[0]
+    result.data = np.multiply(data.data, constant)
+    result.name = "(" + data.name + ")*" + str(constant)
+    result.label = "(" + data.label + ")*" + str(constant)
+    return result
+
+def divcon(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    dialog = QInputDialog.getDouble(parent, "X/C", "Input constant:")
+    if dialog[1]:
+        constant = dialog[0]
+    result.data = np.true_divide(data.data, constant)
+    result.name = "(" + data.name + ")/" + str(constant)
+    result.label = "(" + data.label + ")/" + str(constant)
+    return result
+
+def powcon(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    dialog = QInputDialog.getDouble(parent, "X^C", "Input constant:")
+    if dialog[1]:
+        constant = dialog[0]
+    result.data = np.power(data.data, constant)
+    result.name = "(" + data.name + ")^" + str(constant)
+    result.label = "(" + data.label + ")^" + str(constant)
+    return result
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *

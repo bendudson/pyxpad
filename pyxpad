@@ -405,6 +405,11 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionNlog.triggered.connect(self.handleNlog)
         self.actionNorm.triggered.connect(self.handleNorm)
         self.actionInvert.triggered.connect(self.handleInvert)
+        self.actionAddCon.triggered.connect(self.handleAddCon)
+        self.actionSubCon.triggered.connect(self.handleSubCon)
+        self.actionMulCon.triggered.connect(self.handleMulCon)
+        self.actionDivCon.triggered.connect(self.handleDivCon)
+        self.actionPowCon.triggered.connect(self.handlePowCon)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -917,6 +922,52 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "inv( "+n+" )")
 
+    def handleAddCon(self):
+        """
+        Adds a constant to and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "addcons( "+n+" )")
+
+    def handleSubCon(self):
+        """
+        Subtracts a constant from and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "subcons( "+n+" )")
+
+    def handleMulCon(self):
+        """
+        Multiplies by a constant and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "mulcons( "+n+" )")
+
+    def handleDivCon(self):
+        """
+        Divides by a constant and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "divcons( "+n+" )")
+
+    def handlePowCon(self):
+        """
+        Raises to the power of a constant and returns one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "powcons( "+n+" )")
+
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -965,6 +1016,11 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['ln'] = user_functions.nlog
         glob['norm'] = user_functions.normalise
         glob['inv'] = user_functions.invert
+        glob['addcons'] = user_functions.addcon
+        glob['subcons'] = user_functions.subcon
+        glob['mulcons'] = user_functions.mulcon
+        glob['divcons'] = user_functions.divcon
+        glob['powcons'] = user_functions.powcon
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
