@@ -41,7 +41,9 @@ sqrt = XPadFunction(np.sqrt, "sqrt")
 
 def reciprocal(data):
     recip = XPadFunction(np.reciprocal, "recip")
-    return recip(data)
+    reciprocal = recip(data)
+    reciprocal.units = data.units + chr(0x207B) + chr(0x00B9)
+    return reciprocal
 
 def exponential(data):
     exp = XPadFunction(np.exp, "exp")
@@ -138,6 +140,7 @@ def powcon(data):
     result.data = np.power(data.data, constant)
     result.name = "(" + data.name + ")^" + str(constant)
     result.label = "(" + data.label + ")^" + str(constant)
+    result.units = "(" + data.units + ")^" + str(constant)
     return result
 
 def chop(item, t_min, t_max):
