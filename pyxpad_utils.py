@@ -334,7 +334,7 @@ class XPadDataItem:
             elif self.units == "":
                 self.units = other.units + chr(0x207B) + chr(0x00B9)
             else:
-                self.units += "/", other.units
+                self.units += "/" + other.units
 
             # Low-side error. Note h and l swap for other
             if self.errl is not None and other.errh is not None:
