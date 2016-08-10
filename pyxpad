@@ -410,6 +410,8 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionMulCon.triggered.connect(self.handleMulCon)
         self.actionDivCon.triggered.connect(self.handleDivCon)
         self.actionPowCon.triggered.connect(self.handlePowCon)
+        self.actionChgNam.triggered.connect(self.handleChgNam)
+        self.actionChgUnit.triggered.connect(self.handleChgUnit)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -967,6 +969,27 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "powcons( "+n+" )")
 
+    def handleChgNam(self):
+        """
+        Changes the name of one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        from user_functions import changename, inputname
+
+        for n in names:
+            name = inputname()
+            self.runCommand(self.makeUnique(name) + " = " + "renamed( "+n+" )")
+
+    def handleChgUnit(self):
+        """
+        Changes the units of one or more trace(s)
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "newunits( "+n+" )")
+
 
     ########
 
@@ -1021,6 +1044,8 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['mulcons'] = user_functions.mulcon
         glob['divcons'] = user_functions.divcon
         glob['powcons'] = user_functions.powcon
+        glob['renamed'] = user_functions.changename
+        glob['newunits'] = user_functions.changeunits
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

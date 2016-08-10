@@ -143,6 +143,44 @@ def powcon(data):
     result.units = "(" + data.units + ")^" + str(constant)
     return result
 
+def inputname():
+    parent = QDialog()
+    title = "Change Name"
+    label = "Enter new name:"
+    dialog = QInputDialog.getText(parent, title, label)
+    if dialog[1]:
+        name = dialog[0]
+    return name
+
+def changename(data):
+    result = XPadDataItem(data)
+    result.name = "Renamed(" + data.name +")"
+    return result
+
+def changeunits(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    title = "Change Units"
+    label = "Enter new units:"
+    dialog = QInputDialog.getText(parent, title, label)
+    if dialog[1]:
+        newUnit = dialog[0]
+        unitFact = getUnitFactor()
+    if unitFact and newUnit:
+        result.data = np.multiply(data.data, unitFact)
+        result.units = newUnit
+        return result
+
+def getUnitFactor():
+    parent = QDialog()
+    title = "Change Units"
+    label = "Enter conversion factor:"
+    dialog = QInputDialog.getDouble(parent, title, label)
+    if dialog[1]:
+        return dialog[0]
+    else:
+        return None
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *

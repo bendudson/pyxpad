@@ -210,6 +210,10 @@ class Ui_MainWindow(object):
         self.actionDivCon.setObjectName("actionDivC")
         self.actionPowCon = QtGui.QAction(MainWindow)
         self.actionPowCon.setObjectName("actionPowC")
+        self.actionChgNam = QtGui.QAction(MainWindow)
+        self.actionChgNam.setObjectName("actionChgNam")
+        self.actionChgUnit = QtGui.QAction(MainWindow)
+        self.actionChgUnit.setObjectName("actionChgUnit")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -251,6 +255,8 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionMulCon)
         self.menuCommand.addAction(self.actionDivCon)
         self.menuCommand.addAction(self.actionPowCon)
+        self.menuCommand.addAction(self.actionChgNam)
+        self.menuCommand.addAction(self.actionChgUnit)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -319,6 +325,8 @@ class Ui_MainWindow(object):
         self.actionMulCon.setText(QtGui.QApplication.translate("MainWindow", "X*C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionDivCon.setText(QtGui.QApplication.translate("MainWindow", "X/C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPowCon.setText(QtGui.QApplication.translate("MainWindow", "X^C", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChgNam.setText(QtGui.QApplication.translate("MainWindow", "Change Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChgUnit.setText(QtGui.QApplication.translate("MainWindow", "Change Units", None, QtGui.QApplication.UnicodeUTF8))
 
 
 from console_widget import ConsoleWidget
