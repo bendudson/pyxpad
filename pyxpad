@@ -393,6 +393,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         # Command menu
         self.actionChop.triggered.connect(self.handleChop)
         self.actionIntegrate.triggered.connect(self.handleIntegrate)
+        self.actionDf_dt.triggered.connect(self.handleDifferentiate)
         self.actionAdd.triggered.connect(self.handleAdd)
         self.actionMultiply.triggered.connect(self.handleMultiply)
         self.actionSubtract.triggered.connect(self.handleSubtract)
@@ -805,6 +806,15 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "intg( "+n+" )")
 
+    def handleDifferentiate(self):
+        """
+        Differentiates one or more traces
+        """
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "diff(" + n + ")")
+
     def handleAdd(self):
         """
         Adds all selected traces together
@@ -1030,6 +1040,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['contourf'] = self.DataPlot.contourf
 
         glob['intg'] = calculus.integrate
+        glob['diff'] = calculus.differentiate
         glob['fftp'] = fourier.fftp
         glob['chop'] = user_functions.chop
         glob['recip'] = user_functions.reciprocal
