@@ -413,6 +413,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionPowCon.triggered.connect(self.handlePowCon)
         self.actionChgNam.triggered.connect(self.handleChgNam)
         self.actionChgUnit.triggered.connect(self.handleChgUnit)
+        self.actionClip.triggered.connect(self.handleClip)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -1000,6 +1001,39 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "newunits( "+n+" )")
 
+    def handleClip(self):
+        """
+        Clips a signal, keeping only a specified value ranged
+        """
+
+        names = self.selectedDataNames()
+
+        if len(names) == 0:
+            return
+
+        try:
+            #Get current data range from first variable
+            var = self.data[names[0]]
+            valmin = var.data[0]
+            valmax = var.data[0]
+            for point in var.data:
+                if point <  valmin:
+                    valmin = point
+                if point > valmax:
+                    valmax = point
+        except:
+            return
+
+        #Use a dialog box to get value range
+        config = {"min":float(valmin), "max":float(valmax)}
+
+        c = ConfigDialog(config, self, pstvOnly=False)
+        c.exec_()
+
+        for n in names:
+            self.runCommand(self.makeUnique(n+"_clip") + " = " +
+                            "clip("+n+", %e, %e )" % (config["min"], config["max"]))
+
 
     ########
 
@@ -1057,6 +1091,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['powcons'] = user_functions.powcon
         glob['renamed'] = user_functions.changename
         glob['newunits'] = user_functions.changeunits
+        glob['clip'] = user_functions.clip
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

@@ -228,6 +228,37 @@ def chop(item, t_min, t_max):
 
     return chopped
 
+def clip(item, valmin, valmax):
+    """
+    Removes values outside a given range
+    """
+
+    if len(item.dim) != 1:
+        raise ValueError("Clip can only operate on 1D traces currently")
+
+    if valmax < valmin:
+        raise ValueError("Clip range incorrectly defined")
+
+    clipped = XPadDataItem(item)
+    data = []
+    time = []
+
+    for point in range(len(item.data)-1):
+        if item.data[point] <= valmax and item.data[point] >= valmin:
+            data += [item.data[point]]
+            time += [item.dim[item.order].data[point]]
+
+    if len(data) == 0:
+        raise ValueError("No data in the specified range")
+
+    clipped.data = data
+    clipped.dim[clipped.order].data = time
+    clipped.time = time
+    clipped.name = "CLIP("+item.name+", "+str(valmin)+", "+str(valmax)+")"
+    clipped.label = "CLIP("+item.label+", "+str(valmin)+", "+str(valmax)+")"
+
+    return clipped
+
 ##########################################################################
 
 """

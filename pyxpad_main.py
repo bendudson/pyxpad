@@ -172,6 +172,8 @@ class Ui_MainWindow(object):
         self.actionDivide.setObjectName("actionDivide")
         self.actionChop = QtGui.QAction(MainWindow)
         self.actionChop.setObjectName("actionChop")
+        self.actionClip = QtGui.QAction(MainWindow)
+        self.actionClip.setObjectName("actionClip")
         self.actionIntegrate = QtGui.QAction(MainWindow)
         self.actionIntegrate.setObjectName("actionIntegrate")
         self.actionDf_dt = QtGui.QAction(MainWindow)
@@ -257,6 +259,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionPowCon)
         self.menuCommand.addAction(self.actionChgNam)
         self.menuCommand.addAction(self.actionChgUnit)
+        self.menuCommand.addAction(self.actionClip)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -327,6 +330,7 @@ class Ui_MainWindow(object):
         self.actionPowCon.setText(QtGui.QApplication.translate("MainWindow", "X^C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChgNam.setText(QtGui.QApplication.translate("MainWindow", "Change Name", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChgUnit.setText(QtGui.QApplication.translate("MainWindow", "Change Units", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClip.setText(QtGui.QApplication.translate("MainWindow", "Clip", None, QtGui.QApplication.UnicodeUTF8))
 
 
 from console_widget import ConsoleWidget

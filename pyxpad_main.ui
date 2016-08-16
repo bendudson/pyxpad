@@ -295,6 +295,7 @@
     <addaction name="actionPowCon"/>
     <addaction name="actionChgNam"/>
     <addaction name="actionChgUnit"/>
+    <addaction name="actionClip"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -499,6 +500,11 @@
   <action name="actionChgUnit">
    <property name="text">
     <string>Change Units</string>
+   </property>
+  </action>
+  <action name="actionClip">
+   <property name="text">
+    <string>Clip</string>
    </property>
   </action>
  </widget>

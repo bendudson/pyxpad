@@ -25,7 +25,7 @@ from PySide.QtCore import Qt
 
 
 class ConfigDialog(QDialog):
-    def __init__(self, settings, parent=None, description=None):
+    def __init__(self, settings, parent=None, description=None, pstvOnly = True):
         super(ConfigDialog, self).__init__(parent)
 
         self.setWindowTitle("Configure source")
@@ -63,7 +63,8 @@ class ConfigDialog(QDialog):
                 widget.setText(str(val).strip())
             elif isinstance(val, float):
                 widget = QLineEdit(self)
-                widget.setInputMask("0.00")
+                if pstvOnly:
+                    widget.setInputMask("0.00")
                 widget.setText(str(val).strip())
             else:
                 print("Ignoring: " + name)
