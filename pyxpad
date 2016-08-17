@@ -415,6 +415,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionChgUnit.triggered.connect(self.handleChgUnit)
         self.actionClip.triggered.connect(self.handleClip)
         self.actionStats.triggered.connect(self.handleStats)
+        self.actionTimOff.triggered.connect(self.handleTimOff)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -1049,6 +1050,17 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand("stats("+n+")")
 
+
+    def handleTimOff(self):
+        """
+        Adds a time offset to one or more traces
+        """
+
+        names = self.selectedDataNames()
+
+        for n in names:
+            self.runCommand(self.uniqueName() + " = " + "timoff("+n+")")
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -1107,6 +1119,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['newunits'] = user_functions.changeunits
         glob['clip'] = user_functions.clip
         glob['stats'] = user_functions.statistics
+        glob['timoff'] = user_functions.timeOffset
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

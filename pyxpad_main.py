@@ -218,6 +218,8 @@ class Ui_MainWindow(object):
         self.actionChgUnit.setObjectName("actionChgUnit")
         self.actionStats = QtGui.QAction(MainWindow)
         self.actionStats.setObjectName("actionStats")
+        self.actionTimOff = QtGui.QAction(MainWindow)
+        self.actionTimOff.setObjectName("actionTimOff")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -263,6 +265,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionChgUnit)
         self.menuCommand.addAction(self.actionClip)
         self.menuCommand.addAction(self.actionStats)
+        self.menuCommand.addAction(self.actionTimOff)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
@@ -335,6 +338,7 @@ class Ui_MainWindow(object):
         self.actionChgUnit.setText(QtGui.QApplication.translate("MainWindow", "Change Units", None, QtGui.QApplication.UnicodeUTF8))
         self.actionClip.setText(QtGui.QApplication.translate("MainWindow", "Clip", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStats.setText(QtGui.QApplication.translate("MainWindow", "Statistics", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionTimOff.setText(QtGui.QApplication.translate("MainWindow", "Time Offset", None, QtGui.QApplication.UnicodeUTF8))
 
 
 from console_widget import ConsoleWidget

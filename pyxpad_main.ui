@@ -297,6 +297,7 @@
     <addaction name="actionChgUnit"/>
     <addaction name="actionClip"/>
     <addaction name="actionStats"/>
+    <addaction name="actionTimOff"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -511,6 +512,11 @@
   <action name="actionStats">
    <property name="text">
     <string>Statistics</string>
+   </property>
+  </action>
+  <action name="actionTimOff">
+   <property name="text">
+    <string>Time Offset</string>
    </property>
   </action>
  </widget>

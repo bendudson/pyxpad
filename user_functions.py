@@ -202,6 +202,19 @@ def statistics(data):
     print(stats)
     return()
 
+def timeOffset(data):
+    result = XPadDataItem(data)
+    parent = QDialog()
+    title = "Time Offset"
+    label = "Input time offest:"
+    dialog = QInputDialog.getDouble(parent, title, label)
+    if dialog[1]:
+        offset = dialog[0]
+        result.dim[data.order].data = np.add(result.dim[data.order].data, offset)
+        result.name = "Timoff(" + result.name + ", " + str(offset) + ")"
+        result.label = "Timoff(" + result.label + ", " + str(offset) + ")"
+        return result
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *
