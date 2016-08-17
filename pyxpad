@@ -414,6 +414,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionChgNam.triggered.connect(self.handleChgNam)
         self.actionChgUnit.triggered.connect(self.handleChgUnit)
         self.actionClip.triggered.connect(self.handleClip)
+        self.actionStats.triggered.connect(self.handleStats)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -1035,6 +1036,19 @@ class PyXPad(QMainWindow, Ui_MainWindow):
                             "clip("+n+", %e, %e )" % (config["min"], config["max"]))
 
 
+    def handleStats(self):
+        """
+        Returns the statistics (mean, standard deviation and range) of one or more traces
+        """
+
+        names = self.selectedDataNames()
+
+        if len(names) == 0:
+            return
+
+        for n in names:
+            self.runCommand("stats("+n+")")
+
     ########
 
     def runSandboxed(self, func, args=()):
@@ -1092,6 +1106,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['renamed'] = user_functions.changename
         glob['newunits'] = user_functions.changeunits
         glob['clip'] = user_functions.clip
+        glob['stats'] = user_functions.statistics
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data

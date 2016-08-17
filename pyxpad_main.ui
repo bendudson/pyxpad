@@ -296,6 +296,7 @@
     <addaction name="actionChgNam"/>
     <addaction name="actionChgUnit"/>
     <addaction name="actionClip"/>
+    <addaction name="actionStats"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -505,6 +506,11 @@
   <action name="actionClip">
    <property name="text">
     <string>Clip</string>
+   </property>
+  </action>
+  <action name="actionStats">
+   <property name="text">
+    <string>Statistics</string>
    </property>
   </action>
  </widget>

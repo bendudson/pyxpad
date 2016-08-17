@@ -181,6 +181,27 @@ def getUnitFactor():
     else:
         return None
 
+def statistics(data):
+    n = len(data.data)
+    sumOfData = np.sum(data.data)
+    mean = sumOfData/n
+    dataSquared = np.power(data.data, 2)
+    variance = (np.sum(dataSquared)/n)-mean**2.
+    stdDev = np.sqrt(variance)
+    minVal = data.data[0]
+    maxVal = data.data[0]
+    for value in data.data:
+        if value >= maxVal:
+            maxVal = value
+        if value <= minVal:
+            minVal = value
+    rng = "(" + str(minVal) +")" + " - " + "(" + str(maxVal) + ")"
+    stats = "\nStatistics on " + data.name + ":"
+    stats += "\nMean = " + str(mean) + "\nStandard Deviation = " + str(stdDev)
+    stats += "\nRange = " + rng
+    print(stats)
+    return()
+
 def chop(item, t_min, t_max):
     """
         >>> from user_functions import *
