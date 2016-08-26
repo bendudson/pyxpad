@@ -260,6 +260,7 @@
      <string>Graphics</string>
     </property>
     <addaction name="actionPlot"/>
+    <addaction name="actionOPlot"/>
     <addaction name="actionXYPlot"/>
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
@@ -341,6 +342,11 @@
   <action name="actionPlot">
    <property name="text">
     <string>Plot</string>
+   </property>
+  </action>
+  <action name="actionOPlot">
+   <property name="text">
+    <string>OPlot</string>
    </property>
   </action>
   <action name="actionXYPlot">

@@ -119,6 +119,65 @@ class MatplotlibWidget():
         self.axes.set_ylabel(y.name)
         self.canvas.draw()
 
+    def oplot(self, *args):
+        """
+        Make an overplot from multiple traces
+        """
+        ntraces = len(args)
+        if len(args) == 1:
+            plot(self, *args)
+        self.axes.clear()
+        self.figure.clear()
+        self.axes.grid(True)
+        for tracenum, trace in enumerate(args, 1):
+            self.axes = self.figure.add_subplot(1, 1, 1)
+            try:
+                for data in trace:
+                    label = data.desc
+                    if label == "":
+                        label = data.name + " (" + data.units + ") " + data.source
+
+                    time = data.time
+                    if time is None:
+                        if len(data.dim) != 1:
+                            print(data.dim)
+                            raise ValueError("Cannot plot '"+data.label+"' as it has too many dimensions")
+                        time = data.dim[0].data
+
+                    self.axes.plot(time, data.data, label=label)
+                if tracenum == 0:
+                    self.axes.set_xlabel(trace[0].dim[trace[0].order].label)
+                self.axes.legend()
+            except TypeError:
+                #Trace not iterable
+                time = trace.time.data
+                xlabel = trace.dim[trace.order].label
+                if time is None:
+                    if len(trace.dim) != 1:
+                        raise ValueError("Cannot plot '"+trace.label+"' as it has too many dimensions")
+                    time = trace.dim[0].data
+                    xlabel = trace.dim[0].label
+
+                data = trace.data
+                # Check array size
+                size = len(time)
+                if size > 10000:
+                    fac = int(len(time) / 10000)
+                    time = time[::fac]
+                    data = data[::fac]
+                    print("Warning: too many samples (%d). Down-sampling to %d points" % (size, len(time)))
+
+                self.axes.plot(time, data)
+
+                ylabel = trace.desc
+                if ylabel == "":
+                    ylabel = trace.label
+                    if trace.units != "":
+                        ylabel += " ("+trace.units+") "
+                self.axes.set_ylabel(ylabel)
+
+        self.canvas.draw()
+
     def contour(self, item):
         if len(item.data.shape) != 2:  # Must be 2D
             print("Data must be 2 dimensional")

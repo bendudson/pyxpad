@@ -386,6 +386,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
         # Graphics menu
         self.actionPlot.triggered.connect(self.handlePlot)
+        self.actionOPlot.triggered.connect(self.handleOPlot)
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
         self.actionContour.triggered.connect(lambda: self.handleCommandAction("contour"))
         self.actionContour_filled.triggered.connect(lambda: self.handleCommandAction("contourf"))
@@ -749,6 +750,32 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.runCommand(cmd)
         self.tabWidget.setCurrentWidget(self.plotTab)
 
+    def handleOPlot(self):
+        """
+        Creates an overlap plot of selected traces
+        """
+
+        names = self.selectedDataNames()
+
+        if len(names) == 0:
+            return
+
+        def trace(name):
+            try:
+                return self.data[name].name
+            except:
+                return ""
+        namelist = [(name, trace(name)) for name in names]
+        values = set(map(lambda x: x[1], namelist))
+        groups = [[y[0] for y in namelist if y[1] == x] for x in values]
+
+        def plotStr(items):
+            return "[" + ", ".join(items) + "]"
+
+        cmd = "oplot(" + ", ".join([plotStr(group) for group in groups]) + ")"
+        self.runCommand(cmd)
+        self.tabWidget.setCurrentWidget(self.plotTab)
+
     def handleXYPlot(self):
         names = self.selectedDataNames()
         if len(names) != 2:
@@ -1095,6 +1122,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
         glob = globals()
         glob['plot']     = self.DataPlot.plot
+        glob['oplot']    = self.DataPlot.oplot
         glob['plotxy']   = self.DataPlot.plotxy
         glob['contour']  = self.DataPlot.contour
         glob['contourf'] = self.DataPlot.contourf
