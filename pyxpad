@@ -1127,27 +1127,27 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['contour']  = self.DataPlot.contour
         glob['contourf'] = self.DataPlot.contourf
 
-        glob['intg'] = calculus.integrate
-        glob['diff'] = calculus.differentiate
-        glob['fftp'] = fourier.fftp
-        glob['chop'] = user_functions.chop
-        glob['recip'] = user_functions.reciprocal
-        glob['exp'] = user_functions.exponential
-        glob['abs'] = user_functions.absolute
-        glob['atan'] = user_functions.arctan
-        glob['ln'] = user_functions.nlog
-        glob['norm'] = user_functions.normalise
-        glob['inv'] = user_functions.invert
-        glob['addcons'] = user_functions.addcon
-        glob['subcons'] = user_functions.subcon
-        glob['mulcons'] = user_functions.mulcon
-        glob['divcons'] = user_functions.divcon
-        glob['powcons'] = user_functions.powcon
-        glob['renamed'] = user_functions.changename
+        glob['intg']     = calculus.integrate
+        glob['diff']     = calculus.differentiate
+        glob['fftp']     = fourier.fftp
+        glob['chop']     = user_functions.chop
+        glob['recip']    = user_functions.reciprocal
+        glob['exp']      = user_functions.exponential
+        glob['abs']      = user_functions.absolute
+        glob['atan']     = user_functions.arctan
+        glob['ln']       = user_functions.nlog
+        glob['norm']     = user_functions.normalise
+        glob['inv']      = user_functions.invert
+        glob['addcons']  = user_functions.addcon
+        glob['subcons']  = user_functions.subcon
+        glob['mulcons']  = user_functions.mulcon
+        glob['divcons']  = user_functions.divcon
+        glob['powcons']  = user_functions.powcon
+        glob['renamed']  = user_functions.changename
         glob['newunits'] = user_functions.changeunits
-        glob['clip'] = user_functions.clip
-        glob['stats'] = user_functions.statistics
-        glob['timoff'] = user_functions.timeOffset
+        glob['clip']     = user_functions.clip
+        glob['stats']    = user_functions.statistics
+        glob['timoff']   = user_functions.timeOffset
 
         # Evaluate the command, catching any exceptions
         # Local scope is set to self.data to allow access to user data
