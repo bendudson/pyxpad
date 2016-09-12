@@ -26,6 +26,8 @@ from PySide.QtCore import Qt, QTextCodec, QDir
 from pyxpad_main import Ui_MainWindow
 from configdialog import ConfigDialog
 
+from collections import OrderedDict
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -372,7 +374,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.sources = Sources(self)  # Handles data sources
-        self.data = {}  # User data
+        self.data = OrderedDict()  # User data
 
         # File menu
         self.actionNetCDF_file.triggered.connect(self.sources.addNetCDF)
