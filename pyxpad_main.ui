@@ -261,6 +261,7 @@
     </property>
     <addaction name="actionPlot"/>
     <addaction name="actionOPlot"/>
+    <addaction name="actionMPlot"/>
     <addaction name="actionXYPlot"/>
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
@@ -347,6 +348,11 @@
   <action name="actionOPlot">
    <property name="text">
     <string>OPlot</string>
+   </property>
+  </action>
+  <action name="actionMPlot">
+   <property name="text">
+    <string>MPlot</string>
    </property>
   </action>
   <action name="actionXYPlot">
