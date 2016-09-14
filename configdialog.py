@@ -64,7 +64,7 @@ class ConfigDialog(QDialog):
             elif isinstance(val, float):
                 widget = QLineEdit(self)
                 if pstvOnly:
-                    widget.setInputMask("0.00")
+                    widget.setInputMask("0.000")
                 widget.setText(str(val).strip())
             else:
                 print("Ignoring: " + name)
