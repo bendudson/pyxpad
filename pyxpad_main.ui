@@ -265,6 +265,7 @@
     <addaction name="actionXYPlot"/>
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
+    <addaction name="actionClearFig"/>
    </widget>
    <widget class="QMenu" name="menuCommand">
     <property name="title">
@@ -379,6 +380,11 @@
   <action name="actionContour_filled">
    <property name="text">
     <string>Contour filled</string>
+   </property>
+  </action>
+  <action name="actionClearFig">
+   <property name="text">
+    <string>Clear Figure</string>
    </property>
   </action>
   <action name="actionWrite_ASCII">

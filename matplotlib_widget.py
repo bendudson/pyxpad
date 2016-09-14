@@ -306,3 +306,11 @@ class MatplotlibWidget():
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
         self.axes.contourf(item.data)
         self.canvas.draw()
+
+    def clearFig(self):
+        self.axes.clear()
+        self.figure.clear()
+        self.axes.grid(True)
+        self.axes = self.figure.add_subplot(111)
+        self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07)
+        self.canvas.draw()

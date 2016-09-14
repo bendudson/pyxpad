@@ -393,6 +393,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
         self.actionContour.triggered.connect(lambda: self.handleCommandAction("contour"))
         self.actionContour_filled.triggered.connect(lambda: self.handleCommandAction("contourf"))
+        self.actionClearFig.triggered.connect(self.handleClearFig)
 
         # Command menu
         self.actionChop.triggered.connect(self.handleChop)
@@ -815,6 +816,10 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.runCommand("plotxy( "+names[0]+", "+names[1]+")")
         self.tabWidget.setCurrentWidget(self.plotTab)
 
+    def handleClearFig(self):
+        self.runCommand("clearFig()")
+        self.tabWidget.setCurrentWidget(self.plotTab)
+
     def handleCommandAction(self, command):
         names = self.selectedDataNames()
         if len(names) != 1:
@@ -1157,6 +1162,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['plotxy']   = self.DataPlot.plotxy
         glob['contour']  = self.DataPlot.contour
         glob['contourf'] = self.DataPlot.contourf
+        glob['clearFig'] = self.DataPlot.clearFig
 
         glob['intg']     = calculus.integrate
         glob['diff']     = calculus.differentiate
