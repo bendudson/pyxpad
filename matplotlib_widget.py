@@ -281,7 +281,7 @@ class MatplotlibWidget():
                     self.axes.set_xlabel(xlabel)
 
         self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace=0.001)
-        self.canvas.draw
+        self.canvas.draw()
 
     def contour(self, item):
         if len(item.data.shape) != 2:  # Must be 2D
