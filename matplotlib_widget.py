@@ -284,15 +284,37 @@ class MatplotlibWidget():
         self.canvas.draw()
 
     def contour(self, item):
-        if len(item.data.shape) != 2:  # Must be 2D
-            print("Data must be 2 dimensional")
-            return
 
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
-        self.axes.contour(item.data)
+
+        try:
+
+            if len(item.data.shape) == 2:  # Must be 2D
+                self.axes.contour(item.data)
+
+            elif len(item.dim.shape) == 2:
+                xaxis = item.dim[item.order].data
+                yaxis = item.dim[item.order+1].data
+                zaxis = item.data
+                self.axes.contour(xaxis, yaxis, zaxis)
+
+            else:
+                print("Data must be two dimensional")
+
+        except: # Data and/or dim.data not a numpy array
+
+            if len(item.data) == 2:  # Must be 2D
+                self.axes.contour(item.data)
+
+            elif len(item.dim) == 2:
+                xaxis = item.dim[item.order].data
+                yaxis = item.dim[item.order+1].data
+                zaxis = item.data
+                self.axes.contour(xaxis, yaxis, zaxis)
+
         self.canvas.draw()
 
     def contourf(self, item):
