@@ -854,7 +854,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             return
 
         # Use a dialog box to get time range
-        config = {"min":float(tmin), "max":float(tmax)}
+        config = OrderedDict(("min", float(tmin)), ("max", float(tmax)))
 
         c = ConfigDialog(config, self)
         c.exec_()
@@ -1112,7 +1112,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             return
 
         #Use a dialog box to get value range
-        config = {"min":float(valmin), "max":float(valmax)}
+        config = OrderedDict(("min", float(valmin)), ("max", float(valmax)))
 
         c = ConfigDialog(config, self, pstvOnly=False)
         c.exec_()
