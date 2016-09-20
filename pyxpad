@@ -404,6 +404,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionSubtract.triggered.connect(self.handleSubtract)
         self.actionDivide.triggered.connect(self.handleDivide)
         self.actionFFTP.triggered.connect(self.handleFFTP)
+        self.actionSldFFT.triggered.connect(self.handleSldFFT)
         self.actionReciprocal.triggered.connect(self.handleReciprocal)
         self.actionExponential.triggered.connect(self.handleExponential)
         self.actionAbsolute.triggered.connect(self.handleAbsolute)
@@ -935,6 +936,28 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             phasename = self.makeUnique(n+"_phase")
             self.runCommand(ampname+","+phasename + " = " + "fftp( "+n+" )")
 
+    def handleSldFFT(self):
+        """
+        Perform sliding FFT, returning amplitude and phase
+        """
+
+        stride = 0.001
+        width = 0.001
+
+        # Use a dialog box to get width and stride
+        config = (("stride", float(width)), ("width", float(stride)))
+        config = OrderedDict(config)
+
+        c = ConfigDialog(config, self)
+        c.exec_()
+
+        for n in self.selectedDataNames():
+            # Create a unique name for amplitude and phase
+            ampname = self.makeUnique(n+"_amp")
+            phasename = self.makeUnique(n+"_phase")
+            self.runCommand(ampname+","+phasename + " = " +
+                            "slidfft("+n+", %e, %e)" % (config["stride"], config["width"]))
+
 
     def handleReciprocal(self):
         """
@@ -1167,6 +1190,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         glob['intg']     = calculus.integrate
         glob['diff']     = calculus.differentiate
         glob['fftp']     = fourier.fftp
+        glob['slidfft']  = fourier.sldfft
         glob['chop']     = user_functions.chop
         glob['recip']    = user_functions.reciprocal
         glob['exp']      = user_functions.exponential

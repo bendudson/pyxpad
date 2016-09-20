@@ -284,6 +284,7 @@
     <addaction name="actionDivide"/>
     <addaction name="separator"/>
     <addaction name="actionFFTP"/>
+    <addaction name="actionSldFFT"/>
     <addaction name="actionReciprocal"/>
     <addaction name="actionExponential"/>
     <addaction name="actionAbsolute"/>
@@ -450,6 +451,11 @@
   <action name="actionFFTP">
    <property name="text">
     <string>FFTP</string>
+   </property>
+  </action>
+  <action name="actionSldFFT">
+   <property name="text">
+    <string>Sliding FFT</string>
    </property>
   </action>
   <action name="actionReciprocal">
