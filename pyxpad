@@ -698,12 +698,17 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
         print(row, col)
 
-    def commandEntered(self, text):
+    def commandEntered(self, text=None):
         """
         Called when a command is entered on the Data tab.
         Gets the command string from the text box, and calls
         the runCommand to run the command.
         """
+        # If there's no text, then the "Run" button was probably
+        # pressed
+        if text is None:
+            text = self.commandInput.text()
+
         # Get the command text and clear the text box
         cmd = toStr(text)
         self.commandInput.clear()
