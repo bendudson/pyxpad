@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Thu Mar  6 09:56:21 2014
-#      by: pyside-uic 0.2.15 running on PySide 1.2.1
+# Created: Tue Oct  4 10:57:10 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -194,8 +194,8 @@ class Ui_MainWindow(object):
         self.actionBand_pass_filter.setObjectName("actionBand_pass_filter")
         self.actionFFTP = QtGui.QAction(MainWindow)
         self.actionFFTP.setObjectName("actionFFTP")
-        self.actionSldFFT = QtGui.QAction(MainWindow)
-        self.actionSldFFT.setObjectName("actionSldFFT")
+        self.actionRunFFT = QtGui.QAction(MainWindow)
+        self.actionRunFFT.setObjectName("actionRunFFT")
         self.actionReciprocal = QtGui.QAction(MainWindow)
         self.actionReciprocal.setObjectName("actionReciprocal")
         self.actionExponential = QtGui.QAction(MainWindow)
@@ -259,7 +259,7 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionDivide)
         self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionFFTP)
-        self.menuCommand.addAction(self.actionSldFFT)
+        self.menuCommand.addAction(self.actionRunFFT)
         self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionReciprocal)
         self.menuCommand.addAction(self.actionExponential)
@@ -337,7 +337,7 @@ class Ui_MainWindow(object):
         self.actionHigh_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "High pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBand_pass_filter.setText(QtGui.QApplication.translate("MainWindow", "Band pass filter", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFFTP.setText(QtGui.QApplication.translate("MainWindow", "FFTP", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionSldFFT.setText(QtGui.QApplication.translate("MainWindow", "Sliding FFT", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRunFFT.setText(QtGui.QApplication.translate("MainWindow", "Running FFT", None, QtGui.QApplication.UnicodeUTF8))
         self.actionReciprocal.setText(QtGui.QApplication.translate("MainWindow", "1/X", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExponential.setText(QtGui.QApplication.translate("MainWindow", "exp", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbsolute.setText(QtGui.QApplication.translate("MainWindow", "abs", None, QtGui.QApplication.UnicodeUTF8))
@@ -355,6 +355,5 @@ class Ui_MainWindow(object):
         self.actionClip.setText(QtGui.QApplication.translate("MainWindow", "Clip", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStats.setText(QtGui.QApplication.translate("MainWindow", "Statistics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTimOff.setText(QtGui.QApplication.translate("MainWindow", "Time Offset", None, QtGui.QApplication.UnicodeUTF8))
-
 
 from console_widget import ConsoleWidget
