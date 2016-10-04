@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Tue Oct  4 10:57:10 2016
+# Created: Tue Oct  4 16:47:43 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -136,6 +136,8 @@ class Ui_MainWindow(object):
         self.menuPlot.setObjectName("menuPlot")
         self.menuCommand = QtGui.QMenu(self.menubar)
         self.menuCommand.setObjectName("menuCommand")
+        self.menuHelp = QtGui.QMenu(self.menubar)
+        self.menuHelp.setObjectName("menuHelp")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -228,6 +230,8 @@ class Ui_MainWindow(object):
         self.actionStats.setObjectName("actionStats")
         self.actionTimOff = QtGui.QAction(MainWindow)
         self.actionTimOff.setObjectName("actionTimOff")
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -278,9 +282,11 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionClip)
         self.menuCommand.addAction(self.actionStats)
         self.menuCommand.addAction(self.actionTimOff)
+        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlot.menuAction())
         self.menubar.addAction(self.menuCommand.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -306,6 +312,7 @@ class Ui_MainWindow(object):
         self.menuAdd_source.setTitle(QtGui.QApplication.translate("MainWindow", "Add source", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlot.setTitle(QtGui.QApplication.translate("MainWindow", "Graphics", None, QtGui.QApplication.UnicodeUTF8))
         self.menuCommand.setTitle(QtGui.QApplication.translate("MainWindow", "Command", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionLoadState.setText(QtGui.QApplication.translate("MainWindow", "Load config", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSaveState.setText(QtGui.QApplication.translate("MainWindow", "Save config", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
@@ -355,5 +362,6 @@ class Ui_MainWindow(object):
         self.actionClip.setText(QtGui.QApplication.translate("MainWindow", "Clip", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStats.setText(QtGui.QApplication.translate("MainWindow", "Statistics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTimOff.setText(QtGui.QApplication.translate("MainWindow", "Time Offset", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "&About", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget

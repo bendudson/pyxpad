@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
-#
-# Author: Ben Dudson, Department of Physics, University of York
-#         benjamin.dudson@york.ac.uk
-#
-# This file is part of PyXPad.
-#
-# PyXPad is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# PyXPad is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Author: Ben Dudson, Department of Physics, University of York
+        benjamin.dudson@york.ac.uk
+        Edward Blair, Peter Hill, John Wilson
+
+This file is part of PyXPad.
+
+PyXPad is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+PyXPad is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 from PySide.QtGui import (QAbstractItemView, QAction, QApplication, QCursor,
                           QFileDialog, QIcon, QMainWindow, QMenu, QMessageBox,
@@ -422,6 +425,9 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionClip.triggered.connect(self.handleClip)
         self.actionStats.triggered.connect(self.handleStats)
         self.actionTimOff.triggered.connect(self.handleTimOff)
+
+        # Help menu
+        self.actionAbout.triggered.connect(self.handleAbout)
 
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
@@ -1172,7 +1178,18 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "timoff("+n+")")
 
-    ########
+    ########## Help menu handlers ##########
+
+    def handleAbout(self):
+        """
+        Displays the About dialog
+        """
+
+        about_box = QMessageBox()
+        about_box.setText(__doc__)
+        about_box.exec_()
+
+    ##########
 
     def runSandboxed(self, func, args=()):
         # To capture print statements stdout is temporarily directed to a StringIO buffer

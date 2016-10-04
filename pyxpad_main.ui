@@ -304,9 +304,16 @@
     <addaction name="actionStats"/>
     <addaction name="actionTimOff"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
    <addaction name="menuCommand"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoadState">
@@ -542,6 +549,11 @@
   <action name="actionTimOff">
    <property name="text">
     <string>Time Offset</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About</string>
    </property>
   </action>
  </widget>
