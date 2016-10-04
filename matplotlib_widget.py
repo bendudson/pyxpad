@@ -284,49 +284,97 @@ class MatplotlibWidget():
         self.canvas.draw()
 
     def contour(self, item):
+        """
+        Contour plot of item
+        """
 
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
 
-        try:
+        if not (len(item.dim) == 2 or
+                len(item.data) == 2 or
+                len(item.data.shape) == 2):
+            print("Data must be two dimensional")
+            return
 
-            if len(item.data.shape) == 2:  # Must be 2D
-                self.axes.contour(item.data)
+        xdim = item.dim[item.order]
+        ydim = item.dim[item.order+1]
 
-            elif len(item.dim.shape) == 2:
-                xaxis = item.dim[item.order].data
-                yaxis = item.dim[item.order+1].data
-                zaxis = item.data
-                self.axes.contour(xaxis, yaxis, zaxis)
+        xaxis = xdim.data
+        yaxis = ydim.data
+        zaxis = item.data
+        self.axes.contour(xaxis, yaxis, zaxis)
 
-            else:
-                print("Data must be two dimensional")
+        xlabel = xdim.label
+        if xlabel == "":
+            xlabel = xdim.name
+            if xdim.units != "":
+                xlabel += " ({})".format(xdim.units)
 
-        except: # Data and/or dim.data not a numpy array
+        self.axes.set_xlabel(xlabel)
 
-            if len(item.data) == 2:  # Must be 2D
-                self.axes.contour(item.data)
+        ylabel = ydim.label
+        if ylabel == "":
+            ylabel = ydim.name
+            if ydim.units != "":
+                ylabel += " ({})".format(ydim.units)
 
-            elif len(item.dim) == 2:
-                xaxis = item.dim[item.order].data
-                yaxis = item.dim[item.order+1].data
-                zaxis = item.data
-                self.axes.contour(xaxis, yaxis, zaxis)
+        self.axes.set_ylabel(ylabel)
+
+        title = item.name
+        if title == "":
+            title = item.title
+        self.axes.set_title(title)
 
         self.canvas.draw()
 
     def contourf(self, item):
-        if len(item.data.shape) != 2:  # Must be 2D
-            print("Data must be 2 dimensional")
-            return
+        """
+        Filled contour plot of item
+        """
 
         self.axes.clear()
         self.figure.clear()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
-        self.axes.contourf(item.data)
+
+        if not (len(item.dim) == 2 or
+                len(item.data) == 2 or
+                len(item.data.shape) == 2):
+            print("Data must be two dimensional")
+            return
+
+        xdim = item.dim[item.order]
+        ydim = item.dim[item.order+1]
+
+        xaxis = xdim.data
+        yaxis = ydim.data
+        zaxis = item.data
+        self.axes.contourf(xaxis, yaxis, zaxis)
+
+        xlabel = xdim.label
+        if xlabel == "":
+            xlabel = xdim.name
+            if xdim.units != "":
+                xlabel += " ({})".format(xdim.units)
+
+        self.axes.set_xlabel(xlabel)
+
+        ylabel = ydim.label
+        if ylabel == "":
+            ylabel = ydim.name
+            if ydim.units != "":
+                ylabel += " ({})".format(ydim.units)
+
+        self.axes.set_ylabel(ylabel)
+
+        title = item.name
+        if title == "":
+            title = item.title
+        self.axes.set_title(title)
+
         self.canvas.draw()
 
     def clearFig(self):

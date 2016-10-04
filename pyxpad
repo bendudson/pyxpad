@@ -391,8 +391,8 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionOPlot.triggered.connect(self.handleOPlot)
         self.actionMPlot.triggered.connect(self.handleMPlot)
         self.actionXYPlot.triggered.connect(self.handleXYPlot)
-        self.actionContour.triggered.connect(lambda: self.handleCommandAction("contour"))
-        self.actionContour_filled.triggered.connect(lambda: self.handleCommandAction("contourf"))
+        self.actionContour.triggered.connect(self.handleContour)
+        self.actionContour_filled.triggered.connect(self.handleContourf)
         self.actionClearFig.triggered.connect(self.handleClearFig)
 
         # Command menu
@@ -826,6 +826,30 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.runCommand("clearFig()")
         self.tabWidget.setCurrentWidget(self.plotTab)
 
+    def handleContour(self):
+        """
+        Make a contour plot of a 2D trace
+        """
+        names = self.selectedDataNames()
+        if len(names) != 1:
+            self.write("** One data item must be selected for contour")
+            return
+
+        self.runCommand("contour("+names[0]+")")
+        self.tabWidget.setCurrentWidget(self.plotTab)
+
+    def handleContourf(self):
+        """
+        Make a contour plot of a 2D trace
+        """
+        names = self.selectedDataNames()
+        if len(names) != 1:
+            self.write("** One data item must be selected for contourf")
+            return
+
+        self.runCommand("contourf("+names[0]+")")
+        self.tabWidget.setCurrentWidget(self.plotTab)
+
     def handleCommandAction(self, command):
         names = self.selectedDataNames()
         if len(names) != 1:
@@ -961,7 +985,6 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             new_name = self.makeUnique(name + "_runfft")
             self.runCommand(new_name + " = " +
                             "runfft({}, stride={}, width={})".format(name, config["stride"], config["width"]))
-
 
     def handleReciprocal(self):
         """
@@ -1124,7 +1147,6 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.makeUnique(n+"_clip") + " = " +
                             "clip("+n+", %e, %e )" % (config["min"], config["max"]))
-
 
     def handleStats(self):
         """
