@@ -265,6 +265,7 @@
     <addaction name="actionPlot"/>
     <addaction name="actionOPlot"/>
     <addaction name="actionMPlot"/>
+    <addaction name="actionZPlot"/>
     <addaction name="actionXYPlot"/>
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
@@ -373,6 +374,9 @@
   <action name="actionXYPlot">
    <property name="text">
     <string>XYPlot</string>
+  <action name="actionZPlot">
+   <property name="text">
+    <string>&amp;ZPlot</string>
    </property>
   </action>
   <action name="actionBOUT_data">

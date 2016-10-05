@@ -1,6 +1,7 @@
 #
 # Initial code taken from  http://stackoverflow.com/questions/6723527/getting-pyside-to-work-with-matplotlib
 # Additional bits from https://gist.github.com/jfburkhart/2423179
+# zplot zoom effect from http://matplotlib.org/examples/pylab_examples/axes_zoom_effect.html
 #
 
 import matplotlib
@@ -9,6 +10,11 @@ matplotlib.use('Qt4Agg')
 matplotlib.rcParams['backend.qt4'] = 'PySide'
 
 from matplotlib.figure import Figure
+from matplotlib.transforms import Bbox, TransformedBbox, \
+    blended_transform_factory
+from mpl_toolkits.axes_grid1.inset_locator import BboxPatch, BboxConnector,\
+    BboxConnectorPatch
+
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 try:
     from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
@@ -45,11 +51,22 @@ class MatplotlibWidget():
         """
         Make sure the figure is in a nice state
         """
-        self.axes.clear()
+        if isinstance(self.axes, list):
+            for axes in self.axes:
+                del(axes)
+            self.axes = self.figure.add_subplot(111)
+        else:
+            self.axes.clear()
+
         self.figure.clear()
         self.axes.grid(True)
         if self.callback_id:
-            self.figure.canvas.mpl_disconnect(self.callback_id)
+            try:
+                self.figure.canvas.mpl_disconnect(self.callback_id)
+            except TypeError:
+                for callback_id in self.callback_id:
+                    self.figure.canvas.mpl_disconnect(callback_id)
+                self.callback_id = None
 
     def plot(self, *args):
         """
@@ -290,6 +307,157 @@ class MatplotlibWidget():
 
         self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07, hspace=0.001)
         self.canvas.draw()
+
+    def zplot(self, *args):
+        """
+        Plot traces and a zoomed in section on subplots
+        """
+
+        def connect_bbox(bbox1, bbox2,
+                         loc1a, loc2a, loc1b, loc2b,
+                         prop_lines, prop_patches=None):
+            """
+            Connect two bounding boxes
+            """
+            if prop_patches is None:
+                prop_patches = prop_lines.copy()
+                prop_patches["alpha"] = prop_patches.get("alpha", 1)*0.2
+
+            c1 = BboxConnector(bbox1, bbox2, loc1=loc1a, loc2=loc2a, **prop_lines)
+            c1.set_clip_on(False)
+            c2 = BboxConnector(bbox1, bbox2, loc1=loc1b, loc2=loc2b, **prop_lines)
+            c2.set_clip_on(False)
+
+            bbox_patch1 = BboxPatch(bbox1, **prop_patches)
+            bbox_patch2 = BboxPatch(bbox2, **prop_patches)
+
+            patch = BboxConnectorPatch(bbox1, bbox2,
+                                       loc1a=loc1a, loc2a=loc2a, loc1b=loc1b, loc2b=loc2b,
+                                       **prop_patches)
+            patch.set_clip_on(False)
+
+            return c1, c2, bbox_patch1, bbox_patch2, patch
+
+        def zoom_effect(ax1, ax2, **kwargs):
+            """
+            ax1 : the main axes
+            ax1 : the zoomed axes
+
+            Connect ax1 and ax2.  The xmin & xmax will be taken from the
+            ax1.viewLim.
+            """
+
+            tt = ax1.transScale + (ax1.transLimits + ax2.transAxes)
+            trans = blended_transform_factory(ax2.transData, tt)
+
+            mybbox1 = ax1.bbox
+            mybbox2 = TransformedBbox(ax1.viewLim, trans)
+
+            prop_patches = kwargs.copy()
+            prop_patches["ec"] = "none"
+            prop_patches["alpha"] = 0.2
+
+            c1, c2, bbox_patch1, bbox_patch2, patch = \
+                connect_bbox(mybbox1, mybbox2,
+                             loc1a=3, loc2a=2, loc1b=4, loc2b=1,
+                             prop_lines=kwargs, prop_patches=prop_patches)
+
+            ax1.add_patch(bbox_patch1)
+            ax2.add_patch(bbox_patch2)
+            ax2.add_patch(c1)
+            ax2.add_patch(c2)
+            ax2.add_patch(patch)
+
+            return c1, c2, bbox_patch1, bbox_patch2, patch
+
+        # if len(args) == 1:
+        #     self.plot(*args)
+
+        self._clean_axes()
+
+        self.ax_top = self.figure.add_subplot(2, 1, 1)
+        self.ax_bottom = self.figure.add_subplot(2, 1, 2)
+        self.axes = [self.ax_top, self.ax_bottom]
+
+        zoom_effect(self.ax_top, self.ax_bottom)
+        self.start_cid = self.ax_bottom.figure.canvas.mpl_connect("button_press_event",
+                                                                  self.start_zoom_region)
+        self.end_cid = self.ax_bottom.figure.canvas.mpl_connect("button_release_event",
+                                                                self.end_zoom_region)
+        self.callback_id = [self.start_cid, self.end_cid]
+
+        for tracenum, trace in enumerate(args):
+            try:
+                for data in trace:
+                    label = data.desc
+                    if label == "":
+                        label = data.name + " (" + data.units + ") " + data.source
+
+                    time = data.time
+                    if time is None:
+                        if len(data.dim) != 1:
+                            print(data.dim)
+                            raise ValueError("Cannot plot '"+data.label+"' as it has too many dimensions")
+                        time = data.dim[0].data
+
+                    self.ax_top.plot(time, data.data, label=label)
+                    self.ax_bottom.plot(time, data.data, label=label)
+                if tracenum == 0:
+                    self.ax_bottom.set_xlabel(trace[0].dim[trace[0].order].label)
+                self.ax_bottom.legend()
+            except TypeError:
+                #Trace not iterable
+                time = trace.time.data
+                xlabel = trace.dim[trace.order].label
+                if time is None:
+                    if len(trace.dim) != 1:
+                        raise ValueError("Cannot plot '"+trace.label+"' as it has too many dimensions")
+                    time = trace.dim[0].data
+                    xlabel = trace.dim[0].label
+                self.ax_bottom.set_xlabel(xlabel)
+
+                data = trace.data
+                # Check array size
+                size = len(time)
+                if size > 10000:
+                    fac = int(len(time) / 10000)
+                    time = time[::fac]
+                    data = data[::fac]
+                    print("Warning: too many samples (%d). Down-sampling to %d points" % (size, len(time)))
+
+                self.ax_top.plot(time, data)
+                self.ax_bottom.plot(time, data)
+
+                ylabel = trace.desc
+                if ylabel == "":
+                    ylabel = trace.label
+                    if trace.units != "":
+                        ylabel += " ("+trace.units+") "
+                self.ax_top.set_ylabel(ylabel)
+                self.ax_bottom.set_ylabel(ylabel)
+
+        self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
+        self.canvas.draw()
+
+    def start_zoom_region(self, event):
+        """
+        Callback for starting the zoomed region
+        """
+        if event.inaxes != self.ax_bottom:
+            return
+        _, right = self.ax_top.get_xlim()
+        self.ax_top.set_xlim(event.xdata, right)
+        self.ax_bottom.figure.canvas.draw()
+
+    def end_zoom_region(self, event):
+        """
+        Callback for ending the zoomed region
+        """
+        if event.inaxes != self.ax_bottom:
+            return
+        left, _ = self.ax_top.get_xlim()
+        self.ax_top.set_xlim(left, event.xdata)
+        self.ax_bottom.figure.canvas.draw()
 
     def contour(self, item):
         """
