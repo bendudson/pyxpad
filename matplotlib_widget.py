@@ -39,14 +39,25 @@ class MatplotlibWidget():
         self.grid_layout.addWidget(self.mpl_toolbar)
         parent.setLayout(self.grid_layout)
 
+        self.callback_id = None
+
+    def _clean_axes(self):
+        """
+        Make sure the figure is in a nice state
+        """
+        self.axes.clear()
+        self.figure.clear()
+        self.axes.grid(True)
+        if self.callback_id:
+            self.figure.canvas.mpl_disconnect(self.callback_id)
+
     def plot(self, *args):
         """
         Make multiple plots
         """
         nplots = len(args)
-        self.axes.clear()
-        self.figure.clear()
-        self.axes.grid(True)
+        self._clean_axes()
+
         for plotnum, p in enumerate(args, 1):
             # For each plot
             if plotnum == 1:
@@ -130,10 +141,10 @@ class MatplotlibWidget():
         """
         ntraces = len(args)
         if len(args) == 1:
-            plot(self, *args)
-        self.axes.clear()
-        self.figure.clear()
-        self.axes.grid(True)
+            self.plot(*args)
+
+        self._clean_axes()
+
         for tracenum, trace in enumerate(args, 1):
             self.axes = self.figure.add_subplot(1, 1, 1)
             try:
@@ -208,10 +219,7 @@ class MatplotlibWidget():
         if ntraces != np.sum(pltform):
             raise ValueError("Number of traces does not equal sum of traces to be plotted in format")
 
-        self.axes.clear()
-        self.figure.clear()
-        self.axes.grid(True)
-
+        self._clean_axes()
         # Split data items up into correct plots according to plot format
         traces = []
         maxindx = 0
@@ -288,8 +296,7 @@ class MatplotlibWidget():
         Contour plot of item
         """
 
-        self.axes.clear()
-        self.figure.clear()
+        self._clean_axes()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
 
@@ -335,8 +342,7 @@ class MatplotlibWidget():
         Filled contour plot of item
         """
 
-        self.axes.clear()
-        self.figure.clear()
+        self._clean_axes()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.07, right=0.98, top=0.95, bottom=0.08)
 
@@ -378,9 +384,10 @@ class MatplotlibWidget():
         self.canvas.draw()
 
     def clearFig(self):
-        self.axes.clear()
-        self.figure.clear()
-        self.axes.grid(True)
+        """
+        Reset the plot widget
+        """
+        self._clean_axes()
         self.axes = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.07)
         self.canvas.draw()
