@@ -422,8 +422,8 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionMulCon.triggered.connect(self.handleMulCon)
         self.actionDivCon.triggered.connect(self.handleDivCon)
         self.actionPowCon.triggered.connect(self.handlePowCon)
-        self.actionChgNam.triggered.connect(self.handleChgNam)
-        self.actionChgUnit.triggered.connect(self.handleChgUnit)
+        self.actionChangeName.triggered.connect(self.handleChangeName)
+        self.actionChangeUnits.triggered.connect(self.handleChangeUnit)
         self.actionClip.triggered.connect(self.handleClip)
         self.actionStats.triggered.connect(self.handleStats)
         self.actionTimeOff.triggered.connect(self.handleTimeOff)
@@ -1153,19 +1153,17 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand(self.uniqueName() + " = " + "powcons( "+n+" )")
 
-    def handleChgNam(self):
+    def handleChangeName(self):
         """
         Changes the name of one or more trace(s)
         """
         names = self.selectedDataNames()
 
-        from user_functions import changename, inputname
-
         for n in names:
-            name = inputname()
+            name = user_functions.inputname()
             self.runCommand(self.makeUnique(name) + " = " + "renamed( "+n+" )")
 
-    def handleChgUnit(self):
+    def handleChangeUnit(self):
         """
         Changes the units of one or more trace(s)
         """

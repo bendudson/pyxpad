@@ -304,8 +304,8 @@
     <addaction name="actionMulCon"/>
     <addaction name="actionDivCon"/>
     <addaction name="actionPowCon"/>
-    <addaction name="actionChgNam"/>
-    <addaction name="actionChgUnit"/>
+    <addaction name="actionChangeName"/>
+    <addaction name="actionChangeUnits"/>
     <addaction name="actionClip"/>
     <addaction name="actionStats"/>
     <addaction name="actionTimeOff"/>
@@ -537,12 +537,12 @@
     <string>X^C</string>
    </property>
   </action>
-  <action name="actionChgNam">
+  <action name="actionChangeName">
    <property name="text">
     <string>Change Name</string>
    </property>
   </action>
-  <action name="actionChgUnit">
+  <action name="actionChangeUnits">
    <property name="text">
     <string>Change Units</string>
    </property>

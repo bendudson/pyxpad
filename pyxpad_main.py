@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Wed Oct  5 16:44:12 2016
+# Created: Wed Oct  5 17:25:05 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -161,6 +161,8 @@ class Ui_MainWindow(object):
         self.actionMPlot.setObjectName("actionMPlot")
         self.actionXYPlot = QtGui.QAction(MainWindow)
         self.actionXYPlot.setObjectName("actionXYPlot")
+        self.actionZPlot = QtGui.QAction(MainWindow)
+        self.actionZPlot.setObjectName("actionZPlot")
         self.actionBOUT_data = QtGui.QAction(MainWindow)
         self.actionBOUT_data.setObjectName("actionBOUT_data")
         self.actionContour = QtGui.QAction(MainWindow)
@@ -221,10 +223,10 @@ class Ui_MainWindow(object):
         self.actionDivCon.setObjectName("actionDivCon")
         self.actionPowCon = QtGui.QAction(MainWindow)
         self.actionPowCon.setObjectName("actionPowCon")
-        self.actionChgNam = QtGui.QAction(MainWindow)
-        self.actionChgNam.setObjectName("actionChgNam")
-        self.actionChgUnit = QtGui.QAction(MainWindow)
-        self.actionChgUnit.setObjectName("actionChgUnit")
+        self.actionChangeName = QtGui.QAction(MainWindow)
+        self.actionChangeName.setObjectName("actionChangeName")
+        self.actionChangeUnits = QtGui.QAction(MainWindow)
+        self.actionChangeUnits.setObjectName("actionChangeUnits")
         self.actionClip = QtGui.QAction(MainWindow)
         self.actionClip.setObjectName("actionClip")
         self.actionStats = QtGui.QAction(MainWindow)
@@ -235,8 +237,6 @@ class Ui_MainWindow(object):
         self.actionAbout.setObjectName("actionAbout")
         self.actionDeleteTrace = QtGui.QAction(MainWindow)
         self.actionDeleteTrace.setObjectName("actionDeleteTrace")
-        self.actionZPlot = QtGui.QAction(MainWindow)
-        self.actionZPlot.setObjectName("actionZPlot")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -285,8 +285,8 @@ class Ui_MainWindow(object):
         self.menuCommand.addAction(self.actionMulCon)
         self.menuCommand.addAction(self.actionDivCon)
         self.menuCommand.addAction(self.actionPowCon)
-        self.menuCommand.addAction(self.actionChgNam)
-        self.menuCommand.addAction(self.actionChgUnit)
+        self.menuCommand.addAction(self.actionChangeName)
+        self.menuCommand.addAction(self.actionChangeUnits)
         self.menuCommand.addAction(self.actionClip)
         self.menuCommand.addAction(self.actionStats)
         self.menuCommand.addAction(self.actionTimeOff)
@@ -366,8 +366,8 @@ class Ui_MainWindow(object):
         self.actionMulCon.setText(QtGui.QApplication.translate("MainWindow", "X*C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionDivCon.setText(QtGui.QApplication.translate("MainWindow", "X/C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPowCon.setText(QtGui.QApplication.translate("MainWindow", "X^C", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionChgNam.setText(QtGui.QApplication.translate("MainWindow", "Change Name", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionChgUnit.setText(QtGui.QApplication.translate("MainWindow", "Change Units", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChangeName.setText(QtGui.QApplication.translate("MainWindow", "Change Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChangeUnits.setText(QtGui.QApplication.translate("MainWindow", "Change Units", None, QtGui.QApplication.UnicodeUTF8))
         self.actionClip.setText(QtGui.QApplication.translate("MainWindow", "Clip", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStats.setText(QtGui.QApplication.translate("MainWindow", "Statistics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTimeOff.setText(QtGui.QApplication.translate("MainWindow", "Time Offset", None, QtGui.QApplication.UnicodeUTF8))
