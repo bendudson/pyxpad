@@ -424,7 +424,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionChgUnit.triggered.connect(self.handleChgUnit)
         self.actionClip.triggered.connect(self.handleClip)
         self.actionStats.triggered.connect(self.handleStats)
-        self.actionTimOff.triggered.connect(self.handleTimOff)
+        self.actionTimeOff.triggered.connect(self.handleTimeOff)
 
         # Help menu
         self.actionAbout.triggered.connect(self.handleAbout)
@@ -1132,19 +1132,19 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             return
 
         try:
-            #Get current data range from first variable
+            # Get current data range from first variable
             var = self.data[names[0]]
             valmin = var.data[0]
             valmax = var.data[0]
             for point in var.data:
-                if point <  valmin:
+                if point < valmin:
                     valmin = point
                 if point > valmax:
                     valmax = point
         except:
             return
 
-        #Use a dialog box to get value range
+        # Use a dialog box to get value range
         config = OrderedDict(("min", float(valmin)), ("max", float(valmax)))
 
         c = ConfigDialog(config, self, pstvOnly=False)
@@ -1167,8 +1167,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         for n in names:
             self.runCommand("stats("+n+")")
 
-
-    def handleTimOff(self):
+    def handleTimeOff(self):
         """
         Adds a time offset to one or more traces
         """

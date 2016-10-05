@@ -302,7 +302,7 @@
     <addaction name="actionChgUnit"/>
     <addaction name="actionClip"/>
     <addaction name="actionStats"/>
-    <addaction name="actionTimOff"/>
+    <addaction name="actionTimeOff"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -478,7 +478,7 @@
   </action>
   <action name="actionAbsolute">
    <property name="text">
-    <string>abso</string>
+    <string>abs</string>
    </property>
   </action>
   <action name="actionArctan">
@@ -546,7 +546,7 @@
     <string>Statistics</string>
    </property>
   </action>
-  <action name="actionTimOff">
+  <action name="actionTimeOff">
    <property name="text">
     <string>Time Offset</string>
    </property>
