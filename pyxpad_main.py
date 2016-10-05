@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Wed Oct  5 16:05:21 2016
+# Created: Wed Oct  5 16:44:12 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -329,17 +329,17 @@ class Ui_MainWindow(object):
         self.actionXPAD_tree.setText(QtGui.QApplication.translate("MainWindow", "XPAD tree", None, QtGui.QApplication.UnicodeUTF8))
         self.actionXPAD_tree.setToolTip(QtGui.QApplication.translate("MainWindow", "Load a tree of XPAD items", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNetCDF_file.setText(QtGui.QApplication.translate("MainWindow", "NetCDF file", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPlot.setText(QtGui.QApplication.translate("MainWindow", "Plot", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionOPlot.setText(QtGui.QApplication.translate("MainWindow", "OPlot", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionMPlot.setText(QtGui.QApplication.translate("MainWindow", "MPlot", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionXYPlot.setText(QtGui.QApplication.translate("MainWindow", "XYPlot", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPlot.setText(QtGui.QApplication.translate("MainWindow", "&Plot", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionOPlot.setText(QtGui.QApplication.translate("MainWindow", "&OPlot", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMPlot.setText(QtGui.QApplication.translate("MainWindow", "&MPlot", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionXYPlot.setText(QtGui.QApplication.translate("MainWindow", "&XYPlot", None, QtGui.QApplication.UnicodeUTF8))
         self.actionZPlot.setText(QtGui.QApplication.translate("MainWindow", "&ZPlot", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBOUT_data.setText(QtGui.QApplication.translate("MainWindow", "BOUT++ data", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBOUT_data.setToolTip(QtGui.QApplication.translate("MainWindow", "Read BOUT++ data directory", None, QtGui.QApplication.UnicodeUTF8))
         self.actionBOUT_data.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionContour.setText(QtGui.QApplication.translate("MainWindow", "Contour", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionContour_filled.setText(QtGui.QApplication.translate("MainWindow", "Contour filled", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionClearFig.setText(QtGui.QApplication.translate("MainWindow", "Clear Figure", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionContour.setText(QtGui.QApplication.translate("MainWindow", "&Contour", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionContour_filled.setText(QtGui.QApplication.translate("MainWindow", "Contour &filled", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClearFig.setText(QtGui.QApplication.translate("MainWindow", "C&lear Figure", None, QtGui.QApplication.UnicodeUTF8))
         self.actionWrite_ASCII.setText(QtGui.QApplication.translate("MainWindow", "Write ASCII", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAdd.setText(QtGui.QApplication.translate("MainWindow", "X+Y (Sum Channels)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSubtract.setText(QtGui.QApplication.translate("MainWindow", "X-Y", None, QtGui.QApplication.UnicodeUTF8))

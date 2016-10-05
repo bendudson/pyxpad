@@ -871,7 +871,6 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
     def handleClearFig(self):
         self.runCommand("clearFig()")
-        self.tabWidget.setCurrentWidget(self.plotTab)
 
     def handleContour(self):
         """

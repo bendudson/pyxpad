@@ -358,22 +358,24 @@
   </action>
   <action name="actionPlot">
    <property name="text">
-    <string>Plot</string>
+    <string>&amp;Plot</string>
    </property>
   </action>
   <action name="actionOPlot">
    <property name="text">
-    <string>OPlot</string>
+    <string>&amp;OPlot</string>
    </property>
   </action>
   <action name="actionMPlot">
    <property name="text">
-    <string>MPlot</string>
+    <string>&amp;MPlot</string>
    </property>
   </action>
   <action name="actionXYPlot">
    <property name="text">
-    <string>XYPlot</string>
+    <string>&amp;XYPlot</string>
+   </property>
+  </action>
   <action name="actionZPlot">
    <property name="text">
     <string>&amp;ZPlot</string>
@@ -392,17 +394,17 @@
   </action>
   <action name="actionContour">
    <property name="text">
-    <string>Contour</string>
+    <string>&amp;Contour</string>
    </property>
   </action>
   <action name="actionContour_filled">
    <property name="text">
-    <string>Contour filled</string>
+    <string>Contour &amp;filled</string>
    </property>
   </action>
   <action name="actionClearFig">
    <property name="text">
-    <string>Clear Figure</string>
+    <string>C&amp;lear Figure</string>
    </property>
   </action>
   <action name="actionWrite_ASCII">

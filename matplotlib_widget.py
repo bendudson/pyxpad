@@ -162,7 +162,7 @@ class MatplotlibWidget():
 
         self._clean_axes()
 
-        for tracenum, trace in enumerate(args, 1):
+        for tracenum, trace in enumerate(args):
             self.axes = self.figure.add_subplot(1, 1, 1)
             try:
                 for data in trace:
@@ -471,7 +471,7 @@ class MatplotlibWidget():
         if not (len(item.dim) == 2 or
                 len(item.data) == 2 or
                 len(item.data.shape) == 2):
-            print("Data must be two dimensional")
+            raise ValueError("Data must be two dimensional")
             return
 
         xdim = item.dim[item.order]
@@ -517,7 +517,7 @@ class MatplotlibWidget():
         if not (len(item.dim) == 2 or
                 len(item.data) == 2 or
                 len(item.data.shape) == 2):
-            print("Data must be two dimensional")
+            raise ValueError("Data must be two dimensional")
             return
 
         xdim = item.dim[item.order]
