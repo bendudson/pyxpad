@@ -399,6 +399,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.actionClearFig.triggered.connect(self.handleClearFig)
 
         # Command menu
+        self.actionDeleteTrace.triggered.connect(self.handleDeleteTrace)
         self.actionChop.triggered.connect(self.handleChop)
         self.actionIntegrate.triggered.connect(self.handleIntegrate)
         self.actionDf_dt.triggered.connect(self.handleDifferentiate)
@@ -438,6 +439,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
         # Data tab
         self.dataTable.cellChanged.connect(self.dataTableChanged)
+        self.dataTable.customContextMenuRequested.connect(self.handlePopupMenu)
 
         try:
             from matplotlib_widget import MatplotlibWidget
@@ -737,6 +739,18 @@ class PyXPad(QMainWindow, Ui_MainWindow):
                 pass  # Ignore if doesn't have a name
         return names
 
+    def handlePopupMenu(self):
+        """
+        Called when user right-clicks on a trace
+        """
+        menu = QMenu()
+
+        selected = self.selectedDataNames()
+        if len(selected) != 0:
+            menu.addAction(self.actionDeleteTrace)
+
+        menu.exec_(QCursor.pos())
+
     ##################### Plot menu actions #####################
 
     def handlePlot(self):
@@ -865,6 +879,19 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.runCommand(command+"( "+names[0]+" )")
 
     ######## Command menu handlers
+
+    def handleDeleteTrace(self):
+        """
+        Delete selected traces
+        """
+        # Get list of selected variables
+        names = self.selectedDataNames()
+
+        if len(names) == 0:
+            return
+
+        for name in names:
+            self.runCommand("del({})".format(name))
 
     def handleChop(self):
         """

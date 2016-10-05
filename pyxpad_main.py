@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Tue Oct  4 16:47:43 2016
+# Created: Wed Oct  5 16:05:21 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         self.splitter_2.setOrientation(QtCore.Qt.Vertical)
         self.splitter_2.setObjectName("splitter_2")
         self.dataTable = QtGui.QTableWidget(self.splitter_2)
+        self.dataTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.dataTable.setAlternatingRowColors(True)
         self.dataTable.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         self.dataTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
@@ -232,6 +233,8 @@ class Ui_MainWindow(object):
         self.actionTimeOff.setObjectName("actionTimeOff")
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
+        self.actionDeleteTrace = QtGui.QAction(MainWindow)
+        self.actionDeleteTrace.setObjectName("actionDeleteTrace")
         self.menuAdd_source.addAction(self.actionNetCDF_file)
         self.menuAdd_source.addAction(self.actionXPAD_tree)
         self.menuAdd_source.addAction(self.actionBOUT_data)
@@ -250,6 +253,8 @@ class Ui_MainWindow(object):
         self.menuPlot.addAction(self.actionContour)
         self.menuPlot.addAction(self.actionContour_filled)
         self.menuPlot.addAction(self.actionClearFig)
+        self.menuCommand.addAction(self.actionDeleteTrace)
+        self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionChop)
         self.menuCommand.addSeparator()
         self.menuCommand.addAction(self.actionIntegrate)
@@ -363,5 +368,6 @@ class Ui_MainWindow(object):
         self.actionStats.setText(QtGui.QApplication.translate("MainWindow", "Statistics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTimeOff.setText(QtGui.QApplication.translate("MainWindow", "Time Offset", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "&About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionDeleteTrace.setText(QtGui.QApplication.translate("MainWindow", "&Delete Trace", None, QtGui.QApplication.UnicodeUTF8))
 
 from console_widget import ConsoleWidget
