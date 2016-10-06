@@ -91,7 +91,10 @@ class Sources:
         pickle.dump(self.sources, f)
 
     def loadState(self, f):
-        sources = pickle.load(f)
+        try:
+            sources = pickle.load(f)
+        except EOFError:
+            sources = []
         for s in sources:
             self.addSource(s)
         self.updateDisplay()
@@ -461,10 +464,9 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         if (filename is None) or (filename == ""):
             return
         try:
-            f = open(filename, 'w')
-            self.sources.saveState(f)
-            pickle.dump(self.data, f)
-            f.close()
+            with open(filename, 'wb') as f:
+                self.sources.saveState(f)
+                pickle.dump(self.data, f)
             self.write("** Saved state to file '"+filename+"'")
         except:
             e = sys.exc_info()
@@ -485,13 +487,14 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         if (filename is None) or (filename == ""):
             return  # Cancelled
         try:
-            f = open(filename, 'rb')
-            self.sources.loadState(f)
-            self.data = pickle.load(f)
-            f.close()
+            with open(filename, 'rb') as f:
+                self.sources.loadState(f)
+                self.data = pickle.load(f)
             # Update tables, lists
             self.updateDataTable()
             self.write("** Loaded state from file '"+filename+"'")
+        except EOFError:
+            self.data = []
         except:
             e = sys.exc_info()
             self.write("Could not load state from file '"+filename+"'")
