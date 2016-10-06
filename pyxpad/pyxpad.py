@@ -290,11 +290,12 @@ class Sources:
                     if var.units != "":
                         comment += " ("+var.units+") "
 
-                if (var.dim is not None) and (var.dim != []):
-                    comment += " [" + var.dim[0].name
-                    for d in var.dim[1:]:
-                        comment += ", " + d.name
-                        comment += "] "
+                if var.dim:
+                    try:
+                        comment += " [" + ", ".join([str(v) for v in var.dim]) + "]"
+                    except TypeError:
+                        if str(var.dim):
+                            comment += " [" + str(var.dim) + "]"
                 item = QTableWidgetItem(comment)
                 table.setItem(addVar.ind, 1, item)
                 item.setSelected(selected)
