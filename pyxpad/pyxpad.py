@@ -40,10 +40,12 @@ except ImportError:
     from io import StringIO
 
 import sys
+import os
 import re
 import string
 import fnmatch  # For matching names to wildcard patterns
 from keyword import iskeyword  # Test if a string is a keyword
+import xdg                     # Names of XDG directories for config
 
 from pyxpad import fourier         # FFT-based methods
 from pyxpad import calculus        # Integration and differentiation methods
@@ -373,7 +375,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
 
       data    Dictionary of variables containing user data
     """
-    def __init__(self, parent=None, loadfile=None):
+    def __init__(self, parent=None, loadfile=None, ignoreconfig=False):
         super().__init__(parent)
         self.setupUi(self)
 
@@ -449,8 +451,20 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         except:
             raise
 
+        if not ignoreconfig and loadfile is None:
+            # Other configuration can be saved in here
+            self.config_dir = os.path.join(xdg.XDG_CONFIG_HOME, 'pyxpad')
+            if os.path.exists(xdg.XDG_CACHE_HOME):
+                os.makedirs(self.config_dir, exist_ok=True)
+                defaultfile = os.path.join(self.config_dir, "saved_state.pyx")
+                if os.path.exists(defaultfile):
+                    loadfile = defaultfile
+        else:
+            self.config_dir = os.getcwd()
+
         # Load state
         if loadfile is not None:
+            self.config_dir = os.path.dirname(os.path.abspath(loadfile))
             self.loadState(loadfile)
 
     def saveState(self, filename=None):
@@ -460,7 +474,9 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         """
         if filename is None:
             tr = self.tr
-            filename, _ = QFileDialog.getSaveFileName(self, filter=tr("PyXPad save file (*.pyx)"))
+            defaultfile = os.path.join(self.config_dir, "saved_state.pyx")
+            filename, _ = QFileDialog.getSaveFileName(self, dir=defaultfile,
+                                                      filter=tr("PyXPad save file (*.pyx)"))
             filename = toStr(filename)
         if (filename is None) or (filename == ""):
             return
@@ -487,6 +503,9 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             filename = toStr(filename)
         if (filename is None) or (filename == ""):
             return  # Cancelled
+        if not os.path.exists(filename):
+            self.write("Could not find " + filename)
+            return
         try:
             with open(filename, 'rb') as f:
                 self.sources.loadState(f)
