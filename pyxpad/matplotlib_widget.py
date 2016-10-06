@@ -51,6 +51,7 @@ class MatplotlibWidget():
         """
         Make sure the figure is in a nice state
         """
+        # Get rid of any extra axes
         if isinstance(self.axes, list):
             for axes in self.axes:
                 del(axes)
@@ -60,6 +61,10 @@ class MatplotlibWidget():
 
         self.figure.clear()
         self.axes.grid(True)
+        # Reset to some hardcoded default values
+        self.figure.subplots_adjust(left=0.125, right=0.9, top=0.9, bottom=0.1,
+                                    wspace=0.2, hspace=0.2)
+        # Remove any event callbacks
         if self.callback_id:
             try:
                 self.figure.canvas.mpl_disconnect(self.callback_id)
