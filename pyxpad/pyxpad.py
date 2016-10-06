@@ -437,6 +437,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         # Sources tab
         self.readDataButton.clicked.connect(self.readData)
         self.shotInput.returnPressed.connect(self.readData)
+        self.lastShotButton.clicked.connect(self.lastShot)
 
         self.commandInput.commandEntered.connect(self.commandEntered)
         self.commandButton.clicked.connect(self.commandEntered)
@@ -644,6 +645,35 @@ class PyXPad(QMainWindow, Ui_MainWindow):
                 self.write("Error adding item '"+str(item)+"'")
 
         self.updateDataTable()
+
+    def lastShot(self):
+        """
+        Get the latest shot number
+        """
+
+        # Find an XPadSource in the list of sources
+        from pyxpad.xpadsource import XPadSource
+        source = None
+        for _source in self.sources.sources:
+            if isinstance(_source, XPadSource):
+                source = _source
+        if source is None:
+            # None available
+            return
+
+        # Now ask for the lastshot
+        data_item = source.read("lastshot", "")
+        last_shot_number = data_item.data.children[0].lastshot
+
+        # Append the shot number to any existing shot numbers
+        current_text = self.sources.main.shotInput.text()
+        if current_text == '':
+            new_text = str(last_shot_number)
+        else:
+            new_text = ', '.join([current_text, str(last_shot_number)])
+        self.sources.main.shotInput.setText(new_text)
+
+        return last_shot_number
 
     def updateDataTable(self):
         """

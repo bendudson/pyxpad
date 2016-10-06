@@ -126,8 +126,8 @@ class XPadSource:
                 name = name.encode('utf-8')
         except NameError:
             pass
-        name = str(name)
-        shot = str(shot)
+        name = str(name).strip()
+        shot = str(shot).strip()
 
         # Start client
         if not hasattr(self, "client"):
@@ -143,8 +143,12 @@ class XPadSource:
             data.dim = data.dims
 
         #Give data a name
-        data.name = name
-        data.source = "Shot " + shot
+        try:
+            data.name = name
+            data.source = "Shot " + shot
+        except AttributeError:
+            # Probably IDAM has set something to be read-only property
+            pass
 
         return XPadDataItem(data)
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Thu Oct  6 14:50:21 2016
+# Created: Thu Oct  6 16:15:25 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -25,24 +25,27 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.label = QtGui.QLabel(self.sourceTab)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.sourceDescription = QtGui.QCheckBox(self.sourceTab)
+        self.sourceDescription.setObjectName("sourceDescription")
+        self.gridLayout.addWidget(self.sourceDescription, 0, 6, 1, 1)
+        self.shotLabel = QtGui.QLabel(self.sourceTab)
+        self.shotLabel.setObjectName("shotLabel")
+        self.gridLayout.addWidget(self.shotLabel, 0, 0, 1, 1)
+        self.tracePattern = QtGui.QLineEdit(self.sourceTab)
+        self.tracePattern.setObjectName("tracePattern")
+        self.gridLayout.addWidget(self.tracePattern, 0, 5, 1, 1)
         self.shotInput = QtGui.QLineEdit(self.sourceTab)
         self.shotInput.setObjectName("shotInput")
         self.gridLayout.addWidget(self.shotInput, 0, 1, 1, 1)
         self.readDataButton = QtGui.QPushButton(self.sourceTab)
         self.readDataButton.setObjectName("readDataButton")
         self.gridLayout.addWidget(self.readDataButton, 0, 2, 1, 1)
-        self.label_2 = QtGui.QLabel(self.sourceTab)
-        self.label_2.setObjectName("label_2")
-        self.gridLayout.addWidget(self.label_2, 0, 3, 1, 1)
-        self.tracePattern = QtGui.QLineEdit(self.sourceTab)
-        self.tracePattern.setObjectName("tracePattern")
-        self.gridLayout.addWidget(self.tracePattern, 0, 4, 1, 1)
-        self.sourceDescription = QtGui.QCheckBox(self.sourceTab)
-        self.sourceDescription.setObjectName("sourceDescription")
-        self.gridLayout.addWidget(self.sourceDescription, 0, 5, 1, 1)
+        self.traceLabel = QtGui.QLabel(self.sourceTab)
+        self.traceLabel.setObjectName("traceLabel")
+        self.gridLayout.addWidget(self.traceLabel, 0, 4, 1, 1)
+        self.lastShotButton = QtGui.QPushButton(self.sourceTab)
+        self.lastShotButton.setObjectName("lastShotButton")
+        self.gridLayout.addWidget(self.lastShotButton, 0, 3, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout, 0, 0, 1, 1)
         self.splitter = QtGui.QSplitter(self.sourceTab)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
@@ -302,10 +305,12 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PyXPad", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("MainWindow", "Shot:", None, QtGui.QApplication.UnicodeUTF8))
-        self.readDataButton.setText(QtGui.QApplication.translate("MainWindow", "Read", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Trace:", None, QtGui.QApplication.UnicodeUTF8))
         self.sourceDescription.setText(QtGui.QApplication.translate("MainWindow", "Description", None, QtGui.QApplication.UnicodeUTF8))
+        self.shotLabel.setText(QtGui.QApplication.translate("MainWindow", "Shot:", None, QtGui.QApplication.UnicodeUTF8))
+        self.readDataButton.setText(QtGui.QApplication.translate("MainWindow", "Read", None, QtGui.QApplication.UnicodeUTF8))
+        self.traceLabel.setText(QtGui.QApplication.translate("MainWindow", "Trace:", None, QtGui.QApplication.UnicodeUTF8))
+        self.lastShotButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Get last shot number", None, QtGui.QApplication.UnicodeUTF8))
+        self.lastShotButton.setText(QtGui.QApplication.translate("MainWindow", "Last shot", None, QtGui.QApplication.UnicodeUTF8))
         self.sourceTable.setToolTip(QtGui.QApplication.translate("MainWindow", "List of available signals", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.sourceTab), QtGui.QApplication.translate("MainWindow", "Sources", None, QtGui.QApplication.UnicodeUTF8))
         self.dataTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
