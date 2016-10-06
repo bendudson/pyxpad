@@ -168,8 +168,8 @@ class MatplotlibWidget():
 
         self._clean_axes()
 
+        self.axes = self.figure.add_subplot(1, 1, 1)
         for tracenum, trace in enumerate(args):
-            self.axes = self.figure.add_subplot(1, 1, 1)
             try:
                 for data in trace:
                     label = data.desc
@@ -185,6 +185,12 @@ class MatplotlibWidget():
 
                     self.axes.plot(time, data.data, label=label)
                 if tracenum == 0:
+                    ylabel = data.desc
+                    if ylabel == "":
+                        ylabel = data.label
+                        if data.units != "":
+                            ylabel += " ("+data.units+") "
+                    self.axes.set_ylabel(ylabel)
                     self.axes.set_xlabel(trace[0].dim[trace[0].order].label)
                 self.axes.legend()
             except TypeError:
