@@ -82,7 +82,7 @@ class MatplotlibWidget():
                 ax = self.axes
             else:
                 self.axes = self.figure.add_subplot(nplots, 1, plotnum, sharex=ax)
-                setp(self.axes.get_xticklabels(), visible=False)
+            setp(self.axes.get_xticklabels(), visible=False)
             try:
                 # Assume each p is a list of data items to be overplotted
                 for data in p:
@@ -101,8 +101,9 @@ class MatplotlibWidget():
                         time = data.dim[0].data
 
                     self.axes.plot(time, data.data, label=label)
-                if plotnum == 0:
+                if plotnum == nplots:
                     self.axes.set_xlabel(p[0].dim[p[0].order].label)
+                    setp(self.axes.get_xticklabels(), visible=True)
                 self.axes.legend()
             except TypeError:
                 # p not iterable, so just plot item
