@@ -2,7 +2,7 @@
 Fourier transform based methods on XPadDataItem objects
 """
 
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
 from numpy.fft import rfft, rfftfreq
 from numpy import abs, arctan2, array, pi, zeros

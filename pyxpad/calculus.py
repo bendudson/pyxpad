@@ -3,11 +3,8 @@ Calculus on XPadDataItem objects
 
 """
 
-from pyxpad_utils import XPadDataItem
-
+from .pyxpad_utils import XPadDataItem
 from numpy import zeros, cumsum
-
-import numpy
 
 
 def integrate(item):
@@ -52,7 +49,7 @@ def integrate(item):
     return result
 
 
-def differentiate (item):
+def differentiate(item):
     """
     Differentiates the given trace
 
@@ -86,11 +83,11 @@ def differentiate (item):
 
     time = item.dim[item.order].data
 
-    result.data = numpy.zeros(len(item.data))
+    result.data = zeros(len(item.data))
 
-    for i in range(1, len(result.data)-1) :
+    for i in range(1, len(result.data)-1):
         result.data[i] = (item.data[i+1]-item.data[i-1])/(time[i+1]-time[i-1])
- 
+
     result.data[-1] = result.data[-2]
     result.data[0] = result.data[1]
 

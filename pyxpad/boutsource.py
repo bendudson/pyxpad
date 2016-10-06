@@ -4,7 +4,7 @@
 """
 
 from boutdata.data import BoutData
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
 import os
 

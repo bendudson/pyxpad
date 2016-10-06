@@ -6,9 +6,8 @@ Available to the user in the command terminal
 """
 
 import numpy as np
-import calculus
-
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from pyxpad import calculus
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
 
 def XPadFunction(func, name="f"):

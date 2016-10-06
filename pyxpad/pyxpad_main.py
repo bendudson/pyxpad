@@ -374,4 +374,4 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "&About", None, QtGui.QApplication.UnicodeUTF8))
         self.actionDeleteTrace.setText(QtGui.QApplication.translate("MainWindow", "&Delete Trace", None, QtGui.QApplication.UnicodeUTF8))
 
-from console_widget import ConsoleWidget
+from .console_widget import ConsoleWidget

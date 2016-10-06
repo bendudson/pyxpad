@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Author: Ben Dudson, Department of Physics, University of York
         benjamin.dudson@york.ac.uk
@@ -21,13 +19,13 @@ You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PySide.QtGui import (QAbstractItemView, QAction, QApplication, QCursor,
+from PySide.QtGui import (QAbstractItemView, QAction, QCursor,
                           QFileDialog, QIcon, QMainWindow, QMenu, QMessageBox,
                           QStyle, QTableWidgetItem, QTreeWidgetItem)
 from PySide.QtCore import Qt, QTextCodec, QDir
 
-from pyxpad_main import Ui_MainWindow
-from configdialog import ConfigDialog
+from .pyxpad_main import Ui_MainWindow
+from .configdialog import ConfigDialog
 
 from collections import OrderedDict
 
@@ -42,15 +40,14 @@ except ImportError:
     from io import StringIO
 
 import sys
-import os
 import re
 import string
 import fnmatch  # For matching names to wildcard patterns
 from keyword import iskeyword  # Test if a string is a keyword
 
-import calculus   # Integration and differentiation methods
-import fourier    # FFT-based methods
-import user_functions  # Miscellaneous useful functions
+from pyxpad import fourier         # FFT-based methods
+from pyxpad import calculus        # Integration and differentiation methods
+from pyxpad import user_functions  # Miscellaneous useful functions
 
 # On some installations (Python 2.6 only?) need to convert text using
 # QTextCodec
@@ -119,7 +116,7 @@ class Sources:
         Add a NetCDF file as a data source
         """
         try:
-            from datafile import NetCDFDataSource
+            from pyxpad.datafile import NetCDFDataSource
         except ImportError:
             self.main.write("Sorry, no NetCDF support")
             return
@@ -142,7 +139,7 @@ class Sources:
 
     def addXPADtree(self):
         try:
-            from xpadsource import XPadSource
+            from pyxpad.xpadsource import XPadSource
         except ImportError:
             self.main.write("Sorry, no XPAD tree support")
             self.main.write(str(sys.exc_info()))
@@ -172,7 +169,7 @@ class Sources:
         Add a BOUT++ directory source
         """
         try:
-            from boutsource import BoutDataSource
+            from pyxpad.boutsource import BoutDataSource
 
             # Select the directory
             tr = self.main.tr
@@ -373,7 +370,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
       data    Dictionary of variables containing user data
     """
     def __init__(self, parent=None, loadfile=None):
-        super(PyXPad, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.sources = Sources(self)  # Handles data sources
@@ -443,7 +440,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         self.dataTable.customContextMenuRequested.connect(self.handlePopupMenu)
 
         try:
-            from matplotlib_widget import MatplotlibWidget
+            from pyxpad.matplotlib_widget import MatplotlibWidget
             self.DataPlot = MatplotlibWidget(self.plotTab)
         except:
             raise
@@ -1308,10 +1305,3 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         # Local scope is set to self.data to allow access to user data
         self.runSandboxed(self._runExec, args=(cmd, glob, self.data))
         self.updateDataTable()
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    path = os.path.dirname(sys.argv[0])
-    window = PyXPad(loadfile=os.path.join(path, "test.conf"))
-    window.show()
-    sys.exit(app.exec_())

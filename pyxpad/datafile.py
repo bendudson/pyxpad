@@ -41,7 +41,7 @@ except ImportError:
             raise
 import time
 
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
 
 class NetCDFDataSource:

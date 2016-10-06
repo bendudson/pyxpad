@@ -24,7 +24,7 @@
 
 import os
 
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
 try:
     import pyidam as idam
