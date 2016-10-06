@@ -2,7 +2,7 @@ PyXPad
 ======
 
 Data visualisation and analysis tool in Python,
-intended to be familiar to users of XPAD. 
+intended to be familiar to users of XPAD.
 
 Primarily for IDAM data from the MAST tokamak experiment,
 but can be used to view NetCDF files currently.
@@ -23,4 +23,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+Installation
+------------
 
+You can install PyXPad using pip:
+
+    pip install PyXPad
+
+You can install the latest version from GitHub:
+
+    pip install git+https://github.com/ZedThree/pyxpad.git
