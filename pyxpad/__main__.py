@@ -21,9 +21,10 @@ def main():
                         default=None)
     args = parser.parse_args()
 
-    app = QApplication(sys.argv)
-    path = os.path.dirname(sys.argv[0])
-    window = PyXPad(loadfile=args.config[0])
+    loadfile = args.config[0] if args.config is not None else None
+
+    app = QApplication(sys.argv[0])
+    window = PyXPad(loadfile=loadfile)
     window.show()
     sys.exit(app.exec_())
 

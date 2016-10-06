@@ -150,3 +150,13 @@ class XPadSource:
 
     def size(self, name):
         pass
+
+    def __getstate__(self):
+        # We need to remove the IDAM client in order to pickle
+        # instances of this class
+        if hasattr(self, "client"):
+            state = self.__dict__.copy()
+            del state['client']
+            return state
+        else:
+            return self.__dict__

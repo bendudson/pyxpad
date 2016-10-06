@@ -490,16 +490,18 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             with open(filename, 'rb') as f:
                 self.sources.loadState(f)
                 self.data = pickle.load(f)
-            # Update tables, lists
-            self.updateDataTable()
-            self.write("** Loaded state from file '"+filename+"'")
         except EOFError:
-            self.data = []
+            self.data = OrderedDict()
         except:
             e = sys.exc_info()
             self.write("Could not load state from file '"+filename+"'")
             self.write("\t ->" + str(e[1]))
             raise
+        else:
+            # If no exception raised, then update tables, lists
+            self.data = OrderedDict(self.data)
+            self.updateDataTable()
+            self.write("** Loaded state from file '"+filename+"'")
 
     def closeEvent(self, event):
         """
