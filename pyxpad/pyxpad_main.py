@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Wed Oct  5 17:25:05 2016
+# Created: Thu Oct  6 14:50:21 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -301,7 +301,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PyXpad", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PyXPad", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Shot:", None, QtGui.QApplication.UnicodeUTF8))
         self.readDataButton.setText(QtGui.QApplication.translate("MainWindow", "Read", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Trace:", None, QtGui.QApplication.UnicodeUTF8))
@@ -317,13 +317,13 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.dataTab), QtGui.QApplication.translate("MainWindow", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.plotTab), QtGui.QApplication.translate("MainWindow", "Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAdd_source.setTitle(QtGui.QApplication.translate("MainWindow", "Add source", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAdd_source.setTitle(QtGui.QApplication.translate("MainWindow", "&Add source", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlot.setTitle(QtGui.QApplication.translate("MainWindow", "Graphics", None, QtGui.QApplication.UnicodeUTF8))
         self.menuCommand.setTitle(QtGui.QApplication.translate("MainWindow", "Command", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionLoadState.setText(QtGui.QApplication.translate("MainWindow", "Load config", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionSaveState.setText(QtGui.QApplication.translate("MainWindow", "Save config", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionLoadState.setText(QtGui.QApplication.translate("MainWindow", "&Load state", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSaveState.setText(QtGui.QApplication.translate("MainWindow", "&Save state", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit pyXpad", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))
         self.actionXPAD_tree.setText(QtGui.QApplication.translate("MainWindow", "XPAD tree", None, QtGui.QApplication.UnicodeUTF8))
@@ -340,7 +340,7 @@ class Ui_MainWindow(object):
         self.actionContour.setText(QtGui.QApplication.translate("MainWindow", "&Contour", None, QtGui.QApplication.UnicodeUTF8))
         self.actionContour_filled.setText(QtGui.QApplication.translate("MainWindow", "Contour &filled", None, QtGui.QApplication.UnicodeUTF8))
         self.actionClearFig.setText(QtGui.QApplication.translate("MainWindow", "C&lear Figure", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionWrite_ASCII.setText(QtGui.QApplication.translate("MainWindow", "Write ASCII", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionWrite_ASCII.setText(QtGui.QApplication.translate("MainWindow", "&Write ASCII", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAdd.setText(QtGui.QApplication.translate("MainWindow", "X+Y (Sum Channels)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSubtract.setText(QtGui.QApplication.translate("MainWindow", "X-Y", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMultiply.setText(QtGui.QApplication.translate("MainWindow", "X*Y", None, QtGui.QApplication.UnicodeUTF8))
