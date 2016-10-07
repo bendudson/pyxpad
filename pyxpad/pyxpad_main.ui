@@ -22,7 +22,7 @@
       </property>
       <widget class="QWidget" name="sourceTab">
        <attribute name="title">
-        <string>Sources</string>
+        <string>&amp;Sources</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
@@ -50,7 +50,7 @@
           <item row="0" column="2">
            <widget class="QPushButton" name="readDataButton">
             <property name="text">
-             <string>Read</string>
+             <string>&amp;Read</string>
             </property>
            </widget>
           </item>
@@ -67,7 +67,7 @@
              <string>Get last shot number</string>
             </property>
             <property name="text">
-             <string>Last shot</string>
+             <string>&amp;Last shot</string>
             </property>
            </widget>
           </item>
@@ -145,7 +145,7 @@
       </widget>
       <widget class="QWidget" name="dataTab">
        <attribute name="title">
-        <string>Data</string>
+        <string>&amp;Data</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
@@ -231,7 +231,7 @@
       </widget>
       <widget class="QWidget" name="plotTab">
        <attribute name="title">
-        <string>Plot</string>
+        <string>&amp;Plot</string>
        </attribute>
       </widget>
      </widget>
@@ -249,7 +249,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <widget class="QMenu" name="menuAdd_source">
      <property name="title">
@@ -270,7 +270,7 @@
    </widget>
    <widget class="QMenu" name="menuPlot">
     <property name="title">
-     <string>Graphics</string>
+     <string>&amp;Graphics</string>
     </property>
     <addaction name="actionPlot"/>
     <addaction name="actionOPlot"/>
@@ -283,7 +283,7 @@
    </widget>
    <widget class="QMenu" name="menuCommand">
     <property name="title">
-     <string>Command</string>
+     <string>&amp;Command</string>
     </property>
     <addaction name="actionDeleteTrace"/>
     <addaction name="separator"/>
@@ -322,7 +322,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>

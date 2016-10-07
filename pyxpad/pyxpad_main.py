@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyxpad_main.ui'
 #
-# Created: Thu Oct  6 16:15:25 2016
+# Created: Fri Oct  7 15:25:29 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -307,25 +307,25 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PyXPad", None, QtGui.QApplication.UnicodeUTF8))
         self.sourceDescription.setText(QtGui.QApplication.translate("MainWindow", "Description", None, QtGui.QApplication.UnicodeUTF8))
         self.shotLabel.setText(QtGui.QApplication.translate("MainWindow", "Shot:", None, QtGui.QApplication.UnicodeUTF8))
-        self.readDataButton.setText(QtGui.QApplication.translate("MainWindow", "Read", None, QtGui.QApplication.UnicodeUTF8))
+        self.readDataButton.setText(QtGui.QApplication.translate("MainWindow", "&Read", None, QtGui.QApplication.UnicodeUTF8))
         self.traceLabel.setText(QtGui.QApplication.translate("MainWindow", "Trace:", None, QtGui.QApplication.UnicodeUTF8))
         self.lastShotButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Get last shot number", None, QtGui.QApplication.UnicodeUTF8))
-        self.lastShotButton.setText(QtGui.QApplication.translate("MainWindow", "Last shot", None, QtGui.QApplication.UnicodeUTF8))
+        self.lastShotButton.setText(QtGui.QApplication.translate("MainWindow", "&Last shot", None, QtGui.QApplication.UnicodeUTF8))
         self.sourceTable.setToolTip(QtGui.QApplication.translate("MainWindow", "List of available signals", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.sourceTab), QtGui.QApplication.translate("MainWindow", "Sources", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.sourceTab), QtGui.QApplication.translate("MainWindow", "&Sources", None, QtGui.QApplication.UnicodeUTF8))
         self.dataTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("MainWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.dataTable.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
         self.dataTable.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("MainWindow", "Trace", None, QtGui.QApplication.UnicodeUTF8))
         self.dataTable.horizontalHeaderItem(3).setText(QtGui.QApplication.translate("MainWindow", "Comments", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "Command:", None, QtGui.QApplication.UnicodeUTF8))
         self.commandButton.setText(QtGui.QApplication.translate("MainWindow", "Run", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.dataTab), QtGui.QApplication.translate("MainWindow", "Data", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.plotTab), QtGui.QApplication.translate("MainWindow", "Plot", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.dataTab), QtGui.QApplication.translate("MainWindow", "&Data", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.plotTab), QtGui.QApplication.translate("MainWindow", "&Plot", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAdd_source.setTitle(QtGui.QApplication.translate("MainWindow", "&Add source", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuPlot.setTitle(QtGui.QApplication.translate("MainWindow", "Graphics", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuCommand.setTitle(QtGui.QApplication.translate("MainWindow", "Command", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPlot.setTitle(QtGui.QApplication.translate("MainWindow", "&Graphics", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuCommand.setTitle(QtGui.QApplication.translate("MainWindow", "&Command", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "&Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionLoadState.setText(QtGui.QApplication.translate("MainWindow", "&Load state", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSaveState.setText(QtGui.QApplication.translate("MainWindow", "&Save state", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
