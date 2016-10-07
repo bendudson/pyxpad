@@ -1081,6 +1081,11 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         Perform Running FFT
         """
 
+        names = self.selectedDataNames()
+
+        if len(names) == 0:
+            return
+
         stride = 0.001
         width = 0.001
 
@@ -1091,7 +1096,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         c = ConfigDialog(config, self)
         c.exec_()
 
-        for name in self.selectedDataNames():
+        for name in names:
             # Create a unique name
             new_name = self.makeUnique(name + "_runfft")
             self.runCommand(new_name + " = " +
