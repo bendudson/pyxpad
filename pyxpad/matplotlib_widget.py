@@ -486,16 +486,24 @@ class MatplotlibWidget():
         _, right = self.ax_top.get_xlim()
         self.ax_top.set_xlim(event.xdata, right)
         self.ax_bottom.figure.canvas.draw()
+        self.drag_cid = self.ax_bottom.figure.canvas.mpl_connect("motion_notify_event",
+                                                                 self.middle_zoom_region)
 
-    def end_zoom_region(self, event):
+    def middle_zoom_region(self, event):
         """
-        Callback for ending the zoomed region
+        Callback for dragging the zoomed region
         """
         if event.inaxes != self.ax_bottom:
             return
         left, _ = self.ax_top.get_xlim()
         self.ax_top.set_xlim(left, event.xdata)
         self.ax_bottom.figure.canvas.draw()
+
+    def end_zoom_region(self, event):
+        """
+        Callback for ending the zoomed region
+        """
+        self.figure.canvas.mpl_disconnect(self.drag_cid)
 
     def contour(self, item, levels=10):
         """
