@@ -497,9 +497,12 @@ class MatplotlibWidget():
         self.ax_top.set_xlim(left, event.xdata)
         self.ax_bottom.figure.canvas.draw()
 
-    def contour(self, item):
+    def contour(self, item, levels=10):
         """
         Contour plot of item
+
+        item - Item to plot
+        levels - Number of contours to plot [10]
         """
 
         self._clean_axes()
@@ -518,7 +521,7 @@ class MatplotlibWidget():
         xaxis = xdim.data
         yaxis = ydim.data
         zaxis = item.data
-        self.axes.contour(xaxis, yaxis, zaxis)
+        self.axes.contour(xaxis, yaxis, zaxis, levels)
 
         xlabel = xdim.label
         if xlabel == "":
@@ -543,9 +546,12 @@ class MatplotlibWidget():
 
         self.canvas.draw()
 
-    def contourf(self, item):
+    def contourf(self, item, levels=10):
         """
         Filled contour plot of item
+
+        item - Item to plot
+        levels - Number of contours to plot [10]
         """
 
         self._clean_axes()
@@ -564,7 +570,7 @@ class MatplotlibWidget():
         xaxis = xdim.data
         yaxis = ydim.data
         zaxis = item.data
-        self.axes.contourf(xaxis, yaxis, zaxis)
+        self.axes.contourf(xaxis, yaxis, zaxis, levels)
 
         xlabel = xdim.label
         if xlabel == "":
