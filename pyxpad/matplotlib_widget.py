@@ -106,6 +106,15 @@ class MatplotlibWidget():
                         time = data.dim[0].data
 
                     self.axes.plot(time, data.data, label=label)
+
+                # Y label from last plot
+                ylabel = data.desc
+                if ylabel == "":
+                    ylabel = data.label
+                    if data.units != "":
+                        ylabel += " ("+data.units+")"
+                self.axes.set_ylabel(ylabel)
+
                 if plotnum == nplots:
                     self.axes.set_xlabel(p[0].dim[p[0].order].label)
                     setp(self.axes.get_xticklabels(), visible=True)
@@ -285,8 +294,18 @@ class MatplotlibWidget():
                         time = data.dim[0].data
 
                     self.axes.plot(time, data.data, label=label)
+
+                # Y label from last plot
+                ylabel = data.desc
+                if ylabel == "":
+                    ylabel = data.label
+                    if data.units != "":
+                        ylabel += " ("+data.units+")"
+                self.axes.set_ylabel(ylabel)
+
                 if plotnum == 0:
                     self.axes.set_xlabel(traces[0][0].dim[traces[0][0].order].label)
+
                 self.axes.legend()
 
             except TypeError:
@@ -416,9 +435,16 @@ class MatplotlibWidget():
                     self.ax_bottom.plot(time, data.data, label=label)
                 if tracenum == 0:
                     self.ax_bottom.set_xlabel(trace[0].dim[trace[0].order].label)
+                    ylabel = data.desc
+                    if ylabel == "":
+                        ylabel = data.label
+                        if data.units != "":
+                            ylabel += " ("+data.units+") "
+                    self.ax_bottom.set_ylabel(ylabel)
+                    self.ax_top.set_ylabel(ylabel)
                 self.ax_bottom.legend()
             except TypeError:
-                #Trace not iterable
+                # Trace not iterable
                 time = trace.time.data
                 xlabel = trace.dim[trace.order].label
                 if time is None:
