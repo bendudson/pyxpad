@@ -19,10 +19,11 @@ You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PySide.QtGui import (QAbstractItemView, QAction, QCursor,
-                          QFileDialog, QIcon, QMainWindow, QMenu, QMessageBox,
-                          QStyle, QTableWidgetItem, QTreeWidgetItem)
-from PySide.QtCore import Qt, QTextCodec, QDir
+from Qt.QtWidgets import (QAbstractItemView, QAction,
+                          QFileDialog, QMainWindow, QMenu, QMessageBox,
+                          QStyle, QTableWidgetItem, QTreeWidgetItem, QWidget)
+from Qt.QtGui import (QCursor, QIcon,)
+from Qt.QtCore import Qt, QTextCodec, QDir
 
 from .pyxpad_main import Ui_MainWindow
 from .configdialog import ConfigDialog
@@ -50,12 +51,6 @@ import xdg                     # Names of XDG directories for config
 from pyxpad import fourier         # FFT-based methods
 from pyxpad import calculus        # Integration and differentiation methods
 from pyxpad import user_functions  # Miscellaneous useful functions
-
-# On some installations (Python 2.6 only?) need to convert text using
-# QTextCodec
-codec = QTextCodec.codecForName("UTF-8")
-def toStr(uni):
-    return str(codec.fromUnicode(uni))
 
 
 class Sources:
@@ -767,8 +762,9 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         """
         # If there's no text, then the "Run" button was probably
         # pressed
-        if text is None:
+        if text is None or text is False:
             text = self.commandInput.text()
+            self.commandInput.execute(emit=False)
 
         # Get the command text and clear the text box
         cmd = toStr(text)

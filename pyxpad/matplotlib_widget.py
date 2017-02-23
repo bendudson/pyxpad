@@ -6,8 +6,20 @@
 
 import matplotlib
 
-matplotlib.use('Qt4Agg')
-matplotlib.rcParams['backend.qt4'] = 'PySide'
+from Qt import __binding__, __qt_version__
+
+# Use the correct backend for matplotlib, depending on Qt version and
+# the particular Qt python bindings we're using
+if __qt_version__.split('.')[0] == '5':
+    matplotlib.use('Qt5Agg')
+    matplotlib.rcParams['backend.qt5'] = __binding__
+    from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
+                                                    NavigationToolbar2QT as NavigationToolbar)
+else:
+    matplotlib.use('Qt4Agg')
+    matplotlib.rcParams['backend.qt4'] = __binding__
+    from matplotlib.backends.backend_qt4agg import (FigureCanvasQTAgg as FigureCanvas,
+                                                    NavigationToolbar2QT as NavigationToolbar)
 
 from matplotlib.figure import Figure
 from matplotlib.transforms import Bbox, TransformedBbox, \
@@ -15,17 +27,10 @@ from matplotlib.transforms import Bbox, TransformedBbox, \
 from mpl_toolkits.axes_grid1.inset_locator import BboxPatch, BboxConnector,\
     BboxConnectorPatch
 
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-try:
-    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-except ImportError:
-    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.pyplot import setp
 
-from PySide.QtGui import QVBoxLayout
-from PySide.QtGui import QDialog, QGridLayout, QDialogButtonBox, QPushButton
-from PySide.QtCore import Qt
-from PySide.QtGui import QInputDialog
+from Qt.QtWidgets import *
+from Qt.QtCore import Qt
 
 import numpy as np
 

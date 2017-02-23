@@ -30,10 +30,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
-from PySide import QtCore, QtGui
+from Qt import QtCore, QtGui, QtWidgets
 
 
-class ConsoleWidget(QtGui.QLineEdit):
+class ConsoleWidget(QtWidgets.QLineEdit):
     """ConsoleWidget
 
     Provides a custom widget to accept Python expressions and emit output
@@ -46,7 +46,7 @@ class ConsoleWidget(QtGui.QLineEdit):
 
     def __init__(self, parent=None):
 
-        QtGui.QLineEdit.__init__(self, parent)
+        QtWidgets.QLineEdit.__init__(self, parent)
 
         self.history = []
         self.current = -1
@@ -75,7 +75,7 @@ class ConsoleWidget(QtGui.QLineEdit):
 
                 event.accept()
 
-    def execute(self):
+    def execute(self, emit=True):
         expression = self.text()
 
         # Clear the line edit, append the expression to the
@@ -85,7 +85,8 @@ class ConsoleWidget(QtGui.QLineEdit):
         self.current = len(self.history)
 
         # Emit the text
-        self.commandEntered.emit(expression)
+        if emit:
+            self.commandEntered.emit(expression)
 
 
 if __name__ == "__main__":
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     def runCommand(expr):
         print(expr)
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     widget = ConsoleWidget()
     widget.commandEntered.connect(runCommand)
 

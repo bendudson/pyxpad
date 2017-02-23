@@ -20,8 +20,8 @@ Creates small configuration dialogs from a dictionary of values
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide.QtGui import QDialog, QGridLayout, QLineEdit, QLabel, QCheckBox, QDialogButtonBox
-from PySide.QtCore import Qt
+from Qt.QtWidgets import QDialog, QGridLayout, QLineEdit, QLabel, QCheckBox, QDialogButtonBox
+from Qt.QtCore import Qt
 
 
 class ConfigDialog(QDialog):

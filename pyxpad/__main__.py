@@ -3,7 +3,7 @@
 import argparse
 import os
 from pyxpad import PyXPad
-from PySide.QtGui import QApplication
+from Qt.QtWidgets import QApplication
 import sys
 
 
@@ -25,7 +25,7 @@ def main():
 
     loadfile = args.config[0] if args.config is not None else None
 
-    app = QApplication(sys.argv[0])
+    app = QApplication(sys.argv)
     window = PyXPad(loadfile=loadfile, ignoreconfig=args.ignore_config)
     window.show()
     sys.exit(app.exec_())

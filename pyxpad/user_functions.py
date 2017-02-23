@@ -5,6 +5,10 @@ Available to the user in the command terminal
 
 """
 
+from Qt.QtWidgets import (QDialog, QGridLayout, QDialogButtonBox,
+                          QPushButton, QInputDialog)
+from Qt.QtCore import Qt
+
 import numpy as np
 from pyxpad import calculus
 from .pyxpad_utils import XPadDataItem, XPadDataDim
@@ -80,10 +84,6 @@ def invert(data):
     result.name = "-(" + data.name + ")"
     result.label = "-(" + data.label + ")"
     return result
-
-from PySide.QtGui import QDialog, QGridLayout, QDialogButtonBox, QPushButton
-from PySide.QtCore import Qt
-from PySide.QtGui import QInputDialog
 
 def addcon(data):
     result = XPadDataItem(data)
