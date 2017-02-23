@@ -125,7 +125,6 @@ class Sources:
             tr = self.main.tr
             fname, _ = QFileDialog.getOpenFileName(self.main, tr('Open file'), '.',
                                                    filter=tr("NetCDF files (*.nc *.cdl)"))
-            fname = toStr(fname)
             if (fname is None) or (fname == ""):
                 return  # Cancelled
 
@@ -150,7 +149,6 @@ class Sources:
             tr = self.main.tr
             dname = QFileDialog.getExistingDirectory(self.main, tr('Open XPAD directory'),
                                                      QDir.currentPath())
-            dname = toStr(dname)
             if (dname == "") or (dname is None):
                 return
             # Create data source
@@ -175,7 +173,6 @@ class Sources:
             tr = self.main.tr
             dname = QFileDialog.getExistingDirectory(self.main, tr('Open BOUT++ directory'),
                                                      QDir.currentPath())
-            dname = toStr(dname)
             if (dname == "") or (dname is None):
                 return
             # Create data source
@@ -251,14 +248,14 @@ class Sources:
         nextra = 0
         for item in selecteditems:
             if 'source' in item.__dict__:
-                name = toStr(item.text())
+                name = item.text()
                 selectedvars.append((name, item.source))
                 if item.source != s:
                     nextra += 1
 
         table.clearContents()  # Clear the table and selections
 
-        pattern = toStr(self.main.tracePattern.text())
+        pattern = self.main.tracePattern.text()
         if pattern == "":
             varNames = s.varNames
         else:
@@ -341,14 +338,14 @@ class Sources:
         """
 
         # Get list of shots
-        shotlist = toStr(self.main.shotInput.text()).split(',')
+        shotlist = self.main.shotInput.text().split(',')
 
         table = self.main.sourceTable
         tableitems = table.selectedItems()
         data = []
         for item in tableitems:
             if 'source' in item.__dict__:
-                name = toStr(item.text())
+                name = item.text()
 
                 for shot in shotlist:
                     s = "Reading " + name + " from " + item.source.label
@@ -473,7 +470,6 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             defaultfile = os.path.join(self.config_dir, "saved_state.pyx")
             filename, _ = QFileDialog.getSaveFileName(self, dir=defaultfile,
                                                       filter=tr("PyXPad save file (*.pyx)"))
-            filename = toStr(filename)
         if (filename is None) or (filename == ""):
             return
         try:
@@ -496,7 +492,6 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             tr = self.tr
             filename, _ = QFileDialog.getOpenFileName(self, tr('Open file'), '.',
                                                       filter=tr("PyXPad save file (*.pyx)"))
-            filename = toStr(filename)
         if (filename is None) or (filename == ""):
             return  # Cancelled
         if not os.path.exists(filename):
@@ -734,7 +729,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         if col == 0:
             # The name of the variable
             it = self.dataTable.item(row, col)
-            name = toStr(it.text())
+            name = it.text()
             oldname = it.oldname
             if name == oldname:
                 return  # Not really changed
@@ -766,10 +761,8 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             text = self.commandInput.text()
             self.commandInput.execute(emit=False)
 
-        # Get the command text and clear the text box
-        cmd = toStr(text)
         self.commandInput.clear()
-        self.runCommand(cmd)
+        self.runCommand(text)
 
     def selectedDataNames(self):
         """
