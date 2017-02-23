@@ -994,7 +994,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             return
 
         # Use a dialog box to get time range
-        config = OrderedDict(("min", float(tmin)), ("max", float(tmax)))
+        config = OrderedDict({"min": float(tmin), "max": float(tmax)})
 
         c = ConfigDialog(config, self)
         c.exec_()
@@ -1090,8 +1090,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
         width = 0.001
 
         # Use a dialog box to get width and stride
-        config = (("stride", float(width)), ("width", float(stride)))
-        config = OrderedDict(config)
+        config = OrderedDict({"stride": float(width), "width": float(stride)})
 
         c = ConfigDialog(config, self)
         c.exec_()
@@ -1253,7 +1252,7 @@ class PyXPad(QMainWindow, Ui_MainWindow):
             return
 
         # Use a dialog box to get value range
-        config = OrderedDict(("min", float(valmin)), ("max", float(valmax)))
+        config = OrderedDict({"min": float(valmin), "max": float(valmax)})
 
         c = ConfigDialog(config, self, pstvOnly=False)
         c.exec_()
