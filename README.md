@@ -33,3 +33,9 @@ You can install PyXPad using pip:
 You can install the latest version from GitHub:
 
     pip install git+https://github.com/ZedThree/pyxpad.git
+
+Dependencies
+------------
+
+PyXPad requires matplotlib, numpy, scipy, Qt.py and xdg, as well as
+either PyQt4, PyQt5 or PySide.

@@ -1,14 +1,16 @@
 from setuptools import setup
 
+version='0.3.0'
+
 setup(name='pyxpad',
-      version='0.2.0',
+      version=version,
       description='Data visualisation and analysis tool for IDAM',
       author='Ben Dudson',
       author_email='benjamin.dudson@york.ac.uk',
       maintainer='Peter Hill',
       maintainer_email='peter.hill@york.ac.uk',
       url='https://github.com/ZedThree/pyxpad/',
-      download_url='https://github.com/ZedThree/pyxpad/tarball/0.1.0',
+      download_url='https://github.com/ZedThree/pyxpad/archive/{0}.tar.gz'.format(version),
       license='GPL',
       classifiers=[
           'Development Status :: 3 - Alpha',
