@@ -78,7 +78,7 @@ class NetCDFDataSource:
         self.label = filename   # May need to shorten
         self.open(filename)
         self.dimensions = self.getDimensions()        # A dictionary of XPadDataDim objects
-        self.varNames = self.handle.variables.keys()  # A list of variable names
+        self.varNames = list(self.handle.variables.keys())  # A list of variable names
         for i, v in enumerate(self.varNames):
             try:
                 # Python 2
@@ -86,9 +86,7 @@ class NetCDFDataSource:
                     v = v.encode('utf-8')
                 v = str(v).translate(None, '\0')
             except NameError:
-                # Python 3
-                if isinstance(v, str):
-                    v = v.encode('utf-8')
+                pass
 
             self.varNames[i] = v
 
@@ -97,7 +95,7 @@ class NetCDFDataSource:
             item = XPadDataItem()
             item.name   = name
             item.source = self.filename
-            item.dim = map(lambda d: self.dimensions[d], var.dimensions)
+            item.dim = [self.dimensions[d] for d in var.dimensions]
             self.variables[name] = item
         self.close()
 
@@ -130,7 +128,7 @@ class NetCDFDataSource:
         item.name   = name
         item.source = self.filename
         item.data   = data
-        item.dim = map(lambda d: self.dimensions[d], var.dimensions)
+        item.dim = [self.dimensions[d] for d in var.dimensions]
 
         self.close()
         return item
@@ -169,4 +167,4 @@ class NetCDFDataSource:
                     return dim
                 return len(dim)
             return 0
-        return map(lambda d: dimlen(d), var.dimensions)
+        return [dimlen(d) for d in var.dimensions]
