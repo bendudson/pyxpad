@@ -4,7 +4,7 @@
 
 """
 
-# Author: Ben Dudson, Department of Physics, University of York 
+# Author: Ben Dudson, Department of Physics, University of York
 #         benjamin.dudson@york.ac.uk
 #
 # This file is part of PyXPad.
@@ -24,34 +24,49 @@
 
 import os
 
-from pyxpad_utils import XPadDataItem, XPadDataDim
+from .pyxpad_utils import XPadDataItem, XPadDataDim
 
-try:
-    import idam
-    gotidam = True
-except:
-    print("Warning: IDAM library not found. Cannot read data")
-    gotidam = False
+import importlib
+
+# There are now (at least) three different names for the UDA/IDAM
+# python wrappers. Try to import them, starting with the most recent
+possible_idam_modules = ["pyuda", "pyidam", "idam"]
+gotidam = False
+
+for idam_module in possible_idam_modules:
+    try:
+        idam = importlib.import_module(idam_module)
+        gotidam = True
+        break
+    except ImportError:
+        pass
+
+if not gotidam:
+    print("Warning: UDA/IDAM library not found. Cannot read data")
+
 
 class XPadSource:
     def __init__(self, path, parent=None):
 
         # Convert path to string, strip NULL chars
-        path = str(path).translate(None, '\0')
-        
+        path = str(path)
+
         self.label = os.path.basename(os.path.normpath(path))
         self.dimensions = {}
         self.varNames = []
         self.variables = {}
-        
+
         self.parent = parent
-        
+
         # Define configuration dictionary
-        if parent == None:
-            self.config = {'Host':'mast.fusion.org.uk', 'Port':56565, 'verbose':False, 'debug':False}
+        if parent is None:
+            self.config = {'Host': 'mast.fusion.org.uk',
+                           'Port': 56565,
+                           'verbose': True,
+                           'debug': False}
         else:
             self.config = parent.config
-        
+
         if os.path.isdir(path):
             # List directory
             ls = os.listdir(path)
@@ -62,16 +77,17 @@ class XPadSource:
                 f = open(os.path.join(path, 'title'), 'r')
                 self.label = f.readline().strip()
                 f.close()
-                
+
             # Create a child for each subdirectory
-            self.children = [ XPadSource( os.path.join(path, name), parent=self )  # Create child
-                              for name in ls
-                              if os.path.isdir(os.path.join(path, name)) and name[0] != '.' ]  # For each directory which isn't hidden
-            
-            # Find items 
+            self.children = [XPadSource(os.path.join(path, name), parent=self)  # Create child
+                             for name in ls
+                             # For each directory which isn't hidden
+                             if os.path.isdir(os.path.join(path, name)) and name[0] != '.']
+
+            # Find items
             for name in ls:
-                if os.path.isfile(os.path.join(path, name)) and ( os.path.splitext(name)[1] == ".item" ):
-                    self.children.append( XPadSource( os.path.join(path, name), parent=self) )
+                if os.path.isfile(os.path.join(path, name)) and (os.path.splitext(name)[1] == ".item"):
+                    self.children.append(XPadSource(os.path.join(path, name), parent=self))
         else:
             # Given an item file to read
             f = open(path, 'r')
@@ -94,20 +110,20 @@ class XPadSource:
                 item.source = path
                 self.variables[name] = item
                 self.varNames.append(name)
-                
-            if parent != None:
+
+            if parent is not None:
                 parent.addVariables(self.variables)
             f.close()
-            
+
     def addVariables(self, vardict):
         # Add to dictionary of variables and list of names
         for name, var in vardict.items():
             self.variables[name] = var
             self.varNames.append(name)
-        
-        if self.parent != None:
+
+        if self.parent is not None:
             self.parent.addVariables(vardict)  # Variables go from children up to parent
-    
+
     def read(self, name, shot):
         """ Read data from IDAM """
         if not gotidam:
@@ -115,21 +131,43 @@ class XPadSource:
         try:
             if isinstance(name, unicode):
                 name = name.encode('utf-8')
-            name = str(name).translate(None, '\0')
-            shot = str(shot).translate(None, '\0')
         except NameError:
             pass
-        
-        # Set configuration
-        idam.setHost(self.config['Host'])
-        idam.setPort(self.config['Port'])
-        
+        name = str(name).strip()
+        shot = str(shot).strip()
+
+        # Start client
+        if not hasattr(self, "client"):
+            # Set configuration
+            idam.Client.server = self.config['Host']
+            idam.Client.port = self.config['Port']
+            self.client = idam.Client()
+
         # Read data
-        data = idam.Data(name, shot)
-        
+        data = self.client.get(name, shot)
+
+        if hasattr(data, "dims") and not hasattr(data, "dim"):
+            data.dim = data.dims
+
+        #Give data a name
+        try:
+            data.name = name
+            data.source = "Shot " + shot
+        except AttributeError:
+            # Probably IDAM has set something to be read-only property
+            pass
+
         return XPadDataItem(data)
-    
+
     def size(self, name):
         pass
-    
-    
+
+    def __getstate__(self):
+        # We need to remove the IDAM client in order to pickle
+        # instances of this class
+        if hasattr(self, "client"):
+            state = self.__dict__.copy()
+            del state['client']
+            return state
+        else:
+            return self.__dict__

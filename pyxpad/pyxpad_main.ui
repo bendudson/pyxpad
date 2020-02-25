@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PyXpad</string>
+   <string>PyXPad</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -22,17 +22,27 @@
       </property>
       <widget class="QWidget" name="sourceTab">
        <attribute name="title">
-        <string>Sources</string>
+        <string>&amp;Sources</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="6">
+           <widget class="QCheckBox" name="sourceDescription">
+            <property name="text">
+             <string>Description</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="shotLabel">
             <property name="text">
              <string>Shot:</string>
             </property>
            </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLineEdit" name="tracePattern"/>
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="shotInput"/>
@@ -40,24 +50,24 @@
           <item row="0" column="2">
            <widget class="QPushButton" name="readDataButton">
             <property name="text">
-             <string>Read</string>
+             <string>&amp;Read</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_2">
+          <item row="0" column="4">
+           <widget class="QLabel" name="traceLabel">
             <property name="text">
              <string>Trace:</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
-           <widget class="QLineEdit" name="tracePattern"/>
-          </item>
-          <item row="0" column="5">
-           <widget class="QCheckBox" name="sourceDescription">
+          <item row="0" column="3">
+           <widget class="QPushButton" name="lastShotButton">
+            <property name="toolTip">
+             <string>Get last shot number</string>
+            </property>
             <property name="text">
-             <string>Description</string>
+             <string>&amp;Last shot</string>
             </property>
            </widget>
           </item>
@@ -135,7 +145,7 @@
       </widget>
       <widget class="QWidget" name="dataTab">
        <attribute name="title">
-        <string>Data</string>
+        <string>&amp;Data</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
@@ -144,6 +154,9 @@
            <enum>Qt::Vertical</enum>
           </property>
           <widget class="QTableWidget" name="dataTable">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
            <property name="alternatingRowColors">
             <bool>true</bool>
            </property>
@@ -218,7 +231,7 @@
       </widget>
       <widget class="QWidget" name="plotTab">
        <attribute name="title">
-        <string>Plot</string>
+        <string>&amp;Plot</string>
        </attribute>
       </widget>
      </widget>
@@ -236,11 +249,11 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <widget class="QMenu" name="menuAdd_source">
      <property name="title">
-      <string>Add source</string>
+      <string>&amp;Add source</string>
      </property>
      <addaction name="actionNetCDF_file"/>
      <addaction name="actionXPAD_tree"/>
@@ -257,17 +270,23 @@
    </widget>
    <widget class="QMenu" name="menuPlot">
     <property name="title">
-     <string>Graphics</string>
+     <string>&amp;Graphics</string>
     </property>
     <addaction name="actionPlot"/>
+    <addaction name="actionOPlot"/>
+    <addaction name="actionMPlot"/>
+    <addaction name="actionZPlot"/>
     <addaction name="actionXYPlot"/>
     <addaction name="actionContour"/>
     <addaction name="actionContour_filled"/>
+    <addaction name="actionClearFig"/>
    </widget>
    <widget class="QMenu" name="menuCommand">
     <property name="title">
-     <string>Command</string>
+     <string>&amp;Command</string>
     </property>
+    <addaction name="actionDeleteTrace"/>
+    <addaction name="separator"/>
     <addaction name="actionChop"/>
     <addaction name="separator"/>
     <addaction name="actionIntegrate"/>
@@ -281,25 +300,51 @@
     <addaction name="actionDivide"/>
     <addaction name="separator"/>
     <addaction name="actionFFTP"/>
+    <addaction name="actionRunFFT"/>
+    <addaction name="separator"/>
+    <addaction name="actionReciprocal"/>
+    <addaction name="actionExponential"/>
+    <addaction name="actionAbsolute"/>
+    <addaction name="actionArctan"/>
+    <addaction name="actionNlog"/>
+    <addaction name="actionNorm"/>
+    <addaction name="actionInvert"/>
+    <addaction name="actionAddCon"/>
+    <addaction name="actionSubCon"/>
+    <addaction name="actionMulCon"/>
+    <addaction name="actionDivCon"/>
+    <addaction name="actionPowCon"/>
+    <addaction name="actionChangeName"/>
+    <addaction name="actionChangeUnits"/>
+    <addaction name="actionClip"/>
+    <addaction name="actionStats"/>
+    <addaction name="actionTimeOff"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
    <addaction name="menuCommand"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoadState">
    <property name="text">
-    <string>Load config</string>
+    <string>&amp;Load state</string>
    </property>
   </action>
   <action name="actionSaveState">
    <property name="text">
-    <string>Save config</string>
+    <string>&amp;Save state</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>E&amp;xit</string>
    </property>
    <property name="toolTip">
     <string>Exit pyXpad</string>
@@ -323,12 +368,27 @@
   </action>
   <action name="actionPlot">
    <property name="text">
-    <string>Plot</string>
+    <string>&amp;Plot</string>
+   </property>
+  </action>
+  <action name="actionOPlot">
+   <property name="text">
+    <string>&amp;OPlot</string>
+   </property>
+  </action>
+  <action name="actionMPlot">
+   <property name="text">
+    <string>&amp;MPlot</string>
    </property>
   </action>
   <action name="actionXYPlot">
    <property name="text">
-    <string>XYPlot</string>
+    <string>&amp;XYPlot</string>
+   </property>
+  </action>
+  <action name="actionZPlot">
+   <property name="text">
+    <string>&amp;ZPlot</string>
    </property>
   </action>
   <action name="actionBOUT_data">
@@ -344,17 +404,22 @@
   </action>
   <action name="actionContour">
    <property name="text">
-    <string>Contour</string>
+    <string>&amp;Contour</string>
    </property>
   </action>
   <action name="actionContour_filled">
    <property name="text">
-    <string>Contour filled</string>
+    <string>Contour &amp;filled</string>
+   </property>
+  </action>
+  <action name="actionClearFig">
+   <property name="text">
+    <string>C&amp;lear Figure</string>
    </property>
   </action>
   <action name="actionWrite_ASCII">
    <property name="text">
-    <string>Write ASCII</string>
+    <string>&amp;Write ASCII</string>
    </property>
   </action>
   <action name="actionAdd">
@@ -417,12 +482,112 @@
     <string>FFTP</string>
    </property>
   </action>
+  <action name="actionRunFFT">
+   <property name="text">
+    <string>Running FFT</string>
+   </property>
+  </action>
+  <action name="actionReciprocal">
+   <property name="text">
+    <string>1/X</string>
+   </property>
+  </action>
+  <action name="actionExponential">
+   <property name="text">
+    <string>exp</string>
+   </property>
+  </action>
+  <action name="actionAbsolute">
+   <property name="text">
+    <string>abs</string>
+   </property>
+  </action>
+  <action name="actionArctan">
+   <property name="text">
+    <string>arctan</string>
+   </property>
+  </action>
+  <action name="actionNlog">
+   <property name="text">
+    <string>ln</string>
+   </property>
+  </action>
+  <action name="actionNorm">
+   <property name="text">
+    <string>Normalise</string>
+   </property>
+  </action>
+  <action name="actionInvert">
+   <property name="text">
+    <string>Invert</string>
+   </property>
+  </action>
+  <action name="actionAddCon">
+   <property name="text">
+    <string>X+C</string>
+   </property>
+  </action>
+  <action name="actionSubCon">
+   <property name="text">
+    <string>X-C</string>
+   </property>
+  </action>
+  <action name="actionMulCon">
+   <property name="text">
+    <string>X*C</string>
+   </property>
+  </action>
+  <action name="actionDivCon">
+   <property name="text">
+    <string>X/C</string>
+   </property>
+  </action>
+  <action name="actionPowCon">
+   <property name="text">
+    <string>X^C</string>
+   </property>
+  </action>
+  <action name="actionChangeName">
+   <property name="text">
+    <string>Change Name</string>
+   </property>
+  </action>
+  <action name="actionChangeUnits">
+   <property name="text">
+    <string>Change Units</string>
+   </property>
+  </action>
+  <action name="actionClip">
+   <property name="text">
+    <string>Clip</string>
+   </property>
+  </action>
+  <action name="actionStats">
+   <property name="text">
+    <string>Statistics</string>
+   </property>
+  </action>
+  <action name="actionTimeOff">
+   <property name="text">
+    <string>Time Offset</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="actionDeleteTrace">
+   <property name="text">
+    <string>&amp;Delete Trace</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>ConsoleWidget</class>
    <extends>QLineEdit</extends>
-   <header>console_widget.h</header>
+   <header>.console_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

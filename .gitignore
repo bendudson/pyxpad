@@ -1,0 +1,4 @@
+*.pyc
+*~
+Debug.dbg
+Error.err
