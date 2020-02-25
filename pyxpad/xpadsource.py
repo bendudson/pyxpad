@@ -26,16 +26,23 @@ import os
 
 from .pyxpad_utils import XPadDataItem, XPadDataDim
 
-try:
-    import pyidam as idam
-    gotidam = True
-except ImportError:
+import importlib
+
+# There are now (at least) three different names for the UDA/IDAM
+# python wrappers. Try to import them, starting with the most recent
+possible_idam_modules = ["pyuda", "pyidam", "idam"]
+gotidam = False
+
+for idam_module in possible_idam_modules:
     try:
-        import idam
+        idam = importlib.import_module(idam_module)
         gotidam = True
+        break
     except ImportError:
-        print("Warning: IDAM library not found. Cannot read data")
-        gotidam = False
+        pass
+
+if not gotidam:
+    print("Warning: UDA/IDAM library not found. Cannot read data")
 
 
 class XPadSource:
