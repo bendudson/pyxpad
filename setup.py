@@ -25,7 +25,7 @@ setup(name='pyxpad',
           'Topic :: Scientific/Engineering :: Visualization',
       ],
       packages=['pyxpad'],
-      install_requires=['matplotlib', 'numpy', 'scipy', 'Qt.py', 'xdg'],
+      install_requires=['matplotlib>=3.1', 'numpy>=1.15', 'scipy>=1.4', 'Qt.py>=1.2', 'xdg>=4.0.1'],
       entry_points={
           'gui_scripts': [
               'pyxpad = pyxpad.__main__:main',
