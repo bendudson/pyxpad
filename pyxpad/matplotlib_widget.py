@@ -6,18 +6,16 @@
 
 import matplotlib
 
-from Qt import __binding__, __qt_version__
+from Qt import __qt_version__
 
 # Use the correct backend for matplotlib, depending on Qt version and
 # the particular Qt python bindings we're using
 if __qt_version__.split('.')[0] == '5':
     matplotlib.use('Qt5Agg')
-    matplotlib.rcParams['backend.qt5'] = __binding__
     from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
                                                     NavigationToolbar2QT as NavigationToolbar)
 else:
     matplotlib.use('Qt4Agg')
-    matplotlib.rcParams['backend.qt4'] = __binding__
     from matplotlib.backends.backend_qt4agg import (FigureCanvasQTAgg as FigureCanvas,
                                                     NavigationToolbar2QT as NavigationToolbar)
 
